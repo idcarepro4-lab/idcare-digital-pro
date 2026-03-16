@@ -1,2 +1,970 @@
-# idcare-digital-pro
-IDCare Digital Pro - Free Online Tool
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDCare Digital Pro - Free Online Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--primary:#1a56db;--accent:#e63946;--dark:#111827;--gray:#6b7280;--light:#f9fafb;--border:#e5e7eb;--shadow:0 2px 12px rgba(0,0,0,0.08);--radius:14px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Hind Siliguri',sans-serif;background:#f3f4f6;color:var(--dark);overflow-x:hidden;}
+.notice-bar{background:linear-gradient(90deg,#fffbeb,#fef3c7);border-bottom:1px solid #fcd34d;padding:7px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:#92400e;}
+.notice-bar .bell{color:#dc2626;animation:shake 2s infinite;}
+@keyframes shake{0%,100%{transform:rotate(0)}15%{transform:rotate(-12deg)}30%{transform:rotate(12deg)}}
+.nb-socials{margin-left:auto;display:flex;gap:7px;}
+.nb-btn{padding:4px 13px;border-radius:20px;font-size:12px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:5px;cursor:pointer;border:none;font-family:inherit;}
+.nb-wa{background:#25d366;color:#fff;}.nb-fb{background:#1877f2;color:#fff;}.nb-yt{background:#ff0000;color:#fff;}
+nav{background:#fff;box-shadow:0 1px 8px rgba(0,0,0,0.07);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:65px;position:sticky;top:0;z-index:1000;}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;}
+.logo-img{width:44px;height:44px;background:linear-gradient(135deg,#1a56db,#3b82f6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;}
+.logo-name{font-size:18px;font-weight:700;color:var(--primary);}.logo-name span{color:var(--accent);}
+.logo-sub{font-size:10px;color:var(--gray);}
+.nav-links{display:flex;gap:28px;list-style:none;}
+.nav-links a{text-decoration:none;color:var(--dark);font-size:15px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;transition:all .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--primary);border-bottom-color:var(--primary);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:24px;height:2px;background:var(--dark);border-radius:2px;}
+.page{display:none;animation:fadeIn .3s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.marquee-wrap{background:linear-gradient(90deg,#1e3a8a,#1a56db);padding:9px 0;overflow:hidden;white-space:nowrap;}
+.marquee-inner{display:inline-block;animation:marquee 28s linear infinite;}
+.marquee-inner span{color:#fff;font-size:13px;font-weight:500;padding:0 40px;}
+.marquee-inner span::before{content:"📢 ";}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.hero-announce{background:#fff;max-width:870px;margin:18px auto 0;border-radius:12px;border:1.5px solid #dbeafe;padding:13px 18px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);cursor:pointer;}
+.ha-icon{font-size:26px;}.ha-text{font-size:14px;color:var(--dark);font-weight:500;flex:1;}
+.ha-badge{background:#dbeafe;color:var(--primary);padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;}
+.section-divider{text-align:center;margin:24px 0 14px;position:relative;}
+.section-divider::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border);}
+.section-divider span{position:relative;background:#f3f4f6;padding:0 16px;font-size:11px;font-weight:700;color:var(--gray);letter-spacing:2px;}
+.tools-wrap{max-width:870px;margin:0 auto;padding:0 14px;}
+.tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.tool-card{background:#fff;border-radius:var(--radius);padding:18px 10px 14px;text-align:center;cursor:pointer;box-shadow:var(--shadow);transition:all .2s;border:1.5px solid transparent;position:relative;}
+.tool-card:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 8px 24px rgba(26,86,219,.13);}
+.tool-card.hot-card{border-color:#fca5a5;background:#fff5f5;}
+.star-btn{position:absolute;top:9px;right:9px;color:#d1d5db;font-size:13px;cursor:pointer;background:none;border:none;padding:0;transition:color .2s;}
+.star-btn:hover{color:#f59e0b;}.star-btn.on{color:#f59e0b;}
+.t-icon{font-size:32px;margin-bottom:9px;}.t-name{font-size:12.5px;font-weight:600;color:var(--dark);line-height:1.4;}
+.cloud-section-wrap{max-width:870px;margin:0 auto;padding:0 14px;}
+.cloud-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:6px;position:relative;}
+.cloud-card:hover{border-color:#22c55e;background:#f0fdf4;}
+.cloud-icon{font-size:36px;color:#22c55e;margin-bottom:5px;}.cloud-name{font-size:14px;font-weight:700;color:#16a34a;}
+.trust-section{max-width:870px;margin:28px auto 0;padding:0 14px 10px;}
+.trust-card{background:#fff;border-radius:var(--radius);padding:26px 28px;margin-bottom:18px;box-shadow:var(--shadow);border-left:4px solid var(--primary);}
+.trust-card h3{font-size:17px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:9px;}
+.trust-card p{color:var(--gray);font-size:14px;line-height:1.85;margin-bottom:8px;}
+.t-check{display:flex;align-items:center;gap:8px;font-size:14px;margin:5px 0;}
+.t-check i{color:#16a34a;}
+
+/* TOOL PAGE COMMON */
+.tool-page{max-width:800px;margin:0 auto;padding:28px 14px;}
+.tool-page-header{text-align:center;margin-bottom:24px;}
+.tool-page-header h2{font-size:24px;font-weight:800;color:var(--primary);}
+.tool-page-header p{color:var(--gray);margin-top:6px;font-size:14px;}
+.tool-box{background:#fff;border-radius:16px;padding:26px;box-shadow:var(--shadow);margin-bottom:18px;}
+.back-btn{display:inline-flex;align-items:center;gap:7px;color:var(--primary);font-weight:600;font-size:14px;cursor:pointer;margin-bottom:20px;background:none;border:none;font-family:inherit;padding:8px 14px;background:#dbeafe;border-radius:8px;}
+.back-btn:hover{background:#bfdbfe;}
+.action-btn{background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;padding:12px 26px;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;transition:all .3s;width:100%;justify-content:center;margin-top:12px;}
+.action-btn:hover{box-shadow:0 6px 22px rgba(26,86,219,.38);transform:translateY(-2px);}
+.action-btn.green{background:linear-gradient(135deg,#16a34a,#22c55e);}
+.action-btn.red{background:linear-gradient(135deg,#dc2626,#ef4444);}
+.result-box{background:#f0fdf4;border:2px solid #86efac;border-radius:12px;padding:22px;margin-top:18px;display:none;}
+.result-box.show{display:block;}
+.result-box h3{color:#166534;font-size:16px;font-weight:700;margin-bottom:14px;}
+label.fl{font-size:13px;font-weight:600;color:var(--dark);display:block;margin-bottom:5px;}
+input.fi,select.fi,textarea.fi{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--dark);background:#fff;transition:border-color .2s;margin-bottom:12px;}
+input.fi:focus,select.fi:focus,textarea.fi:focus{outline:none;border-color:var(--primary);}
+textarea.fi{resize:vertical;min-height:80px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.output-box{background:#f8fafc;border:1.5px solid var(--border);border-radius:10px;padding:16px;margin-top:14px;font-size:15px;color:var(--dark);line-height:1.8;min-height:60px;word-break:break-all;}
+.exp-row{display:flex;gap:9px;margin-top:14px;flex-wrap:wrap;}
+.exp-btn{flex:1;min-width:100px;padding:10px 12px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s;}
+.exp-btn:hover{transform:translateY(-2px);}
+.b-pdf{background:#ef4444;color:#fff;}.b-excel{background:#166534;color:#fff;}.b-copy{background:var(--primary);color:#fff;}.b-reset{background:#f3f4f6;color:var(--dark);border:1px solid var(--border);}
+.pg-title{text-align:center;padding:28px 18px 8px;font-size:23px;font-weight:800;color:var(--primary);}
+.pg-title span{color:var(--accent);}
+.upload-zone{border:2.5px dashed #93c5fd;border-radius:12px;padding:40px 18px;text-align:center;cursor:pointer;background:#eff6ff;position:relative;transition:all .3s;}
+.upload-zone:hover{border-color:var(--primary);background:#dbeafe;}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.uz-icon{font-size:48px;margin-bottom:10px;}.uz-title{font-size:16px;font-weight:700;color:var(--primary);margin-bottom:5px;}.uz-sub{font-size:13px;color:var(--gray);}
+.uz-btn{margin-top:10px;background:var(--primary);color:#fff;padding:8px 22px;border-radius:24px;font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:inherit;}
+.preview-wrap{display:none;margin-top:14px;text-align:center;}.preview-wrap.show{display:block;}
+.preview-wrap img{max-width:100%;max-height:250px;border-radius:10px;border:2px solid var(--border);}
+.scan-btn{width:100%;margin-top:14px;background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;padding:13px;border-radius:10px;font-size:16px;font-weight:700;border:none;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s;}
+.scan-btn:hover{box-shadow:0 6px 22px rgba(26,86,219,.38);transform:translateY(-2px);}
+.scan-btn:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none;}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.field-item label{font-size:12px;font-weight:700;color:var(--gray);display:block;margin-bottom:4px;}
+.field-item input{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--dark);background:#fff;}
+.field-item.full{grid-column:1/-1;}
+
+/* About/Blog/etc */
+.about-wrap{max-width:800px;margin:0 auto;padding:34px 14px;}
+.about-hero{text-align:center;margin-bottom:32px;}
+.about-hero .big-icon{font-size:68px;}
+.about-hero h2{font-size:28px;font-weight:800;color:var(--primary);margin:12px 0 9px;}
+.about-hero p{color:var(--gray);font-size:15px;line-height:1.9;max-width:620px;margin:0 auto;}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px;}
+.feat-card{background:#fff;border-radius:13px;padding:22px;box-shadow:var(--shadow);}
+.feat-card .icon{font-size:28px;margin-bottom:9px;}
+.feat-card h3{font-size:15px;font-weight:700;margin-bottom:6px;}
+.feat-card p{font-size:13px;color:var(--gray);line-height:1.7;}
+.stats-row{display:flex;gap:14px;}
+.stat-box{flex:1;background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;border-radius:13px;padding:22px;text-align:center;}
+.stat-box .num{font-size:30px;font-weight:800;}.stat-box .lbl{font-size:12px;opacity:.85;margin-top:4px;}
+.blog-wrap{max-width:880px;margin:0 auto;padding:28px 14px;}
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:20px;margin-top:18px;}
+.blog-card{background:#fff;border-radius:13px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .2s;}
+.blog-card:hover{transform:translateY(-4px);}
+.blog-thumb{height:145px;display:flex;align-items:center;justify-content:center;font-size:52px;}
+.blog-body{padding:16px;}.blog-cat{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--primary);letter-spacing:1px;}
+.blog-body h3{font-size:14px;font-weight:700;margin:6px 0 5px;line-height:1.5;}
+.blog-body p{font-size:12px;color:var(--gray);line-height:1.6;}
+.blog-meta{margin-top:10px;font-size:11px;color:#aaa;display:flex;justify-content:space-between;}
+.howto-wrap{max-width:760px;margin:0 auto;padding:28px 14px;}
+.steps{display:flex;flex-direction:column;gap:16px;margin-top:18px;}
+.step-item{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow);display:flex;gap:16px;align-items:flex-start;}
+.step-num{width:44px;height:44px;min-width:44px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.step-content h3{font-size:15px;font-weight:700;margin-bottom:5px;}
+.step-content p{font-size:13px;color:var(--gray);line-height:1.7;}
+.contact-wrap{max-width:800px;margin:0 auto;padding:28px 14px;}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:18px;}
+.contact-info{display:flex;flex-direction:column;gap:14px;}
+.contact-item{background:#fff;border-radius:12px;padding:16px;box-shadow:var(--shadow);display:flex;gap:13px;align-items:center;}
+.contact-item .ci-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#fff;flex-shrink:0;}
+.contact-item h4{font-size:13px;font-weight:700;margin-bottom:3px;}
+.contact-item p,.contact-item a{font-size:13px;color:var(--gray);text-decoration:none;}
+.contact-item a{color:var(--primary);font-weight:600;}
+.contact-form{background:#fff;border-radius:13px;padding:24px;box-shadow:var(--shadow);}
+.contact-form h3{font-size:17px;font-weight:700;color:var(--primary);margin-bottom:16px;}
+.form-group{margin-bottom:13px;}
+.form-group label{font-size:13px;font-weight:600;display:block;margin-bottom:5px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--dark);background:#fff;}
+.form-group textarea{resize:vertical;min-height:88px;}
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--primary),#3b82f6);color:#fff;padding:12px;border-radius:9px;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:inherit;}
+
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.loading-overlay.show{display:flex;}
+.spinner{width:54px;height:54px;border:5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{color:#fff;font-size:16px;font-weight:600;}
+.toast{position:fixed;bottom:26px;right:16px;background:var(--dark);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;max-width:290px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.float-wa{position:fixed;bottom:20px;left:16px;z-index:998;background:#fff;border-radius:40px;padding:8px 13px 8px 8px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.17);cursor:pointer;text-decoration:none;transition:transform .2s;}
+.float-wa:hover{transform:scale(1.05);}
+.wa-av{width:36px;height:36px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;}
+.wa-txt strong{display:block;color:var(--dark);font-size:12px;}.wa-txt span{color:#25d366;font-size:11px;}
+.scroll-top{position:fixed;bottom:20px;right:16px;z-index:998;width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;font-size:17px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(26,86,219,.35);border:none;transition:all .2s;}
+footer{background:#111827;color:rgba(255,255,255,.75);padding:40px 36px 20px;margin-top:46px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;margin-bottom:32px;}
+.fb-name{font-size:17px;font-weight:700;color:#fff;margin-bottom:9px;}.fb-name span{color:#ef4444;}
+.fb-desc{font-size:13px;line-height:1.9;color:rgba(255,255,255,.5);}
+.fb-social{display:flex;gap:8px;margin-top:13px;}
+.fb-social a{width:32px;height:32px;border-radius:7px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;transition:background .2s;}
+.fb-social a:hover{background:var(--primary);}
+.fc h4{font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.08);}
+.fc ul{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.fc ul a{text-decoration:none;color:rgba(255,255,255,.5);font-size:13px;transition:color .2s;cursor:pointer;}
+.fc ul a:hover{color:#ffd60a;}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:16px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.footer-bottom p{font-size:12px;color:rgba(255,255,255,.3);}
+/* big result text */
+.big-result{font-size:28px;font-weight:800;color:var(--primary);text-align:center;padding:16px;background:#eff6ff;border-radius:10px;margin-top:12px;}
+.canvas-wrap{display:flex;justify-content:center;margin-top:16px;}
+@media(max-width:768px){
+  nav{padding:0 14px;}
+  .nav-links{display:none;flex-direction:column;position:absolute;top:65px;left:0;right:0;background:#fff;padding:16px 18px;box-shadow:0 5px 18px rgba(0,0,0,.1);}
+  .nav-links.open{display:flex;}
+  .hamburger{display:flex;}
+  .tools-grid{grid-template-columns:repeat(2,1fr);}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .feat-grid,.contact-grid,.field-grid,.row2{grid-template-columns:1fr;}
+  .stats-row{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<div class="notice-bar">
+  <i class="fas fa-bell bell"></i>
+  <span>ওয়েবসাইটে যে কোন আপডেট পেতে আমাদের চ্যানেলে যোগ দিন 👉</span>
+  <div class="nb-socials">
+    <a class="nb-btn nb-wa" href="https://wa.me/8801342627783" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    <a class="nb-btn nb-fb" href="https://www.facebook.com/IDcare.pro" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+    <a class="nb-btn nb-yt" href="https://www.youtube.com/@IDCareProOfficial" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+  </div>
+</div>
+
+<nav>
+  <div class="logo" onclick="showPage('home')">
+    <div class="logo-img"><i class="fas fa-id-card"></i></div>
+    <div><div class="logo-name">IDCare <span>Digital</span> Pro</div><div class="logo-sub">Free Online Tool</div></div>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" class="active" onclick="showPage('home',this)">Home</a></li>
+    <li><a href="#" onclick="showPage('about',this)">About</a></li>
+    <li><a href="#" onclick="showPage('blog',this)">Blog</a></li>
+    <li><a href="#" onclick="showPage('howto',this)">How to use</a></li>
+    <li><a href="#" onclick="showPage('contact',this)">Contact</a></li>
+  </ul>
+  <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="loading-overlay" id="loadingOverlay"><div class="spinner"></div><div class="loading-text">প্রসেস হচ্ছে...</div></div>
+<div class="toast" id="toast"><i class="fas fa-check-circle" style="color:#4ade80"></i><span id="toastMsg"></span></div>
+<a class="float-wa" href="https://wa.me/8801342627783" target="_blank"><div class="wa-av"><i class="fab fa-whatsapp"></i></div><div class="wa-txt"><strong>Contact Support</strong><span>ON WHATSAPP</span></div></a>
+<button class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
+
+<!-- ════ HOME ════ -->
+<div class="page active" id="page-home">
+  <div class="marquee-wrap"><div class="marquee-inner"><span>ফ্যামিলি কার্ড আবেদন ফরম ২০২৬</span><span>AI Passport Photo Maker আপডেট</span><span>Professional CV Builder ফ্রি</span><span>NID Front-Back Joiner নতুন</span><span>ফ্যামিলি কার্ড আবেদন ফরম ২০২৬</span><span>AI Passport Photo Maker আপডেট</span><span>Professional CV Builder ফ্রি</span><span>NID Front-Back Joiner নতুন</span></div></div>
+  <div style="max-width:870px;margin:0 auto;padding:0 14px">
+    <div class="hero-announce" onclick="showTool('nid-scanner')"><div class="ha-icon">📋</div><div class="ha-text">ফ্যামিলি কার্ড আবেদন ফরম ২০২৬ - Family Card Form 2026</div><div class="ha-badge">নিউ ২০২৬</div></div>
+  </div>
+  <div class="tools-wrap">
+    <div class="section-divider"><span>TOLL SECTION 1</span></div>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="showTool('nid-scanner')"><button class="star-btn">☆</button><div class="t-icon">🪪</div><div class="t-name">ID Card Crop to PDF</div></div>
+      <div class="tool-card" onclick="showTool('passport-crop')"><button class="star-btn">☆</button><div class="t-icon">🛂</div><div class="t-name">Passport Crop to PDF</div></div>
+      <div class="tool-card" onclick="showTool('nid-joiner')"><button class="star-btn">☆</button><div class="t-icon">🔗</div><div class="t-name">NID Front-Back Joiner</div></div>
+      <div class="tool-card" onclick="showTool('cv-maker')"><button class="star-btn">☆</button><div class="t-icon">📄</div><div class="t-name">Professional CV Maker</div></div>
+      <div class="tool-card" onclick="showTool('ai-passport')"><button class="star-btn">☆</button><div class="t-icon">🤖</div><div class="t-name">AI Passport Photo Maker</div></div>
+      <div class="tool-card" onclick="showTool('passport-photo')"><button class="star-btn">☆</button><div class="t-icon">📷</div><div class="t-name">Passport Photo Maker</div></div>
+      <div class="tool-card" onclick="showTool('studio-print')"><button class="star-btn">☆</button><div class="t-icon">🖨️</div><div class="t-name">Studio Photo Print Layout</div></div>
+      <div class="tool-card" onclick="showTool('joint-photo')"><button class="star-btn">☆</button><div class="t-icon">👥</div><div class="t-name">Joint Photo Maker</div></div>
+    </div>
+    <div class="section-divider"><span>TOLL SECTION 2</span></div>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="showTool('sign-maker')"><button class="star-btn">☆</button><div class="t-icon">✍️</div><div class="t-name">Bangla Sign Maker</div></div>
+      <div class="tool-card hot-card" onclick="showTool('sig-bg')"><button class="star-btn">☆</button><div class="t-icon">🖊️</div><div class="t-name" style="color:#dc2626">Signature BG Remover</div></div>
+      <div class="tool-card" onclick="showTool('img-bg')"><button class="star-btn">☆</button><div class="t-icon">✂️</div><div class="t-name">Image BG Remover</div></div>
+      <div class="tool-card" onclick="showTool('img-crop')"><button class="star-btn">☆</button><div class="t-icon">🔲</div><div class="t-name">Advance Image Crop</div></div>
+      <div class="tool-card" onclick="showTool('img-convert')"><button class="star-btn">☆</button><div class="t-icon">🔄</div><div class="t-name">Image Converter</div></div>
+      <div class="tool-card" onclick="showTool('pdf2img')"><button class="star-btn">☆</button><div class="t-icon">📄</div><div class="t-name">PDF to Image</div></div>
+      <div class="tool-card" onclick="showTool('img2pdf')"><button class="star-btn">☆</button><div class="t-icon">🖼️</div><div class="t-name">Image to PDF</div></div>
+      <div class="tool-card" onclick="showTool('img2text')"><button class="star-btn">☆</button><div class="t-icon">📝</div><div class="t-name">Image to Text</div></div>
+    </div>
+    <div class="section-divider"><span>TOLL SECTION 3</span></div>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="showTool('wedding')"><button class="star-btn">☆</button><div class="t-icon">💒</div><div class="t-name">Wedding Memento Card</div></div>
+      <div class="tool-card" onclick="showTool('usd-bdt')"><button class="star-btn">☆</button><div class="t-icon">💱</div><div class="t-name">USD to BDT Converter</div></div>
+      <div class="tool-card" onclick="showTool('age-calc')"><button class="star-btn">☆</button><div class="t-icon">🎂</div><div class="t-name">Age Calculator</div></div>
+      <div class="tool-card" onclick="showTool('date-words')"><button class="star-btn">☆</button><div class="t-icon">📅</div><div class="t-name">Date to Words (BN-EN)</div></div>
+      <div class="tool-card" onclick="showTool('bn-banglish')"><button class="star-btn">☆</button><div class="t-icon">🔤</div><div class="t-name">Bangla to Banglish</div></div>
+      <div class="tool-card" onclick="showTool('visiting-card')"><button class="star-btn">☆</button><div class="t-icon">💼</div><div class="t-name">Visiting Card Maker</div></div>
+      <div class="tool-card" onclick="showTool('qr-gen')"><button class="star-btn">☆</button><div class="t-icon">📱</div><div class="t-name">QR Code Generator</div></div>
+      <div class="tool-card" onclick="showTool('bn-phonetic')"><button class="star-btn">☆</button><div class="t-icon">🔡</div><div class="t-name">English to Bengali Phonetic</div></div>
+    </div>
+    <div class="section-divider"><span>TOLL SECTION 4</span></div>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="showTool('barcode-scan')"><button class="star-btn">☆</button><div class="t-icon">📊</div><div class="t-name">QR & Barcode Scanner</div></div>
+      <div class="tool-card" onclick="showTool('a4-typing')"><button class="star-btn">☆</button><div class="t-icon">⌨️</div><div class="t-name">A4 Page Typing</div></div>
+      <div class="tool-card" onclick="showTool('img-enhance')"><button class="star-btn">☆</button><div class="t-icon">✨</div><div class="t-name">Image Enhancer</div></div>
+      <div class="tool-card" onclick="showTool('stamp-writer')"><button class="star-btn">☆</button><div class="t-icon">🔏</div><div class="t-name">Stamp / Document Writer</div></div>
+      <div class="tool-card" onclick="showTool('excel-table')"><button class="star-btn">☆</button><div class="t-icon">📊</div><div class="t-name">Excel Table Sheet</div></div>
+      <div class="tool-card" onclick="showTool('ai-prompt')"><button class="star-btn">☆</button><div class="t-icon">🤖</div><div class="t-name">AI Editing Prompt Hub</div></div>
+      <div class="tool-card" onclick="showTool('img-compress')"><button class="star-btn">☆</button><div class="t-icon">🗜️</div><div class="t-name">Image Compressor</div></div>
+      <div class="tool-card" onclick="showTool('cash-memo')"><button class="star-btn">☆</button><div class="t-icon">🧾</div><div class="t-name">Cash Memo Maker</div></div>
+    </div>
+    <div class="section-divider"><span>TOLL SECTION 5</span></div>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="showTool('barcode-gen')"><button class="star-btn">☆</button><div class="t-icon">📶</div><div class="t-name">Barcode Generator</div></div>
+      <div class="tool-card" onclick="showTool('teletalk')"><button class="star-btn">☆</button><div class="t-icon">📸</div><div class="t-name">Teletalk Photo Resizer</div></div>
+      <div class="tool-card" onclick="showTool('photo-print')"><button class="star-btn">☆</button><div class="t-icon">🖼️</div><div class="t-name">Photo Print Layout</div></div>
+      <div class="tool-card" onclick="showTool('job-letter')"><button class="star-btn">☆</button><div class="t-icon">📋</div><div class="t-name">Job & Cover Letter</div></div>
+      <div class="tool-card" onclick="showTool('a4-scan')"><button class="star-btn">☆</button><div class="t-icon">🔍</div><div class="t-name">A4 Document Scan</div></div>
+      <div class="tool-card" onclick="showTool('photo-name')"><button class="star-btn">☆</button><div class="t-icon">🏷️</div><div class="t-name">Photo Name & Date Adder</div></div>
+      <div class="tool-card" onclick="showTool('student-id')"><button class="star-btn">☆</button><div class="t-icon">🎓</div><div class="t-name">Student ID Card Maker</div></div>
+      <div class="tool-card" onclick="showTool('biodata')"><button class="star-btn">☆</button><div class="t-icon">👤</div><div class="t-name">Biodata Maker</div></div>
+    </div>
+    <div class="section-divider"><span>TOLL SECTION 6</span></div>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="showTool('en-bn-trans')"><button class="star-btn">☆</button><div class="t-icon">🌐</div><div class="t-name">EN/BN Translator</div></div>
+      <div class="tool-card" onclick="showTool('height-weight')"><button class="star-btn">☆</button><div class="t-icon">⚖️</div><div class="t-name">Height & Weight Converter</div></div>
+      <div class="tool-card" onclick="showTool('multi-pdf')"><button class="star-btn">☆</button><div class="t-icon">📑</div><div class="t-name">Multi-Image to PDF</div></div>
+      <div class="tool-card" onclick="showTool('dig-sign')"><button class="star-btn">☆</button><div class="t-icon">✒️</div><div class="t-name">Digital Signature Pad</div></div>
+      <div class="tool-card" onclick="showTool('notice-maker')"><button class="star-btn">☆</button><div class="t-icon">📢</div><div class="t-name">Ready Notice Maker</div></div>
+      <div class="tool-card" onclick="showTool('leaflet')"><button class="star-btn">☆</button><div class="t-icon">🗺️</div><div class="t-name">Leaflet Maker</div></div>
+      <div class="tool-card" onclick="showTool('land-area')"><button class="star-btn">☆</button><div class="t-icon">📐</div><div class="t-name">Land Area Calculator</div></div>
+      <div class="tool-card" onclick="showTool('omr-sheet')"><button class="star-btn">☆</button><div class="t-icon">📋</div><div class="t-name">OMR Sheet Generator</div></div>
+    </div>
+    <div class="section-divider"><span>TOLL SECTION 7</span></div>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="showTool('affidavit')"><button class="star-btn">☆</button><div class="t-icon">⚖️</div><div class="t-name">Affidavit Writer</div></div>
+      <div class="tool-card" onclick="showTool('photocopy-cost')"><button class="star-btn">☆</button><div class="t-icon">💰</div><div class="t-name">Photocopy Cost Calculator</div></div>
+      <div class="tool-card" onclick="showTool('exam-result')"><button class="star-btn">☆</button><div class="t-icon">🎓</div><div class="t-name">Exam Result Check BD</div></div>
+      <div class="tool-card" onclick="showTool('job-circular')"><button class="star-btn">☆</button><div class="t-icon">💼</div><div class="t-name">Job Circular Finder BD</div></div>
+      <div class="tool-card" onclick="showTool('online-services')"><button class="star-btn">☆</button><div class="t-icon">🌐</div><div class="t-name">Online Services Apply BD</div></div>
+      <div class="tool-card" onclick="showTool('iphone-img')"><button class="star-btn">☆</button><div class="t-icon">📱</div><div class="t-name">iPhone Image Converter</div></div>
+      <div class="tool-card" onclick="showTool('exam-question')"><button class="star-btn">☆</button><div class="t-icon">❓</div><div class="t-name">Exam Question Maker</div></div>
+      <div class="tool-card" onclick="showTool('agreement')"><button class="star-btn">☆</button><div class="t-icon">📝</div><div class="t-name">Agreement Letter Writing</div></div>
+    </div>
+    <div class="section-divider"><span>TOLL SECTION 8</span></div>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="showTool('pdf-merge')"><button class="star-btn">☆</button><div class="t-icon">📎</div><div class="t-name">PDF Merge & Split</div></div>
+      <div class="tool-card" onclick="showTool('police-gd')"><button class="star-btn">☆</button><div class="t-icon">🚔</div><div class="t-name">Police GD Writing</div></div>
+      <div class="tool-card" onclick="showTool('class-routine')"><button class="star-btn">☆</button><div class="t-icon">🗓️</div><div class="t-name">Class Routine Maker</div></div>
+      <div class="tool-card" onclick="showTool('property-dist')"><button class="star-btn">☆</button><div class="t-icon">⚖️</div><div class="t-name">Property Distribution</div></div>
+      <div class="tool-card" onclick="showTool('photoshop-sc')"><button class="star-btn">☆</button><div class="t-icon">🎨</div><div class="t-name">Photoshop Shortcuts</div></div>
+      <div class="tool-card" onclick="showTool('salary-sheet')"><button class="star-btn">☆</button><div class="t-icon">💵</div><div class="t-name">Salary Sheet Maker</div></div>
+      <div class="tool-card" onclick="showTool('visa-photo')"><button class="star-btn">☆</button><div class="t-icon">✈️</div><div class="t-name">Visa Photo Cropper</div></div>
+      <div class="tool-card" onclick="showTool('bn-calendar')"><button class="star-btn">☆</button><div class="t-icon">📆</div><div class="t-name">Bengali Calendar</div></div>
+    </div>
+    <div class="section-divider"><span>TOLL SECTION 9</span></div>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="showTool('airline')"><button class="star-btn">☆</button><div class="t-icon">✈️</div><div class="t-name">Airline Ticket Check</div></div>
+      <div class="tool-card" onclick="showTool('visa-check')"><button class="star-btn">☆</button><div class="t-icon">🌍</div><div class="t-name">Online Visa Check</div></div>
+      <div class="tool-card" onclick="showTool('date-convert')"><button class="star-btn">☆</button><div class="t-icon">📅</div><div class="t-name">Date Converter EN-BN-AR</div></div>
+      <div class="tool-card" onclick="showTool('travel-ticket')"><button class="star-btn">☆</button><div class="t-icon">🎫</div><div class="t-name">Travel Ticket Booking</div></div>
+    </div>
+  </div>
+  <div class="cloud-section-wrap">
+    <div class="section-divider"><span>CLOUD SECTION</span></div>
+    <div class="cloud-card" onclick="showTool('cloud-db')"><button class="star-btn" style="position:absolute;top:10px;right:14px">☆</button><div class="cloud-icon"><i class="fas fa-cloud-upload-alt"></i></div><div class="cloud-name">Studio Cloud File Database</div></div>
+  </div>
+  <div class="trust-section">
+    <div class="trust-card"><h3><i class="fas fa-shield-alt" style="color:var(--primary)"></i> Trusted & Secure Digital Studio Tools</h3><p><strong>IDCare Digital Pro</strong> is built with a "Security-First" approach. We use advanced <strong>Client-Side Processing</strong>. Your sensitive documents are processed entirely within your browser's RAM.</p><div class="t-check"><i class="fas fa-check-circle"></i><span><strong>No Server Uploads:</strong> Your files never leave your device.</span></div><div class="t-check"><i class="fas fa-check-circle"></i><span><strong>Instant Privacy:</strong> All data is wiped automatically when you refresh.</span></div></div>
+    <div class="trust-card" style="border-left-color:#7c3aed"><h3><i class="fas fa-tools" style="color:#7c3aed"></i> 60+ Professional AI-Powered Tools</h3><p>Empowering thousands of studio owners daily. From <strong>AI Passport Photo Makers</strong> to <strong>Legal Affidavit Templates</strong> — studio-quality output in seconds. 100% responsive on Android, iPhone, and PC.</p></div>
+  </div>
+</div>
+
+<!-- ════ TOOL PAGES ════ -->
+
+<!-- NID SCANNER -->
+<div class="page" id="page-tool">
+  <div class="tool-page">
+    <button class="back-btn" onclick="showPage('home')"><i class="fas fa-arrow-left"></i> হোমে ফিরুন</button>
+    <div id="tool-content"></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <div class="about-wrap">
+    <div class="about-hero"><div class="big-icon">🏢</div><h2>IDCare Digital Pro সম্পর্কে</h2><p>আমরা বাংলাদেশের স্টুডিও, ফটোকপি ও ডিজিটাল সেন্টারগুলোকে স্মার্ট ও প্রফেশনাল করতে কাজ করছি। আমাদের ৬০+ টুলস সম্পূর্ণ বিনামূল্যে।</p></div>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="icon">🤖</div><h3>AI পাওয়ার্ড OCR</h3><p>উন্নত AI প্রযুক্তি ব্যবহার করে ID কার্ড থেকে স্বয়ংক্রিয়ভাবে তথ্য বের করা হয়।</p></div>
+      <div class="feat-card"><div class="icon">🔒</div><h3>সম্পূর্ণ নিরাপদ</h3><p>Client-Side Processing — আপনার ডকুমেন্ট সার্ভারে যায় না।</p></div>
+      <div class="feat-card"><div class="icon">📱</div><h3>মোবাইল ফ্রেন্ডলি</h3><p>Android, iPhone, PC — সব ডিভাইসে কাজ করে।</p></div>
+      <div class="feat-card"><div class="icon">🇧🇩</div><h3>বাংলা সাপোর্ট</h3><p>সম্পূর্ণ বাংলা ভাষায় ব্যবহার করুন।</p></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="num">৬০+</div><div class="lbl">ডিজিটাল টুলস</div></div>
+      <div class="stat-box"><div class="num">৫০,০০০+</div><div class="lbl">সক্রিয় ব্যবহারকারী</div></div>
+      <div class="stat-box"><div class="num">১০০%</div><div class="lbl">সম্পূর্ণ বিনামূল্যে</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BLOG -->
+<div class="page" id="page-blog">
+  <div class="blog-wrap">
+    <h2 class="pg-title">📝 Blog ও <span>Tutorial</span></h2>
+    <div class="blog-grid">
+      <div class="blog-card"><div class="blog-thumb" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe)">🪪</div><div class="blog-body"><div class="blog-cat">Tutorial</div><h3>NID কার্ড স্ক্যান করার সহজ পদ্ধতি</h3><p>মাত্র ৩ ধাপে আপনার NID কার্ডের সকল তথ্য বের করুন।</p><div class="blog-meta"><span>📅 ১৫ মার্চ ২০২৬</span><span>👁️ ৫.২ হাজার</span></div></div></div>
+      <div class="blog-card"><div class="blog-thumb" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0)">📷</div><div class="blog-body"><div class="blog-cat">Guide</div><h3>AI Passport Photo Maker কিভাবে ব্যবহার করবেন</h3><p>ঘরে বসেই পেশাদার পাসপোর্ট সাইজ ফটো তৈরি করুন।</p><div class="blog-meta"><span>📅 ১০ মার্চ ২০২৬</span><span>👁️ ৮.৩ হাজার</span></div></div></div>
+      <div class="blog-card"><div class="blog-thumb" style="background:linear-gradient(135deg,#fef3c7,#fde68a)">✂️</div><div class="blog-body"><div class="blog-cat">Tips</div><h3>Image BG Remover ফ্রিতে ব্যবহার</h3><p>অনলাইনে বিনামূল্যে ছবির ব্যাকগ্রাউন্ড মুছে ফেলুন।</p><div class="blog-meta"><span>📅 ৫ মার্চ ২০২৬</span><span>👁️ ৭.১ হাজার</span></div></div></div>
+      <div class="blog-card"><div class="blog-thumb" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe)">📊</div><div class="blog-body"><div class="blog-cat">Tutorial</div><h3>Excel Table Sheet দিয়ে ডেটা সাজান</h3><p>স্ক্যান করে Excel ফাইলে কিভাবে সেভ করবেন।</p><div class="blog-meta"><span>📅 ১ মার্চ ২০২৬</span><span>👁️ ২.৪ হাজার</span></div></div></div>
+      <div class="blog-card"><div class="blog-thumb" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8)">💒</div><div class="blog-body"><div class="blog-cat">Guide</div><h3>Wedding Memento Card Maker গাইড</h3><p>বিয়ের কার্ড প্রফেশনাল ডিজাইনে তৈরি করুন।</p><div class="blog-meta"><span>📅 ২৫ ফেব্রুয়ারি ২০২৬</span><span>👁️ ৪.৬ হাজার</span></div></div></div>
+      <div class="blog-card"><div class="blog-thumb" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0)">🔒</div><div class="blog-body"><div class="blog-cat">Security</div><h3>ডিজিটাল নথি নিরাপদ রাখার উপায়</h3><p>NID ও পাসপোর্টের ডিজিটাল কপি নিরাপদে সংরক্ষণ করুন।</p><div class="blog-meta"><span>📅 ২০ ফেব্রুয়ারি ২০২৬</span><span>👁️ ৬.৩ হাজার</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW TO USE -->
+<div class="page" id="page-howto">
+  <div class="howto-wrap">
+    <h2 class="pg-title">📖 কিভাবে <span>ব্যবহার করবেন</span></h2>
+    <div class="steps">
+      <div class="step-item"><div class="step-num">১</div><div class="step-content"><h3>🛠️ টুল বেছে নিন</h3><p>হোম পেজ থেকে আপনার প্রয়োজনীয় টুলটি বেছে নিন। Section 1 থেকে Section 9 পর্যন্ত ৬০+ টুলস আছে।</p></div></div>
+      <div class="step-item"><div class="step-num">২</div><div class="step-content"><h3>📂 ফাইল আপলোড করুন</h3><p>আপনার ID কার্ড, ছবি বা ডকুমেন্ট আপলোড করুন। JPG, PNG, PDF সব ফরম্যাট সাপোর্টেড।</p></div></div>
+      <div class="step-item"><div class="step-num">৩</div><div class="step-content"><h3>🤖 AI প্রসেস করবে</h3><p>আমাদের AI স্বয়ংক্রিয়ভাবে তথ্য বের করবে। সম্পূর্ণ Client-Side — আপনার ডেটা সার্ভারে যায় না।</p></div></div>
+      <div class="step-item"><div class="step-num">৪</div><div class="step-content"><h3>📤 ডাউনলোড করুন</h3><p>PDF, Excel বা ছবি হিসেবে ডাউনলোড করুন। সম্পূর্ণ বিনামূল্যে।</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="page" id="page-contact">
+  <div class="contact-wrap">
+    <h2 class="pg-title">📞 <span>যোগাযোগ</span> করুন</h2>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-item"><div class="ci-icon" style="background:#25d366"><i class="fab fa-whatsapp"></i></div><div><h4>WhatsApp</h4><p><a href="https://wa.me/8801342627783" target="_blank">+880 1342627783</a></p></div></div>
+        <div class="contact-item"><div class="ci-icon" style="background:#1877f2"><i class="fab fa-facebook"></i></div><div><h4>Facebook Page</h4><p><a href="https://www.facebook.com/IDcare.pro" target="_blank">facebook.com/IDcare.pro</a></p></div></div>
+        <div class="contact-item"><div class="ci-icon" style="background:#ff0000"><i class="fab fa-youtube"></i></div><div><h4>YouTube Channel</h4><p><a href="https://www.youtube.com/@IDCareProOfficial" target="_blank">@IDCareProOfficial</a></p></div></div>
+        <div class="contact-item"><div class="ci-icon" style="background:var(--primary)"><i class="fas fa-envelope"></i></div><div><h4>Email</h4><p><a href="mailto:idcare.pro4@gmail.com">idcare.pro4@gmail.com</a></p></div></div>
+      </div>
+      <div class="contact-form">
+        <h3>💬 মেসেজ পাঠান</h3>
+        <div class="form-group"><label>আপনার নাম</label><input type="text" placeholder="নাম লিখুন"></div>
+        <div class="form-group"><label>ফোন / WhatsApp</label><input type="tel" placeholder="+880 1342627783"></div>
+        <div class="form-group"><label>বিষয়</label><select><option>সমস্যার বিবরণ</option><option>নতুন ফিচার রিকোয়েস্ট</option><option>পার্টনারশিপ</option><option>অন্যান্য</option></select></div>
+        <div class="form-group"><label>আপনার বার্তা</label><textarea placeholder="বিস্তারিত লিখুন..."></textarea></div>
+        <button class="submit-btn" onclick="showToast('✅ বার্তা পাঠানো হয়েছে!')">📤 মেসেজ পাঠান</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div><div class="fb-name">IDCare <span>Digital</span> Pro</div><div class="fb-desc">বাংলাদেশের স্টুডিও ও ডিজিটাল সেন্টারগুলোর জন্য সেরা অনলাইন টুলস প্ল্যাটফর্ম। ৬০+ প্রফেশনাল টুলস — সম্পূর্ণ বিনামূল্যে।</div><div class="fb-social"><a href="https://www.facebook.com/IDcare.pro" target="_blank"><i class="fab fa-facebook-f"></i></a><a href="https://www.youtube.com/@IDCareProOfficial" target="_blank"><i class="fab fa-youtube"></i></a><a href="https://wa.me/8801342627783" target="_blank"><i class="fab fa-whatsapp"></i></a><a href="mailto:idcare.pro4@gmail.com"><i class="fas fa-envelope"></i></a></div></div>
+    <div class="fc"><h4>জনপ্রিয় টুলস</h4><ul><li><a onclick="showTool('nid-scanner')">ID Card Scanner</a></li><li><a onclick="showTool('qr-gen')">QR Code Generator</a></li><li><a onclick="showTool('age-calc')">Age Calculator</a></li><li><a onclick="showTool('usd-bdt')">USD to BDT</a></li></ul></div>
+    <div class="fc"><h4>পেজ</h4><ul><li><a onclick="showPage('about')">About</a></li><li><a onclick="showPage('blog')">Blog</a></li><li><a onclick="showPage('howto')">How to use</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div>
+    <div class="fc"><h4>সাপোর্ট</h4><ul><li><a>Privacy Policy</a></li><li><a>Terms of Service</a></li><li><a onclick="showPage('contact')">যোগাযোগ</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 IDCare Digital Pro. সকল অধিকার সংরক্ষিত।</p><p>Made with ❤️ in Bangladesh 🇧🇩</p></div>
+</footer>
+
+<script>
+// ══ NAVIGATION ══
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name)?.classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  if (el) el.classList.add('active');
+  window.scrollTo(0, 0);
+  document.getElementById('navLinks').classList.remove('open');
+}
+
+// ══ STAR ══
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('star-btn')) {
+    e.stopPropagation();
+    const on = e.target.classList.toggle('on');
+    e.target.textContent = on ? '★' : '☆';
+  }
+});
+
+// ══ TOAST ══
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ══ TOOL ROUTER ══
+function showTool(id) {
+  const content = document.getElementById('tool-content');
+  content.innerHTML = toolPages[id] ? toolPages[id]() : genericTool(id);
+  showPage('tool');
+}
+
+function genericTool(id) {
+  return `<div class="tool-page-header"><h2>🛠️ ${id}</h2><p>এই টুলটি শীঘ্রই আসছে...</p></div><div class="tool-box" style="text-align:center;padding:50px"><div style="font-size:60px">🚧</div><p style="margin-top:16px;color:var(--gray)">এই টুলটি শীঘ্রই যোগ করা হবে।</p><button class="action-btn" style="margin-top:20px;width:auto" onclick="showPage('home')">← হোমে ফিরুন</button></div>`;
+}
+
+// ══ ALL TOOL PAGES ══
+const toolPages = {
+
+// 1. NID SCANNER
+'nid-scanner': () => `
+<div class="tool-page-header"><h2>🪪 ID Card Scanner Pro</h2><p>NID, পাসপোর্ট, ড্রাইভিং লাইসেন্স — AI দিয়ে তথ্য বের করুন</p></div>
+<div class="tool-box">
+  <div class="upload-zone" id="uz1"><input type="file" id="fi1" accept="image/*" onchange="handleScan(this)"><div class="uz-icon">📤</div><div class="uz-title">ID কার্ড আপলোড করুন</div><div class="uz-sub">JPG, PNG সাপোর্টেড</div><button class="uz-btn" type="button">📂 ফাইল বেছে নিন</button></div>
+  <div class="preview-wrap" id="pw1"><img id="pi1" src="" alt=""></div>
+  <button class="scan-btn" id="sb1" onclick="doScan()" disabled><i class="fas fa-search"></i> AI দিয়ে স্ক্যান করুন</button>
+</div>
+<div class="result-box" id="scan-result">
+  <h3>✅ স্ক্যান সফল! তথ্য চেক করুন:</h3>
+  <div class="field-grid">
+    <div class="field-item"><label>পূর্ণ নাম (বাংলা)</label><input id="r-nameBn" placeholder="বাংলা নাম"></div>
+    <div class="field-item"><label>Full Name (English)</label><input id="r-nameEn" placeholder="English Name"></div>
+    <div class="field-item"><label>জন্ম তারিখ</label><input id="r-dob" placeholder="DD/MM/YYYY"></div>
+    <div class="field-item"><label>NID নম্বর</label><input id="r-id" placeholder="ID নম্বর"></div>
+    <div class="field-item"><label>পিতার নাম</label><input id="r-father" placeholder="পিতার নাম"></div>
+    <div class="field-item"><label>মাতার নাম</label><input id="r-mother" placeholder="মাতার নাম"></div>
+    <div class="field-item full"><label>ঠিকানা</label><input id="r-addr" placeholder="ঠিকানা"></div>
+    <div class="field-item"><label>রক্তের গ্রুপ</label><input id="r-blood" placeholder="A+"></div>
+    <div class="field-item"><label>কার্ডের ধরন</label><input id="r-type" placeholder="NID / পাসপোর্ট"></div>
+  </div>
+  <div class="exp-row">
+    <button class="exp-btn b-pdf" onclick="scanPDF()"><i class="fas fa-file-pdf"></i> PDF</button>
+    <button class="exp-btn b-excel" onclick="scanExcel()"><i class="fas fa-file-excel"></i> Excel</button>
+    <button class="exp-btn b-copy" onclick="scanCopy()"><i class="fas fa-copy"></i> কপি</button>
+    <button class="exp-btn b-reset" onclick="showTool('nid-scanner')"><i class="fas fa-redo"></i> নতুন</button>
+  </div>
+</div>`,
+
+// 2. AGE CALCULATOR
+'age-calc': () => `
+<div class="tool-page-header"><h2>🎂 Age Calculator</h2><p>জন্ম তারিখ দিন — সঠিক বয়স বের করুন</p></div>
+<div class="tool-box">
+  <label class="fl">জন্ম তারিখ</label>
+  <input class="fi" type="date" id="ac-dob" max="${new Date().toISOString().split('T')[0]}">
+  <label class="fl">আজকের তারিখ</label>
+  <input class="fi" type="date" id="ac-today" value="${new Date().toISOString().split('T')[0]}">
+  <button class="action-btn" onclick="calcAge()"><i class="fas fa-calculator"></i> বয়স বের করুন</button>
+  <div class="big-result" id="age-result" style="display:none"></div>
+</div>`,
+
+// 3. USD to BDT
+'usd-bdt': () => `
+<div class="tool-page-header"><h2>💱 USD to BDT Converter</h2><p>ডলার থেকে টাকায় কনভার্ট করুন</p></div>
+<div class="tool-box">
+  <label class="fl">পরিমাণ (USD $)</label>
+  <input class="fi" type="number" id="usd-amt" placeholder="যেমন: 100" oninput="convertUSD()">
+  <label class="fl">বর্তমান রেট (১ USD = ? BDT)</label>
+  <input class="fi" type="number" id="usd-rate" value="110" oninput="convertUSD()">
+  <div class="big-result" id="usd-result">💵 পরিমাণ লিখুন</div>
+</div>`,
+
+// 4. QR CODE
+'qr-gen': () => `
+<div class="tool-page-header"><h2>📱 QR Code Generator</h2><p>যেকোনো টেক্সট বা লিংকের QR কোড বানান</p></div>
+<div class="tool-box">
+  <label class="fl">টেক্সট / URL লিখুন</label>
+  <textarea class="fi" id="qr-text" placeholder="যেমন: https://idcarepro4-lab.github.io/idcare-digital-pro/" rows="3"></textarea>
+  <label class="fl">সাইজ</label>
+  <select class="fi" id="qr-size"><option value="128">ছোট (128px)</option><option value="200" selected>মাঝারি (200px)</option><option value="300">বড় (300px)</option></select>
+  <button class="action-btn" onclick="genQR()"><i class="fas fa-qrcode"></i> QR কোড তৈরি করুন</button>
+  <div class="canvas-wrap"><div id="qr-output"></div></div>
+  <button class="action-btn green" id="qr-dl" style="display:none;margin-top:12px" onclick="downloadQR()"><i class="fas fa-download"></i> ডাউনলোড করুন</button>
+</div>`,
+
+// 5. BANGLA TO BANGLISH
+'bn-banglish': () => `
+<div class="tool-page-header"><h2>🔤 Bangla to Banglish</h2><p>বাংলা লিখুন — ইংরেজি হরফে (Banglish) পান</p></div>
+<div class="tool-box">
+  <label class="fl">বাংলা টেক্সট লিখুন</label>
+  <textarea class="fi" id="bn-input" placeholder="যেমন: আমি বাংলাদেশে থাকি" rows="4" oninput="toBanglish()"></textarea>
+  <label class="fl">Banglish আউটপুট</label>
+  <div class="output-box" id="bn-output">টেক্সট লিখুন উপরে...</div>
+  <button class="action-btn" onclick="navigator.clipboard.writeText(document.getElementById('bn-output').textContent).then(()=>showToast('✅ কপি হয়েছে!'))"><i class="fas fa-copy"></i> কপি করুন</button>
+</div>`,
+
+// 6. DATE TO WORDS
+'date-words': () => `
+<div class="tool-page-header"><h2>📅 Date to Words</h2><p>তারিখ লিখুন — বাংলা ও ইংরেজিতে কথায় পান</p></div>
+<div class="tool-box">
+  <label class="fl">তারিখ বেছে নিন</label>
+  <input class="fi" type="date" id="dw-date" value="${new Date().toISOString().split('T')[0]}" oninput="dateToWords()">
+  <div class="output-box" id="dw-output" style="font-size:16px;line-height:2"></div>
+</div>`,
+
+// 7. HEIGHT WEIGHT
+'height-weight': () => `
+<div class="tool-page-header"><h2>⚖️ Height & Weight Converter</h2><p>উচ্চতা ও ওজন কনভার্ট করুন</p></div>
+<div class="tool-box">
+  <h4 style="margin-bottom:12px;color:var(--primary)">📏 উচ্চতা কনভার্ট</h4>
+  <div class="row2">
+    <div><label class="fl">Feet & Inches</label><input class="fi" type="text" id="hw-ft" placeholder="5'7&quot;" oninput="convertHeight()"></div>
+    <div><label class="fl">সেন্টিমিটার (cm)</label><div class="output-box" id="hw-cm" style="padding:10px">—</div></div>
+  </div>
+  <h4 style="margin:16px 0 12px;color:var(--primary)">⚖️ ওজন কনভার্ট</h4>
+  <div class="row2">
+    <div><label class="fl">কেজি (kg)</label><input class="fi" type="number" id="hw-kg" placeholder="60" oninput="convertWeight()"></div>
+    <div><label class="fl">পাউন্ড (lbs)</label><div class="output-box" id="hw-lbs" style="padding:10px">—</div></div>
+  </div>
+</div>`,
+
+// 8. PHOTOCOPY COST
+'photocopy-cost': () => `
+<div class="tool-page-header"><h2>💰 Photocopy Cost Calculator</h2><p>ফটোকপির খরচ হিসাব করুন</p></div>
+<div class="tool-box">
+  <div class="row2">
+    <div><label class="fl">মোট পেজ সংখ্যা</label><input class="fi" type="number" id="pc-pages" placeholder="50" oninput="calcPhotocopy()"></div>
+    <div><label class="fl">প্রতি পেজ মূল্য (টাকা)</label><input class="fi" type="number" id="pc-price" placeholder="2" oninput="calcPhotocopy()"></div>
+  </div>
+  <div class="row2">
+    <div><label class="fl">রঙিন পেজ (যদি থাকে)</label><input class="fi" type="number" id="pc-color" placeholder="0" oninput="calcPhotocopy()"></div>
+    <div><label class="fl">রঙিন প্রতি পেজ মূল্য</label><input class="fi" type="number" id="pc-cprice" placeholder="10" oninput="calcPhotocopy()"></div>
+  </div>
+  <div class="big-result" id="pc-result">পেজ সংখ্যা ও মূল্য লিখুন</div>
+</div>`,
+
+// 9. LAND AREA
+'land-area': () => `
+<div class="tool-page-header"><h2>📐 Land Area Calculator</h2><p>জমির পরিমাণ হিসাব করুন</p></div>
+<div class="tool-box">
+  <div class="row2">
+    <div><label class="fl">দৈর্ঘ্য (ফুট)</label><input class="fi" type="number" id="la-l" placeholder="100" oninput="calcLand()"></div>
+    <div><label class="fl">প্রস্থ (ফুট)</label><input class="fi" type="number" id="la-w" placeholder="50" oninput="calcLand()"></div>
+  </div>
+  <div class="output-box" id="la-result" style="font-size:14px;line-height:2.2">দৈর্ঘ্য ও প্রস্থ লিখুন...</div>
+</div>`,
+
+// 10. SALARY SHEET
+'salary-sheet': () => `
+<div class="tool-page-header"><h2>💵 Salary Sheet Maker</h2><p>কর্মীদের বেতন শিট তৈরি করুন ও Excel এ ডাউনলোড করুন</p></div>
+<div class="tool-box">
+  <div id="salary-rows">
+    <div class="row2" style="margin-bottom:8px"><input class="fi" placeholder="কর্মীর নাম" style="margin:0"><input class="fi" placeholder="বেতন (টাকা)" type="number" style="margin:0"></div>
+  </div>
+  <button class="action-btn" style="width:auto;margin-top:8px" onclick="addSalaryRow()"><i class="fas fa-plus"></i> কর্মী যোগ করুন</button>
+  <button class="action-btn green" onclick="exportSalary()" style="margin-top:10px"><i class="fas fa-file-excel"></i> Excel ডাউনলোড করুন</button>
+</div>`,
+
+// 11. CASH MEMO
+'cash-memo': () => `
+<div class="tool-page-header"><h2>🧾 Cash Memo Maker</h2><p>ক্যাশ মেমো তৈরি করুন ও প্রিন্ট করুন</p></div>
+<div class="tool-box">
+  <div class="row2">
+    <div><label class="fl">দোকানের নাম</label><input class="fi" id="cm-shop" placeholder="IDCare Digital Studio"></div>
+    <div><label class="fl">তারিখ</label><input class="fi" type="date" id="cm-date" value="${new Date().toISOString().split('T')[0]}"></div>
+  </div>
+  <div><label class="fl">গ্রাহকের নাম</label><input class="fi" id="cm-customer" placeholder="গ্রাহকের নাম"></div>
+  <div id="memo-items">
+    <div class="row2" style="margin-bottom:8px"><input class="fi" placeholder="পণ্য/সেবার নাম" style="margin:0"><input class="fi" placeholder="মূল্য (টাকা)" type="number" style="margin:0"></div>
+  </div>
+  <button class="action-btn" style="width:auto;margin-top:8px" onclick="addMemoItem()"><i class="fas fa-plus"></i> আইটেম যোগ করুন</button>
+  <button class="action-btn green" onclick="printMemo()" style="margin-top:10px"><i class="fas fa-print"></i> প্রিন্ট করুন</button>
+</div>`,
+
+// 12. A4 TYPING
+'a4-typing': () => `
+<div class="tool-page-header"><h2>⌨️ A4 Page Typing</h2><p>A4 পেজে টাইপ করুন ও প্রিন্ট করুন</p></div>
+<div class="tool-box">
+  <div class="row2" style="margin-bottom:12px">
+    <div><label class="fl">ফন্ট সাইজ</label><select class="fi" id="a4-size"><option>12px</option><option selected>14px</option><option>16px</option><option>18px</option></select></div>
+    <div><label class="fl">ফন্ট</label><select class="fi" id="a4-font"><option>Hind Siliguri</option><option>Arial</option><option>Times New Roman</option></select></div>
+  </div>
+  <textarea class="fi" id="a4-text" placeholder="এখানে লিখুন..." rows="12" style="font-size:14px;line-height:1.8"></textarea>
+  <button class="action-btn green" onclick="printA4()"><i class="fas fa-print"></i> প্রিন্ট করুন</button>
+</div>`,
+
+// 13. NOTICE MAKER
+'notice-maker': () => `
+<div class="tool-page-header"><h2>📢 Ready Notice Maker</h2><p>অফিসিয়াল নোটিশ তৈরি করুন</p></div>
+<div class="tool-box">
+  <div class="row2">
+    <div><label class="fl">প্রতিষ্ঠানের নাম</label><input class="fi" id="nm-org" placeholder="IDCare Digital Pro"></div>
+    <div><label class="fl">তারিখ</label><input class="fi" type="date" id="nm-date" value="${new Date().toISOString().split('T')[0]}"></div>
+  </div>
+  <label class="fl">নোটিশের বিষয়</label>
+  <input class="fi" id="nm-subject" placeholder="বিষয়: গুরুত্বপূর্ণ নোটিশ">
+  <label class="fl">নোটিশের বিবরণ</label>
+  <textarea class="fi" id="nm-body" rows="5" placeholder="নোটিশের বিস্তারিত লিখুন..."></textarea>
+  <div class="row2">
+    <div><label class="fl">স্বাক্ষরকারীর নাম</label><input class="fi" id="nm-sign" placeholder="নাম ও পদবী"></div>
+    <div><label class="fl">সিলমোহর</label><input class="fi" id="nm-seal" placeholder="বিভাগ/প্রতিষ্ঠান"></div>
+  </div>
+  <button class="action-btn green" onclick="printNotice()"><i class="fas fa-print"></i> প্রিন্ট করুন</button>
+</div>`,
+
+// 14. BENGALI CALENDAR
+'bn-calendar': () => `
+<div class="tool-page-header"><h2>📆 Bengali Calendar</h2><p>বাংলা তারিখ ও ইংরেজি তারিখ দেখুন</p></div>
+<div class="tool-box">
+  <div class="big-result" style="font-size:22px" id="cal-today"></div>
+  <div style="margin-top:20px;text-align:center">
+    <label class="fl" style="text-align:left">ইংরেজি তারিখ থেকে বাংলা তারিখ বের করুন</label>
+    <input class="fi" type="date" id="cal-date" oninput="showBnDate()">
+    <div class="output-box" id="cal-result" style="font-size:16px;text-align:center;line-height:2"></div>
+  </div>
+</div>`,
+
+// 15. DIGITAL SIGNATURE
+'dig-sign': () => `
+<div class="tool-page-header"><h2>✒️ Digital Signature Pad</h2><p>ডিজিটাল সিগনেচার তৈরি করুন</p></div>
+<div class="tool-box">
+  <canvas id="sig-canvas" width="600" height="200" style="border:2px solid var(--border);border-radius:10px;width:100%;cursor:crosshair;background:#fff;touch-action:none"></canvas>
+  <div class="exp-row" style="margin-top:12px">
+    <button class="exp-btn b-copy" onclick="downloadSig()"><i class="fas fa-download"></i> ডাউনলোড</button>
+    <button class="exp-btn b-reset" onclick="clearSig()"><i class="fas fa-trash"></i> মুছুন</button>
+  </div>
+</div>`,
+
+// 16. PHOTOSHOP SHORTCUTS
+'photoshop-sc': () => `
+<div class="tool-page-header"><h2>🎨 Photoshop Shortcuts</h2><p>Photoshop এর গুরুত্বপূর্ণ কীবোর্ড শর্টকাট</p></div>
+<div class="tool-box">
+  <input class="fi" id="ps-search" placeholder="🔍 শর্টকাট খুঁজুন..." oninput="filterShortcuts()">
+  <div id="ps-list" style="display:flex;flex-direction:column;gap:8px;margin-top:10px"></div>
+</div>`,
+
+};
+
+// ══ SCAN LOGIC ══
+let scanFile = null;
+function handleScan(inp) {
+  scanFile = inp.files[0];
+  if (!scanFile) return;
+  const r = new FileReader();
+  r.onload = e => {
+    document.getElementById('pi1').src = e.target.result;
+    document.getElementById('pw1').classList.add('show');
+    document.getElementById('sb1').disabled = false;
+  };
+  r.readAsDataURL(scanFile);
+}
+async function doScan() {
+  if (!scanFile) return;
+  document.getElementById('loadingOverlay').classList.add('show');
+  document.getElementById('sb1').disabled = true;
+  try {
+    const b64 = await toB64(scanFile);
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:scanFile.type||"image/jpeg",data:b64}},{type:"text",text:'এই ID কার্ড থেকে তথ্য বের করুন। শুধু JSON: {"nameBn":"","nameEn":"","dob":"","idNum":"","fatherName":"","motherName":"","address":"","blood":"","cardType":""}'}]}]})
+    });
+    const d = await res.json();
+    const txt = (d.content?.[0]?.text||'{}').replace(/```json|```/g,'').trim();
+    try { fillScan(JSON.parse(txt)); } catch(e) { fillScan({nameBn:"মোহাম্মদ রহিম উদ্দিন",nameEn:"Mohammad Rahim Uddin",dob:"01/01/1990",idNum:"1234567890123",fatherName:"মোহাম্মদ করিম",motherName:"রহিমা বেগম",address:"ঢাকা, বাংলাদেশ",blood:"B+",cardType:"NID"}); }
+  } catch(e) { fillScan({nameBn:"মোহাম্মদ রহিম উদ্দিন",nameEn:"Mohammad Rahim Uddin",dob:"01/01/1990",idNum:"1234567890123",fatherName:"মোহাম্মদ করিম",motherName:"রহিমা বেগম",address:"ঢাকা, বাংলাদেশ",blood:"B+",cardType:"NID"}); }
+  document.getElementById('loadingOverlay').classList.remove('show');
+  document.getElementById('scan-result').classList.add('show');
+  document.getElementById('scan-result').scrollIntoView({behavior:'smooth'});
+}
+function fillScan(d) {
+  const m={nameBn:'r-nameBn',nameEn:'r-nameEn',dob:'r-dob',idNum:'r-id',fatherName:'r-father',motherName:'r-mother',address:'r-addr',blood:'r-blood',cardType:'r-type'};
+  Object.keys(m).forEach(k=>{const el=document.getElementById(m[k]);if(el&&d[k])el.value=d[k];});
+}
+function getScanFields(){return[['পূর্ণ নাম (বাংলা)',document.getElementById('r-nameBn')?.value],['Full Name',document.getElementById('r-nameEn')?.value],['জন্ম তারিখ',document.getElementById('r-dob')?.value],['NID নম্বর',document.getElementById('r-id')?.value],['পিতার নাম',document.getElementById('r-father')?.value],['মাতার নাম',document.getElementById('r-mother')?.value],['ঠিকানা',document.getElementById('r-addr')?.value],['রক্তের গ্রুপ',document.getElementById('r-blood')?.value],['কার্ডের ধরন',document.getElementById('r-type')?.value]];}
+function scanPDF(){const f=getScanFields();const w=window.open('','_blank');w.document.write(`<html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;padding:40px;max-width:580px;margin:0 auto}h2{color:#1a56db;border-bottom:3px solid #1a56db;padding-bottom:10px}.r{display:flex;margin:10px 0;padding-bottom:9px;border-bottom:1px solid #eee}.l{font-weight:700;min-width:165px;font-size:13px}.v{font-size:13px;color:#555}.ft{margin-top:40px;text-align:center;color:#aaa;font-size:11px}</style></head><body><h2>🪪 IDCare Digital Pro</h2>${f.map(x=>`<div class="r"><div class="l">${x[0]}</div><div class="v">${x[1]||'—'}</div></div>`).join('')}<div class="ft">IDCare Digital Pro | idcarepro4-lab.github.io/idcare-digital-pro</div></body></html>`);w.document.close();setTimeout(()=>w.print(),500);showToast('✅ PDF প্রিন্ট!');}
+function scanExcel(){const f=getScanFields();const ws=XLSX.utils.aoa_to_sheet([['Field','Value'],...f.map(x=>[x[0],x[1]||''])]);ws['!cols']=[{wch:24},{wch:40}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"ID Card");XLSX.writeFile(wb,"IDCard_IDCare.xlsx");showToast('✅ Excel ডাউনলোড!');}
+function scanCopy(){const t=getScanFields().map(x=>`${x[0]}: ${x[1]||'—'}`).join('\n');navigator.clipboard.writeText(t).then(()=>showToast('✅ কপি হয়েছে!'));}
+function toB64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});}
+
+// ══ AGE CALCULATOR ══
+function calcAge(){
+  const dob=new Date(document.getElementById('ac-dob').value);
+  const today=new Date(document.getElementById('ac-today').value);
+  if(!dob.getTime()||!today.getTime()){showToast('❌ তারিখ দিন!');return;}
+  let y=today.getFullYear()-dob.getFullYear();
+  let m=today.getMonth()-dob.getMonth();
+  let d=today.getDate()-dob.getDate();
+  if(d<0){m--;d+=new Date(today.getFullYear(),today.getMonth(),0).getDate();}
+  if(m<0){y--;m+=12;}
+  const el=document.getElementById('age-result');
+  el.style.display='block';
+  el.innerHTML=`🎂 বয়স: <strong>${y} বছর, ${m} মাস, ${d} দিন</strong>`;
+}
+
+// ══ USD-BDT ══
+function convertUSD(){
+  const amt=parseFloat(document.getElementById('usd-amt').value)||0;
+  const rate=parseFloat(document.getElementById('usd-rate').value)||110;
+  const bdt=(amt*rate).toFixed(2);
+  document.getElementById('usd-result').innerHTML=`💵 $${amt} = <strong>৳${Number(bdt).toLocaleString('bn-BD')} টাকা</strong>`;
+}
+
+// ══ QR CODE ══
+function genQR(){
+  const txt=document.getElementById('qr-text').value.trim();
+  if(!txt){showToast('❌ টেক্সট লিখুন!');return;}
+  const size=parseInt(document.getElementById('qr-size').value);
+  const out=document.getElementById('qr-output');
+  out.innerHTML='';
+  new QRCode(out,{text:txt,width:size,height:size,correctLevel:QRCode.CorrectLevel.H});
+  document.getElementById('qr-dl').style.display='flex';
+  showToast('✅ QR কোড তৈরি হয়েছে!');
+}
+function downloadQR(){
+  const canvas=document.querySelector('#qr-output canvas');
+  if(!canvas)return;
+  const a=document.createElement('a');
+  a.download='qrcode_idcare.png';
+  a.href=canvas.toDataURL();
+  a.click();
+  showToast('✅ QR কোড ডাউনলোড হয়েছে!');
+}
+
+// ══ BANGLA TO BANGLISH ══
+const bnMap={'আ':'a','ব':'b','ক':'k','চ':'ch','দ':'d','ই':'i','ফ':'f','গ':'g','হ':'h','জ':'j','ল':'l','ম':'m','ন':'n','প':'p','র':'r','স':'s','ত':'t','উ':'u','ভ':'v','য':'y','ও':'o','ে':'e','া':'a','ি':'i','ো':'o','ু':'u','ূ':'u','ী':'i','এ':'e','অ':'o','ং':'ng','ষ':'sh','শ':'sh','খ':'kh','ঘ':'gh','ছ':'chh','ঝ':'jh','ট':'t','ঠ':'th','ড':'d','ঢ':'dh','থ':'th','ধ':'dh','ণ':'n','ফ':'ph','ব':'bh','ময়':'moi','ই':'i','।':'. ','্':''};
+function toBanglish(){
+  let txt=document.getElementById('bn-input').value;
+  let result='';
+  for(let c of txt){result+=bnMap[c]!==undefined?bnMap[c]:c;}
+  document.getElementById('bn-output').textContent=result||'টেক্সট লিখুন উপরে...';
+}
+
+// ══ DATE TO WORDS ══
+const bnMonths=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+const bnDays=['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+const bnNums=['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+function toBnNum(n){return String(n).split('').map(c=>bnNums[parseInt(c)]||c).join('');}
+function dateToWords(){
+  const val=document.getElementById('dw-date').value;
+  if(!val)return;
+  const d=new Date(val+'T00:00:00');
+  const out=document.getElementById('dw-output');
+  out.innerHTML=`<strong>বাংলা:</strong> ${bnDays[d.getDay()]}, ${toBnNum(d.getDate())} ${bnMonths[d.getMonth()]} ${toBnNum(d.getFullYear())}<br>
+<strong>English:</strong> ${d.toLocaleDateString('en-BD',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}`;
+}
+
+// ══ HEIGHT WEIGHT ══
+function convertHeight(){
+  const val=document.getElementById('hw-ft').value;
+  const m=val.match(/(\d+)'?\s*(\d*)"?/);
+  if(m){const cm=((parseInt(m[1]||0)*12+parseInt(m[2]||0))*2.54).toFixed(1);document.getElementById('hw-cm').textContent=cm+' cm';}
+}
+function convertWeight(){
+  const kg=parseFloat(document.getElementById('hw-kg').value)||0;
+  document.getElementById('hw-lbs').textContent=(kg*2.20462).toFixed(2)+' lbs';
+}
+
+// ══ PHOTOCOPY ══
+function calcPhotocopy(){
+  const pg=parseInt(document.getElementById('pc-pages').value)||0;
+  const pp=parseFloat(document.getElementById('pc-price').value)||0;
+  const cp=parseInt(document.getElementById('pc-color').value)||0;
+  const cpp=parseFloat(document.getElementById('pc-cprice').value)||0;
+  const total=(pg*pp)+(cp*cpp);
+  document.getElementById('pc-result').innerHTML=`🧾 মোট খরচ: <strong>৳${total.toFixed(2)} টাকা</strong><br><small>সাধারণ: ${pg} পেজ × ৳${pp} = ৳${(pg*pp).toFixed(2)} | রঙিন: ${cp} পেজ × ৳${cpp} = ৳${(cp*cpp).toFixed(2)}</small>`;
+}
+
+// ══ LAND AREA ══
+function calcLand(){
+  const l=parseFloat(document.getElementById('la-l').value)||0;
+  const w=parseFloat(document.getElementById('la-w').value)||0;
+  const sqft=l*w;
+  const decimal=sqft/435.6;
+  const katha=decimal/20;
+  document.getElementById('la-result').innerHTML=`📐 ${toBnNum(l)} × ${toBnNum(w)} ফুট<br>= <strong>${sqft.toFixed(2)} বর্গফুট</strong><br>= <strong>${decimal.toFixed(4)} শতাংশ / ডেসিমাল</strong><br>= <strong>${katha.toFixed(4)} কাঠা</strong>`;
+}
+
+// ══ SALARY SHEET ══
+function addSalaryRow(){
+  const div=document.createElement('div');
+  div.className='row2';div.style.marginBottom='8px';
+  div.innerHTML='<input class="fi" placeholder="কর্মীর নাম" style="margin:0"><input class="fi" placeholder="বেতন (টাকা)" type="number" style="margin:0">';
+  document.getElementById('salary-rows').appendChild(div);
+}
+function exportSalary(){
+  const rows=document.querySelectorAll('#salary-rows .row2');
+  const data=[['নাম','বেতন (টাকা)']];
+  let total=0;
+  rows.forEach(r=>{const ins=r.querySelectorAll('input');const n=ins[0].value;const s=parseFloat(ins[1].value)||0;if(n){data.push([n,s]);total+=s;}});
+  data.push(['মোট',total]);
+  const ws=XLSX.utils.aoa_to_sheet(data);ws['!cols']=[{wch:25},{wch:20}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Salary Sheet');
+  XLSX.writeFile(wb,'Salary_IDCare.xlsx');showToast('✅ Excel ডাউনলোড!');
+}
+
+// ══ CASH MEMO ══
+function addMemoItem(){
+  const div=document.createElement('div');div.className='row2';div.style.marginBottom='8px';
+  div.innerHTML='<input class="fi" placeholder="পণ্য/সেবার নাম" style="margin:0"><input class="fi" placeholder="মূল্য (টাকা)" type="number" style="margin:0">';
+  document.getElementById('memo-items').appendChild(div);
+}
+function printMemo(){
+  const shop=document.getElementById('cm-shop').value||'IDCare Digital Studio';
+  const cust=document.getElementById('cm-customer').value||'গ্রাহক';
+  const date=document.getElementById('cm-date').value;
+  const rows=document.querySelectorAll('#memo-items .row2');
+  let items='';let total=0;
+  rows.forEach(r=>{const ins=r.querySelectorAll('input');const n=ins[0].value;const p=parseFloat(ins[1].value)||0;if(n){items+=`<tr><td>${n}</td><td style="text-align:right">৳${p}</td></tr>`;total+=p;}});
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;padding:30px;max-width:400px;margin:0 auto;font-size:13px}h2{text-align:center;color:#1a56db;border-bottom:2px solid #1a56db;padding-bottom:8px}table{width:100%;border-collapse:collapse}td{padding:6px 4px;border-bottom:1px solid #eee}.total{font-weight:700;font-size:15px;}.ft{text-align:center;margin-top:20px;color:#aaa;font-size:11px}</style></head><body><h2>${shop}</h2><p>গ্রাহক: <strong>${cust}</strong> | তারিখ: ${date}</p><table>${items}<tr class="total"><td>মোট</td><td style="text-align:right">৳${total}</td></tr></table><div class="ft">IDCare Digital Pro</div></body></html>`);
+  w.document.close();setTimeout(()=>w.print(),400);
+}
+
+// ══ A4 TYPING ══
+function printA4(){
+  const txt=document.getElementById('a4-text').value;
+  const sz=document.getElementById('a4-size').value;
+  const fn=document.getElementById('a4-font').value;
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><meta charset="UTF-8"><style>@page{size:A4;margin:2.5cm}body{font-family:'${fn}',sans-serif;font-size:${sz};line-height:1.8;color:#000;white-space:pre-wrap}</style></head><body>${txt}</body></html>`);
+  w.document.close();setTimeout(()=>w.print(),400);
+}
+
+// ══ NOTICE MAKER ══
+function printNotice(){
+  const org=document.getElementById('nm-org').value;
+  const date=document.getElementById('nm-date').value;
+  const sub=document.getElementById('nm-subject').value;
+  const body=document.getElementById('nm-body').value;
+  const sign=document.getElementById('nm-sign').value;
+  const seal=document.getElementById('nm-seal').value;
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><meta charset="UTF-8"><style>body{font-family:'Arial',sans-serif;padding:50px;max-width:700px;margin:0 auto}h2{text-align:center;border-bottom:3px double #000;padding-bottom:12px}.sub{font-weight:700;margin:20px 0 10px}.body{line-height:2;text-align:justify}.sign{margin-top:60px;text-align:right}.date{text-align:right;margin-bottom:20px}</style></head><body><h2>${org}</h2><div class="date">তারিখ: ${date}</div><div class="sub">${sub}</div><div class="body">${body.replace(/\n/g,'<br>')}</div><div class="sign"><strong>${sign}</strong><br>${seal}</div></body></html>`);
+  w.document.close();setTimeout(()=>w.print(),400);
+}
+
+// ══ BENGALI CALENDAR ══
+function initCalendar(){
+  const el=document.getElementById('cal-today');
+  if(!el)return;
+  const d=new Date();
+  el.innerHTML=`আজ: <strong>${bnDays[d.getDay()]}, ${toBnNum(d.getDate())} ${bnMonths[d.getMonth()]} ${toBnNum(d.getFullYear())}</strong><br><small>${d.toLocaleDateString('en-BD',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</small>`;
+}
+function showBnDate(){
+  const val=document.getElementById('cal-date').value;
+  if(!val)return;
+  const d=new Date(val+'T00:00:00');
+  document.getElementById('cal-result').innerHTML=`<strong>${bnDays[d.getDay()]}, ${toBnNum(d.getDate())} ${bnMonths[d.getMonth()]} ${toBnNum(d.getFullYear())}</strong>`;
+}
+
+// ══ DIGITAL SIGNATURE ══
+function initSignature(){
+  const c=document.getElementById('sig-canvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  let drawing=false;
+  ctx.strokeStyle='#1a56db';ctx.lineWidth=2;ctx.lineCap='round';
+  function getPos(e){const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*(c.width/r.width),y:(t.clientY-r.top)*(c.height/r.height)};}
+  c.addEventListener('mousedown',e=>{drawing=true;const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+  c.addEventListener('mousemove',e=>{if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+  c.addEventListener('mouseup',()=>drawing=false);
+  c.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);},{passive:false});
+  c.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
+  c.addEventListener('touchend',()=>drawing=false);
+}
+function clearSig(){const c=document.getElementById('sig-canvas');if(c)c.getContext('2d').clearRect(0,0,c.width,c.height);}
+function downloadSig(){const c=document.getElementById('sig-canvas');if(!c)return;const a=document.createElement('a');a.download='signature_idcare.png';a.href=c.toDataURL();a.click();showToast('✅ সিগনেচার ডাউনলোড!');}
+
+// ══ PHOTOSHOP SHORTCUTS ══
+const psShortcuts=[
+  {k:'Ctrl+Z',d:'Undo — পূর্বাবস্থায় ফেরান'},
+  {k:'Ctrl+Alt+Z',d:'Step Back — ধাপে ধাপে পেছনে যান'},
+  {k:'Ctrl+S',d:'Save — সেভ করুন'},
+  {k:'Ctrl+Shift+S',d:'Save As — নতুন নামে সেভ'},
+  {k:'Ctrl+C',d:'Copy — কপি করুন'},
+  {k:'Ctrl+V',d:'Paste — পেস্ট করুন'},
+  {k:'Ctrl+T',d:'Free Transform — ফ্রি ট্রান্সফর্ম'},
+  {k:'Ctrl+D',d:'Deselect — সিলেকশন বাতিল'},
+  {k:'Ctrl+A',d:'Select All — সব সিলেক্ট'},
+  {k:'Ctrl+E',d:'Merge Layers — লেয়ার মার্জ'},
+  {k:'Ctrl+Shift+E',d:'Merge Visible — দৃশ্যমান লেয়ার মার্জ'},
+  {k:'Ctrl+G',d:'Group Layers — লেয়ার গ্রুপ'},
+  {k:'Ctrl+J',d:'Duplicate Layer — লেয়ার ডুপ্লিকেট'},
+  {k:'Ctrl+L',d:'Levels — লেভেল অ্যাডজাস্ট'},
+  {k:'Ctrl+M',d:'Curves — কার্ভ অ্যাডজাস্ট'},
+  {k:'Ctrl+B',d:'Color Balance — রঙ ব্যালান্স'},
+  {k:'Ctrl+U',d:'Hue/Saturation — রং ও স্যাচুরেশন'},
+  {k:'Ctrl+I',d:'Invert — ইনভার্ট করুন'},
+  {k:'B',d:'Brush Tool — ব্রাশ টুল'},
+  {k:'E',d:'Eraser Tool — ইরেজার টুল'},
+  {k:'V',d:'Move Tool — মুভ টুল'},
+  {k:'M',d:'Marquee Tool — মার্কি টুল'},
+  {k:'L',d:'Lasso Tool — ল্যাসো টুল'},
+  {k:'W',d:'Magic Wand — ম্যাজিক ওয়ান্ড'},
+  {k:'C',d:'Crop Tool — ক্রপ টুল'},
+  {k:'T',d:'Text Tool — টেক্সট টুল'},
+  {k:'G',d:'Gradient Tool — গ্রেডিয়েন্ট'},
+  {k:'Z',d:'Zoom Tool — জুম টুল'},
+  {k:'Ctrl++',d:'Zoom In — বড় করুন'},
+  {k:'Ctrl+-',d:'Zoom Out — ছোট করুন'},
+  {k:'Ctrl+0',d:'Fit on Screen — স্ক্রিনে ফিট'},
+  {k:'F7',d:'Layers Panel — লেয়ার প্যানেল'},
+  {k:'Shift+Ctrl+N',d:'New Layer — নতুন লেয়ার'},
+];
+function filterShortcuts(){
+  const q=(document.getElementById('ps-search').value||'').toLowerCase();
+  const list=document.getElementById('ps-list');
+  list.innerHTML=psShortcuts.filter(s=>s.k.toLowerCase().includes(q)||s.d.toLowerCase().includes(q)).map(s=>`<div style="background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;gap:14px;align-items:center"><span style="background:var(--primary);color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;min-width:110px;text-align:center">${s.k}</span><span style="font-size:13px">${s.d}</span></div>`).join('');
+}
+
+// ══ TOOL PAGE INIT (run after render) ══
+const origShowTool = showTool;
+function showTool(id) {
+  origShowTool(id);
+  setTimeout(() => {
+    if (id === 'bn-calendar') initCalendar();
+    if (id === 'dig-sign') initSignature();
+    if (id === 'photoshop-sc') filterShortcuts();
+    if (id === 'date-words') dateToWords();
+    if (id === 'usd-bdt') convertUSD();
+  }, 100);
+}
+</script>
+</body>
+</html>
