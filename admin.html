@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDCare Digital Pro — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --primary: #1a56db;
+  --sidebar: #0f172a;
+  --sidebar2: #1e293b;
+  --accent: #f59e0b;
+  --green: #22c55e;
+  --red: #ef4444;
+  --purple: #8b5cf6;
+  --dark: #111827;
+  --gray: #6b7280;
+  --border: #e5e7eb;
+  --white: #fff;
+  --light: #f8fafc;
+  --radius: 12px;
+  --shadow: 0 2px 14px rgba(0,0,0,0.08);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Hind Siliguri',sans-serif; background:var(--light); color:var(--dark); overflow-x:hidden; }
+
+/* ── LOGIN SCREEN ── */
+.login-screen {
+  position:fixed; inset:0; background:linear-gradient(135deg,#0f172a,#1e3a8a,#1a56db);
+  display:flex; align-items:center; justify-content:center; z-index:9999;
+}
+.login-box {
+  background:#fff; border-radius:20px; padding:40px 36px;
+  width:100%; max-width:400px; box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  text-align:center;
+}
+.login-logo { width:60px; height:60px; background:linear-gradient(135deg,#1a56db,#3b82f6); border-radius:15px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:26px; margin:0 auto 16px; }
+.login-box h2 { font-size:22px; font-weight:800; color:var(--dark); margin-bottom:4px; }
+.login-box p { font-size:13px; color:var(--gray); margin-bottom:28px; }
+.login-field { margin-bottom:16px; text-align:left; }
+.login-field label { font-size:13px; font-weight:600; display:block; margin-bottom:6px; color:var(--dark); }
+.login-field input {
+  width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:10px;
+  font-family:inherit; font-size:14px; transition:border-color .2s;
+}
+.login-field input:focus { outline:none; border-color:var(--primary); }
+.login-btn {
+  width:100%; background:linear-gradient(135deg,var(--primary),#3b82f6);
+  color:#fff; padding:13px; border-radius:10px; font-size:16px; font-weight:700;
+  border:none; cursor:pointer; font-family:inherit; transition:all .2s; margin-top:6px;
+}
+.login-btn:hover { transform:translateY(-2px); box-shadow:0 5px 18px rgba(26,86,219,.35); }
+.login-err { color:var(--red); font-size:13px; margin-top:10px; display:none; }
+.login-hint { font-size:12px; color:#aaa; margin-top:16px; }
+
+/* ── LAYOUT ── */
+.app { display:none; min-height:100vh; }
+.app.show { display:flex; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width:240px; min-width:240px; background:var(--sidebar); min-height:100vh;
+  display:flex; flex-direction:column; position:sticky; top:0; height:100vh; overflow-y:auto;
+}
+.sb-logo { padding:22px 20px 16px; border-bottom:1px solid rgba(255,255,255,.06); }
+.sb-logo-inner { display:flex; align-items:center; gap:10px; }
+.sb-logo-icon { width:38px; height:38px; background:linear-gradient(135deg,var(--primary),#3b82f6); border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; }
+.sb-logo-text { font-size:14px; font-weight:700; color:#fff; line-height:1.3; }
+.sb-logo-sub { font-size:10px; color:rgba(255,255,255,.4); }
+
+.sb-menu { padding:14px 12px; flex:1; }
+.sb-section { font-size:10px; font-weight:700; color:rgba(255,255,255,.3); letter-spacing:1.5px; padding:12px 8px 6px; text-transform:uppercase; }
+.sb-item {
+  display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:9px;
+  color:rgba(255,255,255,.65); font-size:13.5px; font-weight:500; cursor:pointer;
+  transition:all .2s; margin-bottom:2px; text-decoration:none;
+}
+.sb-item:hover { background:rgba(255,255,255,.06); color:#fff; }
+.sb-item.active { background:var(--primary); color:#fff; }
+.sb-item i { width:18px; text-align:center; font-size:14px; }
+.sb-badge { margin-left:auto; background:var(--accent); color:#fff; font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; }
+.sb-badge.red { background:var(--red); }
+.sb-badge.green { background:var(--green); }
+
+.sb-bottom { padding:14px 12px; border-top:1px solid rgba(255,255,255,.06); }
+.sb-user { display:flex; align-items:center; gap:10px; }
+.sb-avatar { width:34px; height:34px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; font-weight:700; }
+.sb-user-name { font-size:13px; font-weight:600; color:#fff; }
+.sb-user-role { font-size:11px; color:rgba(255,255,255,.4); }
+.sb-logout { margin-left:auto; color:rgba(255,255,255,.4); cursor:pointer; font-size:16px; transition:color .2s; }
+.sb-logout:hover { color:var(--red); }
+
+/* ── MAIN ── */
+.main { flex:1; overflow-y:auto; }
+
+/* ── TOP BAR ── */
+.topbar {
+  background:#fff; padding:14px 28px; display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100;
+}
+.topbar-title { font-size:18px; font-weight:700; color:var(--dark); }
+.topbar-right { display:flex; align-items:center; gap:14px; }
+.tb-btn { padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:none; font-family:inherit; display:flex; align-items:center; gap:6px; transition:all .2s; }
+.tb-primary { background:var(--primary); color:#fff; }
+.tb-primary:hover { background:var(--primary-dark,#1e40af); }
+.tb-ghost { background:var(--light); color:var(--dark); border:1px solid var(--border); }
+.tb-ghost:hover { background:#e5e7eb; }
+
+/* ── PANELS ── */
+.panel { display:none; padding:26px 28px; }
+.panel.active { display:block; }
+
+/* ── STATS CARDS ── */
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:26px; }
+.stat-card { background:#fff; border-radius:var(--radius); padding:20px 22px; box-shadow:var(--shadow); display:flex; align-items:center; gap:16px; }
+.stat-icon { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.stat-icon.blue { background:#dbeafe; }
+.stat-icon.green { background:#dcfce7; }
+.stat-icon.yellow { background:#fef3c7; }
+.stat-icon.purple { background:#ede9fe; }
+.stat-val { font-size:26px; font-weight:800; color:var(--dark); line-height:1; }
+.stat-lbl { font-size:12px; color:var(--gray); margin-top:3px; }
+.stat-chg { font-size:11px; margin-top:4px; font-weight:600; }
+.stat-chg.up { color:var(--green); }
+.stat-chg.dn { color:var(--red); }
+
+/* ── CARDS ── */
+.card { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:20px; }
+.card-head { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.card-head h3 { font-size:15px; font-weight:700; color:var(--dark); display:flex; align-items:center; gap:8px; }
+.card-body { padding:20px; }
+
+/* ── TABLE ── */
+.data-table { width:100%; border-collapse:collapse; }
+.data-table th { font-size:12px; font-weight:700; color:var(--gray); text-transform:uppercase; letter-spacing:.5px; padding:10px 14px; text-align:left; border-bottom:2px solid var(--border); background:#f8fafc; }
+.data-table td { padding:12px 14px; font-size:13.5px; border-bottom:1px solid #f1f5f9; vertical-align:middle; }
+.data-table tr:last-child td { border-bottom:none; }
+.data-table tr:hover td { background:#f8fafc; }
+.badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+.badge-green { background:#dcfce7; color:#166534; }
+.badge-blue { background:#dbeafe; color:#1e40af; }
+.badge-red { background:#fee2e2; color:#991b1b; }
+.badge-yellow { background:#fef3c7; color:#92400e; }
+.badge-gray { background:#f3f4f6; color:#374151; }
+
+/* ── GRID 2 ── */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+
+/* ── FORM ── */
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.form-group { margin-bottom:14px; }
+.form-group label { font-size:13px; font-weight:600; color:var(--dark); display:block; margin-bottom:5px; }
+.form-group input, .form-group select, .form-group textarea {
+  width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:8px;
+  font-family:inherit; font-size:14px; color:var(--dark); background:#fff; transition:border-color .2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline:none; border-color:var(--primary); }
+.form-group textarea { resize:vertical; min-height:90px; }
+.save-btn { background:linear-gradient(135deg,var(--primary),#3b82f6); color:#fff; padding:11px 24px; border-radius:9px; font-size:14px; font-weight:700; border:none; cursor:pointer; font-family:inherit; transition:all .2s; }
+.save-btn:hover { transform:translateY(-1px); box-shadow:0 4px 14px rgba(26,86,219,.3); }
+.del-btn { background:#fee2e2; color:var(--red); padding:7px 14px; border-radius:7px; font-size:12px; font-weight:700; border:none; cursor:pointer; font-family:inherit; }
+.edit-btn { background:#dbeafe; color:var(--primary); padding:7px 14px; border-radius:7px; font-size:12px; font-weight:700; border:none; cursor:pointer; font-family:inherit; }
+
+/* ── TOOLS MANAGER ── */
+.tool-mgr-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
+.tool-mgr-card { background:#f8fafc; border:1.5px solid var(--border); border-radius:10px; padding:14px; display:flex; align-items:center; gap:10px; transition:all .2s; }
+.tool-mgr-card:hover { border-color:var(--primary); background:#eff6ff; }
+.tm-icon { font-size:22px; }
+.tm-name { font-size:12.5px; font-weight:600; flex:1; }
+.toggle { position:relative; width:36px; height:20px; flex-shrink:0; }
+.toggle input { opacity:0; width:0; height:0; }
+.toggle-slider { position:absolute; cursor:pointer; inset:0; background:#d1d5db; border-radius:20px; transition:.3s; }
+.toggle-slider::before { content:""; position:absolute; width:14px; height:14px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.3s; }
+.toggle input:checked + .toggle-slider { background:var(--green); }
+.toggle input:checked + .toggle-slider::before { transform:translateX(16px); }
+
+/* ── NOTICE EDITOR ── */
+.notice-list { display:flex; flex-direction:column; gap:10px; }
+.notice-item { background:#fffbeb; border:1.5px solid #fde68a; border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:12px; }
+.notice-item .ni-text { flex:1; font-size:13.5px; font-weight:500; }
+.ni-status { font-size:11px; font-weight:700; padding:2px 9px; border-radius:10px; background:#fef3c7; color:#92400e; }
+.ni-status.live { background:#dcfce7; color:#166534; }
+
+/* ── SOCIAL MANAGER ── */
+.social-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.social-card { background:#f8fafc; border:1.5px solid var(--border); border-radius:12px; padding:18px; }
+.social-card .sc-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.sc-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:17px; }
+.sc-name { font-size:14px; font-weight:700; }
+.sc-status { font-size:11px; color:var(--green); font-weight:600; }
+
+/* ── CHART BARS ── */
+.mini-bars { display:flex; align-items:flex-end; gap:6px; height:70px; }
+.bar-item { flex:1; border-radius:4px 4px 0 0; min-width:8px; transition:all .3s; cursor:pointer; position:relative; }
+.bar-item:hover { opacity:.8; }
+.bar-lbl { text-align:center; font-size:9px; color:var(--gray); margin-top:4px; }
+
+/* ── ACTIVITY ── */
+.activity-list { display:flex; flex-direction:column; gap:12px; }
+.act-item { display:flex; gap:12px; align-items:flex-start; }
+.act-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+.act-dot.blue { background:var(--primary); }
+.act-dot.green { background:var(--green); }
+.act-dot.yellow { background:var(--accent); }
+.act-dot.red { background:var(--red); }
+.act-text { font-size:13px; color:var(--dark); flex:1; line-height:1.5; }
+.act-time { font-size:11px; color:var(--gray); white-space:nowrap; }
+
+/* ── TOAST ── */
+.toast { position:fixed; bottom:24px; right:18px; background:var(--dark); color:#fff; padding:10px 16px; border-radius:10px; font-size:13px; z-index:9999; transform:translateY(80px); opacity:0; transition:all .3s; display:flex; align-items:center; gap:8px; }
+.toast.show { transform:translateY(0); opacity:1; }
+
+/* ── MOBILE ── */
+@media(max-width:900px) {
+  .sidebar { display:none; }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+  .grid2, .form-row, .social-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════ LOGIN ════ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo"><i class="fas fa-shield-alt"></i></div>
+    <h2>Admin Login</h2>
+    <p>IDCare Digital Pro — Admin Panel</p>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="admin" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> লগইন করুন</button>
+    <div class="login-err" id="loginErr">❌ Username বা Password ভুল!</div>
+    <div class="login-hint">Default: admin / idcare2026</div>
+  </div>
+</div>
+
+<!-- ════ APP ════ -->
+<div class="app" id="appLayout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-inner">
+        <div class="sb-logo-icon"><i class="fas fa-id-card"></i></div>
+        <div>
+          <div class="sb-logo-text">IDCare Digital Pro</div>
+          <div class="sb-logo-sub">Admin Panel v1.0</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-menu">
+      <div class="sb-section">Main</div>
+      <div class="sb-item active" onclick="switchPanel('dashboard',this)"><i class="fas fa-th-large"></i> Dashboard</div>
+      <div class="sb-item" onclick="switchPanel('tools',this)"><i class="fas fa-tools"></i> টুলস ম্যানেজার <span class="sb-badge">68</span></div>
+      <div class="sb-item" onclick="switchPanel('notices',this)"><i class="fas fa-bell"></i> নোটিশ / মার্কি <span class="sb-badge red">3</span></div>
+
+      <div class="sb-section">Content</div>
+      <div class="sb-item" onclick="switchPanel('social',this)"><i class="fas fa-share-alt"></i> সোশ্যাল লিংক</div>
+      <div class="sb-item" onclick="switchPanel('blog',this)"><i class="fas fa-blog"></i> Blog পোস্ট</div>
+      <div class="sb-item" onclick="switchPanel('contact',this)"><i class="fas fa-envelope"></i> Contact Messages <span class="sb-badge green">2</span></div>
+
+      <div class="sb-section">Settings</div>
+      <div class="sb-item" onclick="switchPanel('settings',this)"><i class="fas fa-cog"></i> সাইট সেটিংস</div>
+      <div class="sb-item" onclick="switchPanel('password',this)"><i class="fas fa-lock"></i> পাসওয়ার্ড পরিবর্তন</div>
+
+      <div style="margin-top:16px">
+        <a class="sb-item" href="index.html" target="_blank"><i class="fas fa-external-link-alt"></i> সাইট দেখুন</a>
+      </div>
+    </div>
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar">A</div>
+        <div><div class="sb-user-name">Admin</div><div class="sb-user-role">Super Admin</div></div>
+        <i class="fas fa-sign-out-alt sb-logout" onclick="doLogout()" title="লগআউট"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">📊 Dashboard</div>
+      <div class="topbar-right">
+        <button class="tb-btn tb-ghost" onclick="window.open('index.html','_blank')"><i class="fas fa-eye"></i> সাইট দেখুন</button>
+        <button class="tb-btn tb-primary" onclick="showToast('✅ সব পরিবর্তন সেভ হয়েছে!')"><i class="fas fa-save"></i> সেভ করুন</button>
+      </div>
+    </div>
+
+    <!-- ── DASHBOARD ── -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-users" style="color:#1a56db"></i></div>
+          <div><div class="stat-val">1,284</div><div class="stat-lbl">আজকের ভিজিটর</div><div class="stat-chg up">↑ 12% গতকালের চেয়ে</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-tools" style="color:#16a34a"></i></div>
+          <div><div class="stat-val">68</div><div class="stat-lbl">মোট টুলস</div><div class="stat-chg up">↑ 4 নতুন এই মাসে</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon yellow"><i class="fas fa-envelope" style="color:#d97706"></i></div>
+          <div><div class="stat-val">2</div><div class="stat-lbl">নতুন মেসেজ</div><div class="stat-chg dn">↓ আজ আসেনি</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="fas fa-eye" style="color:#7c3aed"></i></div>
+          <div><div class="stat-val">47.2K</div><div class="stat-lbl">মোট পেজভিউ</div><div class="stat-chg up">↑ 8% এই সপ্তাহে</div></div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-chart-bar" style="color:var(--primary)"></i> সাপ্তাহিক ভিজিটর</h3></div>
+          <div class="card-body">
+            <div class="mini-bars" id="chartBars"></div>
+            <div style="display:flex;gap:6px;margin-top:4px" id="chartLabels"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><i class="fas fa-history" style="color:var(--accent)"></i> সাম্প্রতিক কার্যক্রম</h3></div>
+          <div class="card-body">
+            <div class="activity-list">
+              <div class="act-item"><div class="act-dot blue"></div><div class="act-text">নতুন ভিজিটর ID Card Scanner ব্যবহার করেছেন</div><div class="act-time">২ মিনিট আগে</div></div>
+              <div class="act-item"><div class="act-dot green"></div><div class="act-text">Contact Form: নতুন মেসেজ এসেছে</div><div class="act-time">১৫ মিনিট আগে</div></div>
+              <div class="act-item"><div class="act-dot yellow"></div><div class="act-text">AI Passport Photo Maker সবচেয়ে বেশি ব্যবহৃত</div><div class="act-time">১ ঘন্টা আগে</div></div>
+              <div class="act-item"><div class="act-dot red"></div><div class="act-text">Signature BG Remover ট্রেন্ডিং</div><div class="act-time">৩ ঘন্টা আগে</div></div>
+              <div class="act-item"><div class="act-dot blue"></div><div class="act-text">নতুন ব্লগ পোস্ট পাবলিশ হয়েছে</div><div class="act-time">৫ ঘন্টা আগে</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3><i class="fas fa-fire" style="color:var(--red)"></i> সবচেয়ে জনপ্রিয় টুলস</h3></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>#</th><th>টুলের নাম</th><th>ব্যবহার আজ</th><th>মোট ব্যবহার</th><th>স্ট্যাটাস</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>🪪 ID Card Scanner</td><td>342</td><td>12,840</td><td><span class="badge badge-green">Active</span></td></tr>
+              <tr><td>2</td><td>🤖 AI Passport Photo Maker</td><td>289</td><td>9,420</td><td><span class="badge badge-green">Active</span></td></tr>
+              <tr><td>3</td><td>🖊️ Signature BG Remover</td><td>201</td><td>7,301</td><td><span class="badge badge-green">Active</span></td></tr>
+              <tr><td>4</td><td>📄 Professional CV Maker</td><td>178</td><td>6,820</td><td><span class="badge badge-green">Active</span></td></tr>
+              <tr><td>5</td><td>✂️ Image BG Remover</td><td>156</td><td>5,940</td><td><span class="badge badge-green">Active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TOOLS MANAGER ── -->
+    <div class="panel" id="panel-tools">
+      <div class="card">
+        <div class="card-head">
+          <h3><i class="fas fa-tools" style="color:var(--primary)"></i> টুলস ম্যানেজার (৬৮ টি টুল)</h3>
+          <button class="save-btn" onclick="showToast('✅ টুলস স্ট্যাটাস সেভ হয়েছে!')">💾 সেভ করুন</button>
+        </div>
+        <div class="card-body">
+          <div style="margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="tb-btn tb-primary" onclick="toggleAll(true)">✅ সব চালু</button>
+            <button class="tb-btn tb-ghost" onclick="toggleAll(false)">🚫 সব বন্ধ</button>
+          </div>
+          <div class="tool-mgr-grid" id="toolMgrGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NOTICES ── -->
+    <div class="panel" id="panel-notices">
+      <div class="card">
+        <div class="card-head"><h3><i class="fas fa-bell" style="color:var(--accent)"></i> মার্কি / নোটিশ ম্যানেজার</h3></div>
+        <div class="card-body">
+          <div class="notice-list" id="noticeList">
+            <div class="notice-item">
+              <i class="fas fa-grip-vertical" style="color:#d1d5db;cursor:grab"></i>
+              <div class="ni-text">ফ্যামিলি কার্ড আবেদন ফরম ২০২৬ - Family Card Form 2026</div>
+              <span class="ni-status live">Live</span>
+              <button class="edit-btn" onclick="editNotice(this)"><i class="fas fa-edit"></i></button>
+              <button class="del-btn"><i class="fas fa-trash"></i></button>
+            </div>
+            <div class="notice-item">
+              <i class="fas fa-grip-vertical" style="color:#d1d5db;cursor:grab"></i>
+              <div class="ni-text">AI Passport Photo Maker এখন আরও উন্নত!</div>
+              <span class="ni-status live">Live</span>
+              <button class="edit-btn" onclick="editNotice(this)"><i class="fas fa-edit"></i></button>
+              <button class="del-btn"><i class="fas fa-trash"></i></button>
+            </div>
+            <div class="notice-item">
+              <i class="fas fa-grip-vertical" style="color:#d1d5db;cursor:grab"></i>
+              <div class="ni-text">Professional CV Builder - বিনামূল্যে</div>
+              <span class="ni-status">Draft</span>
+              <button class="edit-btn" onclick="editNotice(this)"><i class="fas fa-edit"></i></button>
+              <button class="del-btn"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>
+          <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border)">
+            <h4 style="font-size:14px;font-weight:700;margin-bottom:12px">➕ নতুন নোটিশ যোগ করুন</h4>
+            <div class="form-group"><label>নোটিশ টেক্সট</label><input type="text" id="newNoticeText" placeholder="নতুন নোটিশ লিখুন..."></div>
+            <button class="save-btn" onclick="addNotice()">➕ যোগ করুন</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SOCIAL LINKS ── -->
+    <div class="panel" id="panel-social">
+      <div class="card">
+        <div class="card-head"><h3><i class="fas fa-share-alt" style="color:var(--primary)"></i> সোশ্যাল মিডিয়া লিংক</h3></div>
+        <div class="card-body">
+          <div class="social-grid">
+            <div class="social-card">
+              <div class="sc-header"><div class="sc-icon" style="background:#25d366"><i class="fab fa-whatsapp"></i></div><div><div class="sc-name">WhatsApp</div><div class="sc-status">● Connected</div></div></div>
+              <div class="form-group"><label>নম্বর</label><input type="text" value="+880 1342627783"></div>
+              <div class="form-group"><label>WhatsApp Link</label><input type="text" value="https://wa.me/8801342627783"></div>
+            </div>
+            <div class="social-card">
+              <div class="sc-header"><div class="sc-icon" style="background:#1877f2"><i class="fab fa-facebook"></i></div><div><div class="sc-name">Facebook</div><div class="sc-status">● Connected</div></div></div>
+              <div class="form-group"><label>Page URL</label><input type="text" value="https://www.facebook.com/IDcare.pro"></div>
+            </div>
+            <div class="social-card">
+              <div class="sc-header"><div class="sc-icon" style="background:#ff0000"><i class="fab fa-youtube"></i></div><div><div class="sc-name">YouTube</div><div class="sc-status">● Connected</div></div></div>
+              <div class="form-group"><label>Channel URL</label><input type="text" value="https://www.youtube.com/@IDCareProOfficial"></div>
+            </div>
+            <div class="social-card">
+              <div class="sc-header"><div class="sc-icon" style="background:var(--primary)"><i class="fas fa-envelope"></i></div><div><div class="sc-name">Email</div><div class="sc-status">● Connected</div></div></div>
+              <div class="form-group"><label>Email Address</label><input type="text" value="idcare.pro4@gmail.com"></div>
+            </div>
+          </div>
+          <div style="margin-top:16px">
+            <button class="save-btn" onclick="showToast('✅ সোশ্যাল লিংক সেভ হয়েছে!')">💾 পরিবর্তন সেভ করুন</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BLOG ── -->
+    <div class="panel" id="panel-blog">
+      <div class="card">
+        <div class="card-head">
+          <h3><i class="fas fa-blog" style="color:var(--purple)"></i> Blog পোস্ট ম্যানেজার</h3>
+          <button class="save-btn" onclick="showToast('✅ নতুন পোস্ট পাবলিশ হয়েছে!')">➕ নতুন পোস্ট</button>
+        </div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>#</th><th>শিরোনাম</th><th>ক্যাটেগরি</th><th>তারিখ</th><th>ভিউ</th><th>স্ট্যাটাস</th><th>অ্যাকশন</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>NID কার্ড স্ক্যান করার সহজ পদ্ধতি</td><td><span class="badge badge-blue">Tutorial</span></td><td>১৫ মার্চ ২০২৬</td><td>5,200</td><td><span class="badge badge-green">Published</span></td><td><button class="edit-btn">✏️ এডিট</button></td></tr>
+              <tr><td>2</td><td>AI Passport Photo Maker কিভাবে ব্যবহার করবেন</td><td><span class="badge badge-blue">Guide</span></td><td>১০ মার্চ ২০২৬</td><td>8,300</td><td><span class="badge badge-green">Published</span></td><td><button class="edit-btn">✏️ এডিট</button></td></tr>
+              <tr><td>3</td><td>Image BG Remover ফ্রিতে ব্যবহার</td><td><span class="badge badge-yellow">Tips</span></td><td>৫ মার্চ ২০২৬</td><td>7,100</td><td><span class="badge badge-green">Published</span></td><td><button class="edit-btn">✏️ এডিট</button></td></tr>
+              <tr><td>4</td><td>Excel Table Sheet দিয়ে ডেটা সাজান</td><td><span class="badge badge-blue">Tutorial</span></td><td>১ মার্চ ২০২৬</td><td>2,400</td><td><span class="badge badge-green">Published</span></td><td><button class="edit-btn">✏️ এডিট</button></td></tr>
+              <tr><td>5</td><td>ডিজিটাল নথি নিরাপদ রাখার উপায়</td><td><span class="badge badge-gray">Security</span></td><td>২০ ফেব্রুয়ারি</td><td>6,300</td><td><span class="badge badge-green">Published</span></td><td><button class="edit-btn">✏️ এডিট</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CONTACT MESSAGES ── -->
+    <div class="panel" id="panel-contact">
+      <div class="card">
+        <div class="card-head"><h3><i class="fas fa-envelope" style="color:var(--green)"></i> Contact Form মেসেজ</h3></div>
+        <div class="card-body" style="overflow-x:auto">
+          <table class="data-table">
+            <thead><tr><th>#</th><th>নাম</th><th>ফোন</th><th>বিষয়</th><th>বার্তা</th><th>সময়</th><th>স্ট্যাটাস</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>রহিম উদ্দিন</td><td>01712345678</td><td>সমস্যার বিবরণ</td><td>ID Scanner কাজ করছে না...</td><td>আজ ১০:২৩</td><td><span class="badge badge-yellow">Pending</span></td></tr>
+              <tr><td>2</td><td>করিম মিয়া</td><td>01987654321</td><td>নতুন ফিচার রিকোয়েস্ট</td><td>বাংলা ফন্ট কনভার্টার...</td><td>গতকাল ৩:৪৫</td><td><span class="badge badge-green">Replied</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS ── -->
+    <div class="panel" id="panel-settings">
+      <div class="card">
+        <div class="card-head"><h3><i class="fas fa-cog" style="color:var(--gray)"></i> সাইট সেটিংস</h3></div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group"><label>সাইটের নাম</label><input type="text" value="IDCare Digital Pro"></div>
+            <div class="form-group"><label>ট্যাগলাইন</label><input type="text" value="Free Online Tool"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>সাইটের URL</label><input type="text" placeholder="https://username.github.io/idcare-digital-pro"></div>
+            <div class="form-group"><label>ডিফল্ট ভাষা</label><select><option>বাংলা (Bengali)</option><option>English</option></select></div>
+          </div>
+          <div class="form-group"><label>নোটিশ বার টেক্সট</label><input type="text" value="ওয়েবসাইটে যে কোন আপডেট পেতে আমাদের চ্যানেলে যোগ দিন 👉"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Footer কপিরাইট টেক্সট</label><input type="text" value="© 2026 IDCare Digital Pro. সকল অধিকার সংরক্ষিত।"></div>
+            <div class="form-group"><label>Google Analytics ID (optional)</label><input type="text" placeholder="G-XXXXXXXXXX"></div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:6px;flex-wrap:wrap">
+            <div class="form-group" style="margin:0;display:flex;align-items:center;gap:10px">
+              <label style="margin:0;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px">
+                <input type="checkbox" checked style="width:16px;height:16px"> Maintenance Mode বন্ধ
+              </label>
+            </div>
+          </div>
+          <div style="margin-top:18px">
+            <button class="save-btn" onclick="showToast('✅ সেটিংস সেভ হয়েছে!')">💾 সেটিংস সেভ করুন</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PASSWORD ── -->
+    <div class="panel" id="panel-password">
+      <div class="card" style="max-width:450px">
+        <div class="card-head"><h3><i class="fas fa-lock" style="color:var(--primary)"></i> পাসওয়ার্ড পরিবর্তন</h3></div>
+        <div class="card-body">
+          <div class="form-group"><label>বর্তমান পাসওয়ার্ড</label><input type="password" id="curPass" placeholder="••••••••"></div>
+          <div class="form-group"><label>নতুন পাসওয়ার্ড</label><input type="password" id="newPass" placeholder="নতুন পাসওয়ার্ড"></div>
+          <div class="form-group"><label>নতুন পাসওয়ার্ড (আবার)</label><input type="password" id="confPass" placeholder="আবার লিখুন"></div>
+          <button class="save-btn" onclick="changePass()">🔒 পাসওয়ার্ড পরিবর্তন করুন</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main -->
+</div><!-- end app -->
+
+<div class="toast" id="toast"><i class="fas fa-check-circle" style="color:#4ade80"></i><span id="toastMsg"></span></div>
+
+<script>
+// ── AUTH ──
+let adminPass = 'idcare2026';
+
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if (u === 'admin' && p === adminPass) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appLayout').classList.add('show');
+    initChart(); initTools();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('loginPass').value = '';
+  }
+}
+
+function doLogout() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('appLayout').classList.remove('show');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginErr').style.display = 'none';
+}
+
+function changePass() {
+  const cur = document.getElementById('curPass').value;
+  const np = document.getElementById('newPass').value;
+  const cp = document.getElementById('confPass').value;
+  if (cur !== adminPass) { showToast('❌ বর্তমান পাসওয়ার্ড ভুল!'); return; }
+  if (np.length < 6) { showToast('❌ নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে!'); return; }
+  if (np !== cp) { showToast('❌ পাসওয়ার্ড মিলছে না!'); return; }
+  adminPass = np;
+  document.getElementById('curPass').value = '';
+  document.getElementById('newPass').value = '';
+  document.getElementById('confPass').value = '';
+  showToast('✅ পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে!');
+}
+
+// ── NAVIGATION ──
+function switchPanel(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const titles = { dashboard:'📊 Dashboard', tools:'🛠️ টুলস ম্যানেজার', notices:'🔔 নোটিশ / মার্কি', social:'🔗 সোশ্যাল লিংক', blog:'📝 Blog পোস্ট', contact:'📧 Contact Messages', settings:'⚙️ সাইট সেটিংস', password:'🔒 পাসওয়ার্ড পরিবর্তন' };
+  document.getElementById('topbarTitle').textContent = titles[name] || name;
+}
+
+// ── CHART ──
+function initChart() {
+  const data = [420,680,540,820,960,1100,1284];
+  const days = ['সোম','মঙ্গ','বুধ','বৃহ','শুক্র','শনি','আজ'];
+  const max = Math.max(...data);
+  const bars = document.getElementById('chartBars');
+  const lbls = document.getElementById('chartLabels');
+  bars.innerHTML = ''; lbls.innerHTML = '';
+  data.forEach((v,i) => {
+    const h = Math.round((v/max)*65);
+    const b = document.createElement('div');
+    b.className = 'bar-item';
+    b.style.cssText = `height:${h}px;background:${i===6?'#1a56db':'#93c5fd'};`;
+    b.title = v + ' ভিজিটর';
+    bars.appendChild(b);
+    const l = document.createElement('div');
+    l.className = 'bar-lbl'; l.style.flex='1'; l.textContent = days[i];
+    lbls.appendChild(l);
+  });
+}
+
+// ── TOOLS LIST ──
+const allTools = [
+  'ID Card Crop to PDF','Passport Crop to PDF','NID Front-Back Joiner','Professional CV Maker',
+  'AI Passport Photo Maker','Passport Photo Maker','Studio Photo Print Layout','Joint Photo Maker',
+  'Bangla Sign Maker','Signature BG Remover','Image BG Remover','Advance Image Crop',
+  'Image Converter','PDF to Image','Image to PDF','Image to Text',
+  'Wedding Memento Card Maker','USD to BDT Converter','Age Calculator','Date to Words (BN-EN)',
+  'Bangla to Banglish','Visiting Card Maker','QR Code Generator','English to Bengali Phonetic',
+  'QR & Barcode Scanner','A4 Page Typing','Image Enhancer','Stamp or Document Writer',
+  'Excel Table Sheet','AI Editing Prompt Hub','Image Compressor & KB Limiter','Cash Memo Maker',
+  'Barcode Generator','Teletalk Photo & Sig Resizer','Photo Print Layout','Job & Cover Letter Writing',
+  'A4 Document Scan','Photo Name & Date Adder','Student ID Card Maker','Biodata Maker',
+  'EN/BN Text Translator','Height & Weight Converter','Multi-Image to PDF','Digital Signature Pad',
+  'Ready Notice Maker','Leaflet Maker','Land Area Calculator','OMR Sheet Generator',
+  'Affidavit Writer','Photocopy Cost Calculator','Exam Result Check BD','Job Circular Finder BD',
+  'Online Services Apply BD','iPhone Image Converter','Exam Question Maker','Agreement Letter Writing',
+  'PDF Merge & Split','Police GD Writing','Class Routine Maker','Property Distribution',
+  'Photoshop Shortcuts','Salary Sheet Maker','Visa Photo Cropper','Bengali Calendar',
+  'Airline Ticket Check','Online Visa Check','Date Converter (EN-BN-AR)','Travel Ticket Booking'
+];
+
+function initTools() {
+  const grid = document.getElementById('toolMgrGrid');
+  grid.innerHTML = '';
+  allTools.forEach((name, i) => {
+    const div = document.createElement('div');
+    div.className = 'tool-mgr-card';
+    div.innerHTML = `<div class="tm-icon">🛠️</div><div class="tm-name">${name}</div>
+      <label class="toggle"><input type="checkbox" checked id="tool_${i}"><span class="toggle-slider"></span></label>`;
+    grid.appendChild(div);
+  });
+}
+
+function toggleAll(val) {
+  allTools.forEach((_, i) => {
+    const el = document.getElementById('tool_' + i);
+    if (el) el.checked = val;
+  });
+  showToast(val ? '✅ সব টুলস চালু করা হয়েছে!' : '🚫 সব টুলস বন্ধ করা হয়েছে!');
+}
+
+// ── NOTICES ──
+function addNotice() {
+  const txt = document.getElementById('newNoticeText').value.trim();
+  if (!txt) { showToast('❌ নোটিশ টেক্সট লিখুন!'); return; }
+  const list = document.getElementById('noticeList');
+  const div = document.createElement('div');
+  div.className = 'notice-item';
+  div.innerHTML = `<i class="fas fa-grip-vertical" style="color:#d1d5db;cursor:grab"></i>
+    <div class="ni-text">${txt}</div>
+    <span class="ni-status live">Live</span>
+    <button class="edit-btn" onclick="editNotice(this)"><i class="fas fa-edit"></i></button>
+    <button class="del-btn" onclick="this.closest('.notice-item').remove()"><i class="fas fa-trash"></i></button>`;
+  list.appendChild(div);
+  document.getElementById('newNoticeText').value = '';
+  showToast('✅ নোটিশ যোগ হয়েছে!');
+}
+
+function editNotice(btn) {
+  const item = btn.closest('.notice-item');
+  const textEl = item.querySelector('.ni-text');
+  const newTxt = prompt('নোটিশ এডিট করুন:', textEl.textContent);
+  if (newTxt) { textEl.textContent = newTxt; showToast('✅ নোটিশ আপডেট হয়েছে!'); }
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+</script>
+</body>
+</html>
