@@ -1,114 +1,223 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDCare Digital Pro - Smart Scanner</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDCare Digital Pro - All-in-One Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <style>
-        /* আপনার সাইটের মূল থিম কালার */
-        :root {
-            --primary: #1a56db;
-            --dark: #111827;
-            --light: #f3f4f6;
-            --white: #ffffff;
-        }
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-        body { font-family: 'Hind Siliguri', sans-serif; background: var(--light); padding: 20px; }
-        .dashboard-card { background: var(--white); border-radius: 15px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 900px; margin: auto; }
-        .upload-box { border: 2px dashed #cbd5e1; border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .upload-box:hover { border-color: var(--primary); background: #f8fafc; }
-        .btn-primary { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; }
-        .result-area { margin-top: 20px; display: none; }
-        .result-area.active { display: block; }
-        textarea { width: 100%; border-radius: 10px; border: 1px solid #ddd; padding: 15px; background: #fafafa; }
-        
-        /* Loading Overlay */
-        #loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; color: white; flex-direction: column; align-items: center; justify-content: center; }
-        .spinner { width: 50px; height: 50px; border: 5px solid #fff; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-    </style>
+<style>
+:root {
+  --primary: #1a56db; --primary-dark: #1e40af; --green: #0a6640;
+  --dark: #111827; --gray: #6b7280; --light: #f3f4f6; --white: #ffffff;
+  --border: #e5e7eb; --shadow: 0 4px 20px rgba(0,0,0,0.08); --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Hind Siliguri',sans-serif; background:var(--light); color:var(--dark); }
+
+/* Navigation */
+nav { background: var(--white); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+.nav-links a { text-decoration: none; color: var(--gray); margin-left: 20px; font-weight: 500; cursor: pointer; transition: 0.3s; }
+.nav-links a:hover, .nav-links a.active { color: var(--primary); }
+
+/* Container & Pages */
+.container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+.page { display: none; animation: fadeIn 0.4s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Cards */
+.card { background: var(--white); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 20px; }
+.tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+.tool-item { background: var(--white); padding: 30px; border-radius: var(--radius); text-align: center; cursor: pointer; border: 1px solid var(--border); transition: 0.3s; }
+.tool-item:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 25px rgba(26, 86, 219, 0.1); }
+.tool-item i { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
+
+/* Components */
+.upload-zone { border: 2px dashed var(--primary); padding: 40px; border-radius: var(--radius); text-align: center; cursor: pointer; background: #f8faff; margin-bottom: 20px; }
+textarea { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-top: 15px; font-family: inherit; font-size: 14px; }
+.btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; justify-content: center; }
+.btn-primary { background: var(--primary); color: white; width: 100%; }
+.btn-green { background: var(--green); color: white; width: 100%; }
+
+/* Feedback */
+#loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; color: white; }
+.spinner { width: 50px; height: 50px; border: 5px solid #fff; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+#toast { position: fixed; bottom: 20px; right: 20px; background: var(--dark); color: white; padding: 12px 25px; border-radius: 8px; transform: translateY(100px); transition: 0.3s; z-index: 1001; }
+#toast.show { transform: translateY(0); }
+</style>
 </head>
 <body>
 
-<div id="loader">
-    <div class="spinner"></div>
-    <p class="mt-3">স্ক্যান হচ্ছে... দয়া করে অপেক্ষা করুন</p>
-</div>
-
-<div class="dashboard-card">
-    <h2 class="text-center mb-4" style="color: var(--primary);"><i class="fas fa-id-card"></i> IDCare Digital Pro Scanner</h2>
-    
-    <div class="upload-box" id="dropZone">
-        <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color: var(--primary);"></i>
-        <h4>আইডি কার্ডের ছবি এখানে দিন</h4>
-        <p class="text-muted">Drag & Drop or Click to Upload</p>
-        <input type="file" id="fileInput" hidden accept="image/*">
+<nav>
+    <div class="logo"><i class="fas fa-shield-alt"></i> IDCare Pro</div>
+    <div class="nav-links">
+        <a onclick="showPage('home')" id="nav-home" class="active">হোম</a>
+        <a onclick="showPage('scanner')" id="nav-scanner">স্ক্যানার</a>
+        <a onclick="showPage('photo')" id="nav-photo">ফটো মেকার</a>
+        <a onclick="showPage('bg')" id="nav-bg">বিজি রিমুভার</a>
     </div>
+</nav>
 
-    <div class="result-area" id="resultBox">
-        <h5 class="mt-4 mb-2">স্ক্যান করা তথ্য:</h5>
-        <textarea id="output" rows="10"></textarea>
-        
-        <div class="d-flex gap-2 mt-3">
-            <button class="btn-primary" onclick="copyText()"><i class="fas fa-copy"></i> কপি করুন</button>
-            <button class="btn-primary" style="background: #10b981;" onclick="downloadExcel()"><i class="fas fa-file-excel"></i> এক্সেল ডাউনলোড</button>
+<div id="loader"><div class="spinner"></div><p style="margin-top:15px">প্রসেসিং হচ্ছে... দয়া করে অপেক্ষা করুন</p></div>
+<div id="toast"></div>
+
+<div class="container">
+    
+    <div id="page-home" class="page active">
+        <h2 class="mb-4">সবগুলো ডিজিটাল টুলস এক জায়গায়</h2>
+        <div class="tool-grid">
+            <div class="tool-item" onclick="showPage('scanner')">
+                <i class="fas fa-id-card"></i>
+                <h3>ID Scanner</h3>
+                <p>আইডি কার্ড থেকে টেক্সট সংগ্রহ করুন।</p>
+            </div>
+            <div class="tool-item" onclick="showPage('photo')">
+                <i class="fas fa-user-tie"></i>
+                <h3>Photo Maker</h3>
+                <p>পাসপোর্ট সাইজ ছবি তৈরি করুন।</p>
+            </div>
+            <div class="tool-item" onclick="showPage('bg')">
+                <i class="fas fa-image"></i>
+                <h3>BG Remover</h3>
+                <p>ছবির ব্যাকগ্রাউন্ড রিমুভ করুন।</p>
+            </div>
         </div>
     </div>
+
+    <div id="page-scanner" class="page">
+        <div class="card">
+            <h2 class="mb-3"><i class="fas fa-id-card"></i> ID Card Scanner Pro</h2>
+            <div class="upload-zone" onclick="document.getElementById('inputScanner').click()">
+                <i class="fas fa-cloud-upload-alt fa-3x mb-2"></i>
+                <h4>ছবি আপলোড করুন</h4>
+                <input type="file" id="inputScanner" hidden accept="image/*" onchange="processScanner(this)">
+            </div>
+            <img id="prevScanner" style="max-width:100%; border-radius:10px; display:none; margin-bottom:15px;">
+            <textarea id="resScanner" rows="8" placeholder="স্ক্যান করা তথ্য এখানে দেখা যাবে..."></textarea>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:15px">
+                <button class="btn btn-primary" onclick="copyRes('resScanner')"><i class="fas fa-copy"></i> কপি করুন</button>
+                <button class="btn btn-green" onclick="downExcel('resScanner')"><i class="fas fa-file-excel"></i> এক্সেল</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-photo" class="page">
+        <div class="card">
+            <h2><i class="fas fa-user-tie"></i> Passport Photo Maker</h2>
+            <p class="text-muted mb-4">আপনার ছবি আপলোড করে পাসপোর্ট সাইজ রিসাইজ করুন।</p>
+            <div class="upload-zone" onclick="document.getElementById('inputPhoto').click()">
+                <i class="fas fa-camera fa-3x mb-2"></i>
+                <h4>আপনার ছবি দিন</h4>
+                <input type="file" id="inputPhoto" hidden accept="image/*" onchange="processPhoto(this)">
+            </div>
+            <canvas id="canvasPhoto" style="display:none; width:100%; border-radius:10px;"></canvas>
+            <button id="downPhoto" class="btn btn-primary" style="display:none; margin-top:15px" onclick="downloadCanvas()"><i class="fas fa-download"></i> ছবি ডাউনলোড করুন</button>
+        </div>
+    </div>
+
+    <div id="page-bg" class="page">
+        <div class="card text-center">
+            <h2><i class="fas fa-image"></i> Background Remover</h2>
+            <p class="text-muted">এই টুলটি ব্যবহার করে ছবির ব্যাকগ্রাউন্ড স্বচ্ছ (Transparent) করা যায়।</p>
+            <div class="upload-zone" style="margin-top:20px">
+                <i class="fas fa-magic fa-3x mb-2"></i>
+                <h4>শীঘ্রই আসছে!</h4>
+                <p>আমরা AI মডেল ইন্টিগ্রেট করছি।</p>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    const fileInput = document.getElementById('fileInput');
-    const dropZone = document.getElementById('dropZone');
-    const output = document.getElementById('output');
-    const loader = document.getElementById('loader');
-    const resultBox = document.getElementById('resultBox');
+// --- UI Control ---
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    document.getElementById('nav-' + id)?.classList.add('active');
+}
 
-    dropZone.onclick = () => fileInput.click();
+function showToast(m) {
+    const t = document.getElementById('toast');
+    t.textContent = m;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
 
-    fileInput.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) handleFile(file);
+const loader = (s) => document.getElementById('loader').style.display = s ? 'flex' : 'none';
+
+// --- ID Scanner Logic ---
+async function processScanner(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const prev = document.getElementById('prevScanner');
+    prev.src = URL.createObjectURL(file);
+    prev.style.display = 'block';
+
+    loader(true);
+    try {
+        const { data: { text } } = await Tesseract.recognize(file, 'eng+ben');
+        document.getElementById('resScanner').value = text;
+        showToast('✅ স্ক্যান সম্পন্ন হয়েছে!');
+    } catch (e) {
+        showToast('❌ ভুল হয়েছে!');
+    } finally { loader(false); }
+}
+
+// --- Photo Maker Logic (Simple Resize) ---
+function processPhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    loader(true);
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    img.onload = () => {
+        const canvas = document.getElementById('canvasPhoto');
+        const ctx = canvas.getContext('2d');
+        // Passport size ratio (4:5)
+        canvas.width = 413;
+        canvas.height = 531;
+        ctx.drawImage(img, 0, 0, 413, 531);
+        canvas.style.display = 'block';
+        document.getElementById('downPhoto').style.display = 'inline-flex';
+        loader(false);
+        showToast('✅ পাসপোর্ট সাইজ রেডি!');
     };
+}
 
-    async function handleFile(file) {
-        loader.style.display = 'flex';
-        resultBox.classList.remove('active');
+// --- Helpers ---
+function copyRes(id) {
+    const el = document.getElementById(id);
+    el.select();
+    document.execCommand('copy');
+    showToast('✅ কপি করা হয়েছে!');
+}
 
-        try {
-            // Tesseract Engine Setup (English + Bengali)
-            const { data: { text } } = await Tesseract.recognize(file, 'eng+ben', {
-                logger: m => console.log(m)
-            });
+function downExcel(id) {
+    const val = document.getElementById(id).value;
+    if(!val) return showToast('⚠️ কোন তথ্য নেই!');
+    const ws = XLSX.utils.aoa_to_sheet([["ID Information"], [val]]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Data");
+    XLSX.writeFile(wb, "IDCare_Data.xlsx");
+}
 
-            output.value = text;
-            resultBox.classList.add('active');
-            alert('✅ স্ক্যান সম্পন্ন হয়েছে!');
-        } catch (err) {
-            alert('❌ সমস্যা হয়েছে: ' + err.message);
-        } finally {
-            loader.style.display = 'none';
-        }
-    }
-
-    function copyText() {
-        output.select();
-        document.execCommand('copy');
-        alert('কপি করা হয়েছে!');
-    }
-
-    function downloadExcel() {
-        const ws = XLSX.utils.aoa_to_sheet([["ID Card Information"], [output.value]]);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "ScannedData");
-        XLSX.writeFile(wb, "ID_Data_IDCare.xlsx");
-    }
+function downloadCanvas() {
+    const link = document.createElement('a');
+    link.download = 'IDCare_Photo.png';
+    link.href = document.getElementById('canvasPhoto').toDataURL();
+    link.click();
+}
 </script>
-
 </body>
 </html>
