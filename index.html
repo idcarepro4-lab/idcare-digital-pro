@@ -1440,4 +1440,16 @@ async function doOCR(){
     const b64=await toB64(ocrF);
     const res=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCX5DrwRo94nCE5RqXhaWjmgFPP7AW0ulI",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{inline_data:{mime_type:ocrF.type||"image/jpeg",data:b64}},{text:"এই ছবিতে যা লেখা আছে তা হুবহু বের করে দাও।"}]}]})});
     const d=await res.json();document.getElementById('ot').value=d.candidates?.[0]?.content?.parts?.[0]?.text||'';//replaced
-    //
+    document.getElementById('ot').value=d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+    document.getElementById('or').classList.add('show');
+  }catch(e){
+    document.getElementById('ot').value='ছবি পড়তে সমস্যা হয়েছে।';
+    document.getElementById('or').classList.add('show');
+  }
+  document.getElementById('lo').classList.remove('show');
+}
+
+function V(id){return document.getElementById(id)?.value||'';}
+</script>
+</body>
+</html>
