@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificate of Experience Maker</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'EB Garamond',serif;background:#e8e0d4;min-height:100vh;padding:24px 12px;}
+
+/* FORM CARD */
+.form-wrap{max-width:700px;margin:0 auto 30px;}
+.form-card{background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.12);overflow:hidden;}
+.form-hd{background:#2c2416;color:#f5efe6;padding:16px 22px;display:flex;align-items:center;gap:12px;}
+.form-hd h2{font-size:16px;font-weight:700;font-family:'Playfair Display',serif;}
+.form-hd p{font-size:11px;opacity:.7;margin-top:2px;}
+.form-bd{padding:22px;}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.fg{margin-bottom:12px;}
+.fg label{font-size:12px;font-weight:600;color:#3d2e1e;display:block;margin-bottom:4px;font-family:sans-serif;}
+.req{color:#c00;}
+.fg input,.fg select{width:100%;border:1.5px solid #d5c9b8;border-radius:6px;padding:9px 11px;font-size:13.5px;font-family:'EB Garamond',serif;color:#2c1a0e;background:#fdfaf6;transition:border-color .2s;}
+.fg input:focus,.fg select:focus{outline:none;border-color:#2c2416;background:#fff;}
+.fg input::placeholder{color:#b5a898;font-size:12.5px;}
+.btn-row{display:flex;gap:10px;margin-top:6px;}
+.btn-make{flex:2;padding:12px;background:#2c2416;color:#f5efe6;border:none;border-radius:7px;font-size:14px;font-weight:700;font-family:'Playfair Display',serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;}
+.btn-make:hover{background:#3d3020;transform:translateY(-1px);}
+.btn-make:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-rst{flex:1;padding:12px;background:#f5f0e8;color:#3d2e1e;border:1.5px solid #d5c9b8;border-radius:7px;font-size:13px;font-weight:700;font-family:sans-serif;cursor:pointer;}
+.btn-rst:hover{background:#e8e0d4;}
+.st{margin-top:11px;padding:9px 13px;border-radius:7px;font-size:13px;display:none;align-items:center;gap:7px;font-family:sans-serif;}
+.st.show{display:flex;}
+.st.ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb;}
+.st.err{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;}
+
+/* CERTIFICATE PREVIEW */
+.cert-wrap{max-width:900px;margin:0 auto;display:none;}
+.cert-wrap.show{display:block;}
+.cert-prev-lbl{font-family:sans-serif;font-size:12px;font-weight:700;color:#5a4a3a;text-align:center;margin-bottom:8px;opacity:.8;}
+
+/* THE ACTUAL CERTIFICATE */
+.cert{
+  background:#f0e8d8;
+  width:100%;
+  aspect-ratio:1536/1086;
+  position:relative;
+  font-family:'EB Garamond',serif;
+  color:#2c2416;
+  overflow:hidden;
+}
+
+/* OUTER BORDER LINES */
+.cert-border-outer{position:absolute;inset:18px;border:1.5px solid #2c2416;}
+.cert-border-inner{position:absolute;inset:28px;border:0.6px solid #2c2416;}
+
+/* CORNER ORNAMENTS */
+.corner{position:absolute;width:52px;height:52px;}
+.corner svg{width:100%;height:100%;}
+.corner.tl{top:10px;left:10px;}
+.corner.tr{top:10px;right:10px;transform:scaleX(-1);}
+.corner.bl{bottom:10px;left:10px;transform:scaleY(-1);}
+.corner.br{bottom:10px;right:10px;transform:scale(-1,-1);}
+
+/* CORNER DOTS */
+.cdot{position:absolute;width:8px;height:8px;background:#2c2416;border-radius:50%;}
+.cdot.tl{top:18px;left:66px;}
+.cdot.tr{top:18px;right:66px;}
+.cdot.bl{bottom:18px;left:66px;}
+.cdot.br{bottom:18px;right:66px;}
+.cdot.ml{top:50%;left:18px;transform:translateY(-50%);}
+.cdot.mr{top:50%;right:18px;transform:translateY(-50%);}
+
+/* CONTENT */
+.cert-content{position:absolute;inset:34px;display:flex;flex-direction:column;align-items:center;padding:2% 7%;}
+
+.cert-title-main{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,5.5vw,68px);
+  font-weight:900;
+  letter-spacing:0.06em;
+  color:#2c2416;
+  line-height:1;
+  margin-top:2%;
+}
+.cert-title-sub{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(12px,2.2vw,26px);
+  font-weight:400;
+  letter-spacing:0.35em;
+  color:#2c2416;
+  margin-top:0.5%;
+}
+.cert-to-whom{
+  font-size:clamp(10px,1.8vw,22px);
+  letter-spacing:0.12em;
+  color:#2c2416;
+  margin-top:4%;
+  font-style:italic;
+}
+.cert-body-text{
+  font-size:clamp(9px,1.5vw,18px);
+  line-height:1.9;
+  color:#2c2416;
+  text-align:left;
+  margin-top:4%;
+  width:100%;
+}
+.cert-blank{
+  display:inline-block;
+  border-bottom:1.2px solid #2c2416;
+  min-width:80px;
+  padding:0 4px;
+  text-align:center;
+  font-weight:500;
+}
+.cert-blank.wide{min-width:130px;}
+.cert-blank.sm{min-width:55px;}
+
+/* SIGNATURE ROW */
+.cert-sig-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  width:100%;
+  margin-top:auto;
+  padding-top:1%;
+  padding-bottom:2%;
+}
+.cert-sig-item{text-align:center;flex:1;}
+.cert-sig-line{border-bottom:1.2px solid #2c2416;margin:0 10px 6px;}
+.cert-sig-lbl{font-size:clamp(8px,1.3vw,15px);color:#2c2416;}
+.cert-sig-val{font-size:clamp(7px,1.1vw,13px);color:#4a3820;font-style:italic;min-height:14px;margin-bottom:3px;}
+
+/* PRINT */
+@media print{
+  body{background:none;padding:0;}
+  .form-wrap,.cert-prev-lbl,.btn-row,.st{display:none!important;}
+  .cert-wrap{display:block!important;max-width:100%;}
+  .cert{width:100%;height:100vh;}
+}
+@media(max-width:560px){.r2,.r3{grid-template-columns:1fr;}.btn-row{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<!-- FORM -->
+<div class="form-wrap">
+<div class="form-card">
+  <div class="form-hd">
+    <div style="font-size:28px;">📜</div>
+    <div><h2>Certificate of Experience</h2><p>Fill in the details below to generate the certificate</p></div>
+  </div>
+  <div class="form-bd">
+
+    <div class="r2">
+      <div class="fg"><label>Mr./Ms. (Employee Name) <span class="req">*</span></label><input id="empName" placeholder="John Doe"></div>
+      <div class="fg"><label>R/o (Resident of) <span class="req">*</span></label><input id="resOf" placeholder="New York, USA"></div>
+    </div>
+    <div class="fg"><label>Company Name <span class="req">*</span></label><input id="companyName" placeholder="ABC Technologies Ltd."></div>
+    <div class="r2">
+      <div class="fg"><label>Designation <span class="req">*</span></label><input id="designation" placeholder="Senior Software Engineer"></div>
+      <div class="fg"><label>Employee Pronoun</label>
+        <select id="pronoun"><option value="they/them">They/Them</option><option value="he/him">He/Him</option><option value="she/her">She/Her</option></select></div>
+    </div>
+    <div class="r2">
+      <div class="fg"><label>Joining Date <span class="req">*</span></label><input type="date" id="joinDate"></div>
+      <div class="fg"><label>End Date <span class="req">*</span></label><input type="date" id="endDate"></div>
+    </div>
+    <div class="r3">
+      <div class="fg"><label>Nature (Signatory Name)</label><input id="nature" placeholder="Md. Rahman"></div>
+      <div class="fg"><label>Signatory Designation</label><input id="sigDesig" placeholder="CEO / Director"></div>
+      <div class="fg"><label>Date & Place</label><input id="datePlace" placeholder="01/01/2025, Dhaka"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-rst" onclick="resetAll()">🔄 Reset</button>
+      <button class="btn-make" id="makeBtn" onclick="makeCert()">✒️ Generate Certificate + PDF</button>
+    </div>
+    <div class="st" id="st"></div>
+  </div>
+</div>
+</div>
+
+<!-- CERTIFICATE PREVIEW -->
+<div class="cert-wrap" id="certWrap">
+  <div class="cert-prev-lbl">📋 Certificate Preview — Scroll down to download PDF</div>
+  <div class="cert" id="theCert">
+
+    <!-- BORDERS -->
+    <div class="cert-border-outer"></div>
+    <div class="cert-border-inner"></div>
+
+    <!-- CORNER ORNAMENTS -->
+    <div class="corner tl">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="2" x2="30" y2="58" stroke="#2c2416" stroke-width="1"/>
+        <line x1="2" y1="30" x2="58" y2="30" stroke="#2c2416" stroke-width="1"/>
+        <polygon points="30,4 34,14 30,12 26,14" fill="#2c2416"/>
+        <polygon points="56,30 46,34 48,30 46,26" fill="#2c2416"/>
+        <circle cx="30" cy="30" r="3" fill="none" stroke="#2c2416" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="corner tr">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="2" x2="30" y2="58" stroke="#2c2416" stroke-width="1"/>
+        <line x1="2" y1="30" x2="58" y2="30" stroke="#2c2416" stroke-width="1"/>
+        <polygon points="30,4 34,14 30,12 26,14" fill="#2c2416"/>
+        <polygon points="56,30 46,34 48,30 46,26" fill="#2c2416"/>
+        <circle cx="30" cy="30" r="3" fill="none" stroke="#2c2416" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="corner bl">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="2" x2="30" y2="58" stroke="#2c2416" stroke-width="1"/>
+        <line x1="2" y1="30" x2="58" y2="30" stroke="#2c2416" stroke-width="1"/>
+        <polygon points="30,4 34,14 30,12 26,14" fill="#2c2416"/>
+        <polygon points="56,30 46,34 48,30 46,26" fill="#2c2416"/>
+        <circle cx="30" cy="30" r="3" fill="none" stroke="#2c2416" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="corner br">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="2" x2="30" y2="58" stroke="#2c2416" stroke-width="1"/>
+        <line x1="2" y1="30" x2="58" y2="30" stroke="#2c2416" stroke-width="1"/>
+        <polygon points="30,4 34,14 30,12 26,14" fill="#2c2416"/>
+        <polygon points="56,30 46,34 48,30 46,26" fill="#2c2416"/>
+        <circle cx="30" cy="30" r="3" fill="none" stroke="#2c2416" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- DOTS -->
+    <div class="cdot tl"></div>
+    <div class="cdot tr"></div>
+    <div class="cdot bl"></div>
+    <div class="cdot br"></div>
+    <div class="cdot ml"></div>
+    <div class="cdot mr"></div>
+
+    <!-- CONTENT -->
+    <div class="cert-content">
+      <div class="cert-title-main">CERTIFICATE</div>
+      <div class="cert-title-sub">O F &nbsp; E X P E R I E N C E</div>
+
+      <div class="cert-to-whom">To Whom It May Concern</div>
+
+      <div class="cert-body-text" id="certBodyText">
+        This is to certify that Mr./Ms. <span class="cert-blank wide" id="c_empName">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        R/o <span class="cert-blank" id="c_resOf">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        was an employee of
+        <span class="cert-blank" id="c_company">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> (Company Name) as a
+        <span class="cert-blank wide" id="c_desig">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> (Designation)
+        from <span class="cert-blank" id="c_joinDate">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> (Joining Date)
+        to <span class="cert-blank sm" id="c_endDate">&nbsp;&nbsp;&nbsp;&nbsp;</span> (End Date).
+        During their time with
+        <span class="cert-blank" id="c_company2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> (Company)
+        <span class="cert-blank" id="c_empName2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> (Employee)
+        has shown great dedication and work ethic. We wish them all the best for their future.
+      </div>
+
+      <div class="cert-sig-row">
+        <div class="cert-sig-item">
+          <div class="cert-sig-val" id="c_nature">&nbsp;</div>
+          <div class="cert-sig-line"></div>
+          <div class="cert-sig-lbl">Nature</div>
+        </div>
+        <div class="cert-sig-item">
+          <div class="cert-sig-val" id="c_sigDesig">&nbsp;</div>
+          <div class="cert-sig-line"></div>
+          <div class="cert-sig-lbl">Designation</div>
+        </div>
+        <div class="cert-sig-item">
+          <div class="cert-sig-val">&nbsp;</div>
+          <div class="cert-sig-line"></div>
+          <div class="cert-sig-lbl">Company seal</div>
+        </div>
+        <div class="cert-sig-item">
+          <div class="cert-sig-val" id="c_datePlace">&nbsp;</div>
+          <div class="cert-sig-line"></div>
+          <div class="cert-sig-lbl">Date &amp; Place</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PDF download btn -->
+  <div style="text-align:center;margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+    <button onclick="downloadPDF()" style="background:#2c2416;color:#f5efe6;border:none;padding:12px 30px;border-radius:7px;font-size:14px;font-weight:700;font-family:'Playfair Display',serif;cursor:pointer;display:inline-flex;align-items:center;gap:8px;">
+      📥 Download PDF
+    </button>
+    <button onclick="window.print()" style="background:#f5f0e8;color:#2c2416;border:1.5px solid #2c2416;padding:12px 24px;border-radius:7px;font-size:14px;font-weight:700;font-family:'Playfair Display',serif;cursor:pointer;">
+      🖨️ Print
+    </button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+function v(id){ return (document.getElementById(id).value||'').trim(); }
+
+function fmtDate(s){
+  if(!s) return '______';
+  const d=new Date(s);
+  const mn=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return mn[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+}
+
+function makeCert(){
+  const empName = v('empName');
+  const resOf   = v('resOf');
+  const company = v('companyName');
+  const desig   = v('designation');
+  const join    = v('joinDate');
+  const end     = v('endDate');
+  if(!empName){ showSt('❌ Employee name is required!','err'); return; }
+  if(!company){ showSt('❌ Company name is required!','err'); return; }
+  if(!desig)  { showSt('❌ Designation is required!','err'); return; }
+  if(!join||!end){ showSt('❌ Both dates are required!','err'); return; }
+
+  // Fill certificate blanks
+  setText('c_empName',   empName);
+  setText('c_resOf',     resOf||'______');
+  setText('c_company',   company);
+  setText('c_desig',     desig);
+  setText('c_joinDate',  fmtDate(join));
+  setText('c_endDate',   fmtDate(end));
+  setText('c_company2',  company);
+  setText('c_empName2',  empName);
+  setText('c_nature',    v('nature')||'');
+  setText('c_sigDesig',  v('sigDesig')||'');
+  setText('c_datePlace', v('datePlace')||'');
+
+  document.getElementById('certWrap').classList.add('show');
+  document.getElementById('certWrap').scrollIntoView({behavior:'smooth'});
+  showSt('✅ Certificate generated! Click "Download PDF" below.','ok');
+}
+
+function setText(id, val){
+  const el = document.getElementById(id);
+  if(el) el.textContent = val;
+}
+
+async function downloadPDF(){
+  const cert = document.getElementById('theCert');
+  const btn = event.target;
+  btn.textContent='⏳ Generating...'; btn.disabled=true;
+  try{
+    const canvas = await html2canvas(cert, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#f0e8d8',
+      logging: false
+    });
+    const imgData = canvas.toDataURL('image/jpeg', 0.97);
+    const {jsPDF} = window.jspdf;
+    // Landscape A4
+    const pdf = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
+    const pw = pdf.internal.pageSize.getWidth();
+    const ph = pdf.internal.pageSize.getHeight();
+    pdf.addImage(imgData,'JPEG',0,0,pw,ph);
+    const name = (v('empName')||'Certificate').replace(/\s+/g,'_');
+    pdf.save('Certificate_of_Experience_'+name+'.pdf');
+    showSt('✅ PDF downloaded successfully!','ok');
+  }catch(e){
+    showSt('❌ PDF error: '+e.message,'err');
+  }
+  btn.innerHTML='📥 Download PDF'; btn.disabled=false;
+}
+
+function resetAll(){
+  document.querySelectorAll('input').forEach(i=>i.value='');
+  document.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+  document.getElementById('certWrap').classList.remove('show');
+  document.getElementById('st').classList.remove('show');
+}
+function showSt(msg,type){
+  const el=document.getElementById('st');
+  el.textContent=msg; el.className='st show '+type;
+  setTimeout(()=>el.classList.remove('show'),6000);
+}
+</script>
+</body>
+</html>
