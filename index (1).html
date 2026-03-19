@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDCare Digital Pro - Free Online Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--p:#1a56db;--pk:#1e40af;--g:#22c55e;--r:#ef4444;--a:#e63946;--d:#111827;--gr:#6b7280;--b:#f3f4f6;--w:#fff;--bd:#e5e7eb;--sh:0 2px 12px rgba(0,0,0,.08);--ra:14px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Hind Siliguri',sans-serif;background:var(--b);color:var(--d);overflow-x:hidden}
+/* NOTICE */
+.nb{background:linear-gradient(90deg,#fffbeb,#fef3c7);border-bottom:1px solid #fcd34d;padding:7px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:#92400e}
+.nb .bell{color:#dc2626;animation:sh 2s infinite}
+@keyframes sh{0%,100%{transform:rotate(0)}15%{transform:rotate(-12deg)}30%{transform:rotate(12deg)}}
+.nb-s{margin-left:auto;display:flex;gap:6px}
+.nb-b{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:5px;border:none;font-family:inherit;cursor:pointer}
+.wa{background:#25d366;color:#fff}.fb{background:#1877f2;color:#fff}.yt{background:#ff0000;color:#fff}
+/* NAV */
+nav{background:#fff;box-shadow:0 1px 8px rgba(0,0,0,.07);padding:0 36px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:1000}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.logo-i{width:42px;height:42px;background:linear-gradient(135deg,var(--p),#3b82f6);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px}
+.logo-n{font-size:17px;font-weight:700;color:var(--p)}.logo-n span{color:var(--a)}.logo-s{font-size:10px;color:var(--gr)}
+.nav-l{display:flex;gap:26px;list-style:none}
+.nav-l a{text-decoration:none;color:var(--d);font-size:14px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;transition:all .2s}
+.nav-l a:hover,.nav-l a.active{color:var(--p);border-bottom-color:var(--p)}
+.hb{display:none;flex-direction:column;gap:5px;cursor:pointer}
+.hb span{width:24px;height:2px;background:var(--d);border-radius:2px}
+/* PAGES */
+.page{display:none;animation:fi .3s ease}.page.active{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* MARQUEE */
+.mq{background:linear-gradient(90deg,#1e3a8a,#1a56db);padding:8px 0;overflow:hidden;white-space:nowrap}
+.mq-i{display:inline-block;animation:mq 28s linear infinite}
+.mq-i span{color:#fff;font-size:13px;font-weight:500;padding:0 36px}
+.mq-i span::before{content:"📢 "}
+@keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+/* HERO ANNOUNCE */
+.ha{background:#fff;max-width:860px;margin:16px auto 0;border-radius:12px;border:1.5px solid #dbeafe;padding:12px 18px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh);cursor:pointer}
+.ha-t{font-size:14px;font-weight:500;flex:1}
+.ha-b{background:#dbeafe;color:var(--p);padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap}
+/* SECTION DIVIDER */
+.sd{text-align:center;margin:22px 0 13px;position:relative}
+.sd::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:var(--bd)}
+.sd span{position:relative;background:var(--b);padding:0 14px;font-size:11px;font-weight:700;color:var(--gr);letter-spacing:2px}
+/* TOOLS GRID */
+.tw{max-width:860px;margin:0 auto;padding:0 12px}
+.tg{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.tc{background:#fff;border-radius:var(--ra);padding:17px 10px 13px;text-align:center;cursor:pointer;box-shadow:var(--sh);transition:all .2s;border:1.5px solid transparent;position:relative}
+.tc:hover{transform:translateY(-4px);border-color:var(--p);box-shadow:0 8px 24px rgba(26,86,219,.13)}
+.tc.hot{border-color:#fca5a5;background:#fff5f5}
+.tc.new-tool{border-color:#86efac;background:#f0fdf4}
+.tc.new-tool:hover{border-color:#16a34a;box-shadow:0 8px 24px rgba(22,163,74,.13)}
+.sb{position:absolute;top:8px;right:8px;color:#d1d5db;font-size:13px;cursor:pointer;background:none;border:none;padding:0;transition:color .2s}
+.sb:hover{color:#f59e0b}.sb.on{color:#f59e0b}
+.ti{font-size:30px;margin-bottom:8px}.tn{font-size:12.5px;font-weight:600;line-height:1.4}
+.new-badge{position:absolute;top:6px;left:6px;background:#16a34a;color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;letter-spacing:.5px}
+/* CLOUD */
+.cw{max-width:860px;margin:0 auto;padding:0 12px}
+.cc{background:#fff;border:1.5px solid var(--bd);border-radius:var(--ra);padding:16px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:6px;position:relative}
+.cc:hover{border-color:#22c55e;background:#f0fdf4}
+.ci{font-size:34px;color:#22c55e;margin-bottom:4px}.cn{font-size:14px;font-weight:700;color:#16a34a}
+/* TRUST */
+.ts{max-width:860px;margin:26px auto 0;padding:0 12px 10px}
+.tc2{background:#fff;border-radius:var(--ra);padding:24px 28px;margin-bottom:16px;box-shadow:var(--sh);border-left:4px solid var(--p)}
+.tc2 h3{font-size:16px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:9px}
+.tc2 p{color:var(--gr);font-size:14px;line-height:1.85;margin-bottom:8px}
+.ck{display:flex;align-items:center;gap:8px;font-size:14px;margin:5px 0}
+.ck i{color:#16a34a}
+/* TOOL PAGE */
+.tp{max-width:780px;margin:0 auto;padding:26px 12px}
+.tph{text-align:center;margin-bottom:22px}
+.tph h2{font-size:24px;font-weight:800;color:var(--p)}
+.tph p{color:var(--gr);margin-top:5px;font-size:14px}
+.tb{background:#fff;border-radius:16px;padding:24px;box-shadow:var(--sh);margin-bottom:16px}
+.bb{display:inline-flex;align-items:center;gap:7px;color:var(--p);font-weight:600;font-size:14px;cursor:pointer;margin-bottom:18px;background:#dbeafe;border:none;padding:8px 14px;border-radius:8px;font-family:inherit}
+.bb:hover{background:#bfdbfe}
+.ab{background:linear-gradient(135deg,var(--p),#3b82f6);color:#fff;padding:11px 22px;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all .3s;width:100%;margin-top:10px}
+.ab:hover{box-shadow:0 6px 22px rgba(26,86,219,.38);transform:translateY(-2px)}
+.ab.gn{background:linear-gradient(135deg,#16a34a,#22c55e)}
+.ab.rd{background:linear-gradient(135deg,#dc2626,#ef4444)}
+/* FORM */
+.fl{font-size:13px;font-weight:600;display:block;margin-bottom:5px;color:var(--d)}
+.fi{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:8px;font-family:inherit;font-size:14px;color:var(--d);background:#fff;transition:border-color .2s;margin-bottom:12px}
+.fi:focus{outline:none;border-color:var(--p)}
+textarea.fi{resize:vertical;min-height:80px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* UPLOAD */
+.uz{border:2.5px dashed #93c5fd;border-radius:12px;padding:38px 16px;text-align:center;cursor:pointer;background:#eff6ff;position:relative;transition:all .3s}
+.uz:hover{border-color:var(--p);background:#dbeafe}
+.uz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.uzi{font-size:46px;margin-bottom:10px}.uzt{font-size:16px;font-weight:700;color:var(--p);margin-bottom:4px}.uzs{font-size:13px;color:var(--gr)}
+.uzb{margin-top:10px;background:var(--p);color:#fff;padding:8px 22px;border-radius:24px;font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:inherit}
+.pw{display:none;margin-top:12px;text-align:center}.pw.show{display:block}
+.pw img{max-width:100%;max-height:240px;border-radius:10px;border:2px solid var(--bd)}
+/* RESULT */
+.rb{display:none;margin-top:16px}.rb.show{display:block}
+.ri{background:#f0fdf4;border:2px solid #86efac;border-radius:12px;padding:20px}
+.ri h3{color:#166534;font-size:15px;font-weight:700;margin-bottom:14px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.fgi label{font-size:12px;font-weight:700;color:var(--gr);display:block;margin-bottom:3px}
+.fgi input{width:100%;padding:9px 11px;border:1.5px solid var(--bd);border-radius:8px;font-family:inherit;font-size:14px;color:var(--d);background:#fff}
+.fgi.full{grid-column:1/-1}
+.er{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.eb{flex:1;min-width:100px;padding:10px 11px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s}
+.eb:hover{transform:translateY(-2px)}
+.ep{background:#ef4444;color:#fff}.ee{background:#166534;color:#fff}.ec{background:var(--p);color:#fff}.en{background:#f3f4f6;color:var(--d);border:1px solid var(--bd)}
+/* OUTPUT */
+.ob{background:#f8fafc;border:1.5px solid var(--bd);border-radius:10px;padding:14px;margin-top:12px;font-size:15px;line-height:1.8;min-height:50px;word-break:break-all}
+.br{font-size:26px;font-weight:800;color:var(--p);text-align:center;padding:14px;background:#eff6ff;border-radius:10px;margin-top:10px}
+.cvw{display:flex;justify-content:center;margin-top:14px}
+/* SCAN BTN */
+.scb{width:100%;margin-top:12px;background:linear-gradient(135deg,var(--p),#3b82f6);color:#fff;padding:12px;border-radius:10px;font-size:16px;font-weight:700;border:none;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s}
+.scb:hover{box-shadow:0 6px 22px rgba(26,86,219,.38);transform:translateY(-2px)}
+.scb:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+/* DIG SIGN */
+#sig-canvas{border:2px solid var(--bd);border-radius:10px;width:100%;cursor:crosshair;background:#fff;touch-action:none;display:block}
+/* ABOUT/BLOG/etc */
+.aw{max-width:780px;margin:0 auto;padding:32px 12px}
+.ah{text-align:center;margin-bottom:28px}
+.ah .bi{font-size:66px}
+.ah h2{font-size:26px;font-weight:800;color:var(--p);margin:12px 0 9px}
+.ah p{color:var(--gr);font-size:14px;line-height:1.9;max-width:600px;margin:0 auto}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
+.fc{background:#fff;border-radius:13px;padding:20px;box-shadow:var(--sh)}
+.fc .ic{font-size:26px;margin-bottom:8px}
+.fc h3{font-size:14px;font-weight:700;margin-bottom:5px}
+.fc p{font-size:13px;color:var(--gr);line-height:1.7}
+.sr{display:flex;gap:12px}
+.sx{flex:1;background:linear-gradient(135deg,var(--p),#3b82f6);color:#fff;border-radius:13px;padding:20px;text-align:center}
+.sx .sn{font-size:28px;font-weight:800}.sx .sl{font-size:12px;opacity:.85;margin-top:3px}
+.bw{max-width:860px;margin:0 auto;padding:26px 12px}
+.bg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;margin-top:16px}
+.bcard{background:#fff;border-radius:13px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:transform .2s}
+.bcard:hover{transform:translateY(-4px)}
+.bt{height:140px;display:flex;align-items:center;justify-content:center;font-size:50px}
+.bb2{padding:15px}.bc{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--p);letter-spacing:1px}
+.bb2 h3{font-size:14px;font-weight:700;margin:6px 0 4px;line-height:1.5}
+.bb2 p{font-size:12px;color:var(--gr);line-height:1.6}
+.bm{margin-top:10px;font-size:11px;color:#aaa;display:flex;justify-content:space-between}
+.hw{max-width:740px;margin:0 auto;padding:26px 12px}
+.st{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.si{background:#fff;border-radius:12px;padding:18px;box-shadow:var(--sh);display:flex;gap:14px;align-items:flex-start}
+.sn2{width:42px;height:42px;min-width:42px;border-radius:50%;background:linear-gradient(135deg,var(--p),#3b82f6);color:#fff;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.sc h3{font-size:14px;font-weight:700;margin-bottom:4px}.sc p{font-size:13px;color:var(--gr);line-height:1.7}
+.ctw{max-width:780px;margin:0 auto;padding:26px 12px}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px}
+.ci2{display:flex;flex-direction:column;gap:13px}
+.cm{background:#fff;border-radius:12px;padding:15px;box-shadow:var(--sh);display:flex;gap:12px;align-items:center}
+.cic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0}
+.cm h4{font-size:13px;font-weight:700;margin-bottom:2px}
+.cm p,.cm a{font-size:13px;color:var(--gr);text-decoration:none}
+.cm a{color:var(--p);font-weight:600}
+.cf{background:#fff;border-radius:13px;padding:22px;box-shadow:var(--sh)}
+.cf h3{font-size:16px;font-weight:700;color:var(--p);margin-bottom:14px}
+.fg3{margin-bottom:12px}
+.fg3 label{font-size:13px;font-weight:600;display:block;margin-bottom:4px}
+.fg3 input,.fg3 textarea,.fg3 select{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:8px;font-family:inherit;font-size:14px;color:var(--d);background:#fff}
+.fg3 textarea{resize:vertical;min-height:86px}
+.sbb{width:100%;background:linear-gradient(135deg,var(--p),#3b82f6);color:#fff;padding:11px;border-radius:9px;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:inherit}
+.pgt{text-align:center;padding:26px 16px 8px;font-size:22px;font-weight:800;color:var(--p)}
+.pgt span{color:var(--a)}
+/* LOADING */
+.lo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.lo.show{display:flex}
+.sp{width:52px;height:52px;border:5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.lt{color:#fff;font-size:16px;font-weight:600}
+/* TOAST */
+.tst{position:fixed;bottom:24px;right:14px;background:var(--d);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;max-width:280px}
+.tst.show{transform:translateY(0);opacity:1}
+/* WA FLOAT */
+.fw{position:fixed;bottom:18px;left:14px;z-index:998;background:#fff;border-radius:40px;padding:8px 12px 8px 8px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.17);cursor:pointer;text-decoration:none;transition:transform .2s}
+.fw:hover{transform:scale(1.05)}
+.wa2{width:34px;height:34px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.wt strong{display:block;color:var(--d);font-size:12px}.wt span{color:#25d366;font-size:11px}
+.sct{position:fixed;bottom:18px;right:14px;z-index:998;width:38px;height:38px;border-radius:50%;background:var(--p);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(26,86,219,.35);border:none;transition:all .2s}
+/* FOOTER */
+footer{background:#111827;color:rgba(255,255,255,.75);padding:38px 32px 18px;margin-top:44px}
+.fg4{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px;margin-bottom:30px}
+.fn{font-size:16px;font-weight:700;color:#fff;margin-bottom:8px}.fn span{color:#ef4444}
+.fd{font-size:13px;line-height:1.9;color:rgba(255,255,255,.5)}
+.fs{display:flex;gap:8px;margin-top:12px}
+.fs a{width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;transition:background .2s}
+.fs a:hover{background:var(--p)}
+.fl2 h4{font-size:13px;font-weight:700;color:#fff;margin-bottom:11px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,.08)}
+.fl2 ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.fl2 ul a{text-decoration:none;color:rgba(255,255,255,.5);font-size:13px;transition:color .2s;cursor:pointer}
+.fl2 ul a:hover{color:#ffd60a}
+.fb2{border-top:1px solid rgba(255,255,255,.08);padding-top:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.fb2 p{font-size:12px;color:rgba(255,255,255,.3)}
+/* PS SHORTCUT */
+.ps-item{background:#f8fafc;border:1px solid var(--bd);border-radius:8px;padding:10px 14px;display:flex;gap:14px;align-items:center;margin-bottom:6px}
+.ps-k{background:var(--p);color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;min-width:115px;text-align:center}
+.ps-d{font-size:13px}
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:0 12px}
+  .nav-l{display:none;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:#fff;padding:14px 16px;box-shadow:0 5px 18px rgba(0,0,0,.1)}
+  .nav-l.open{display:flex}
+  .hb{display:flex}
+  .tg{grid-template-columns:repeat(2,1fr)}
+  .fg4{grid-template-columns:1fr 1fr}
+  .fg2,.cg,.fg,.r2{grid-column:unset;grid-template-columns:1fr}
+  .sr{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- NOTICE BAR -->
+<div class="nb">
+  <i class="fas fa-bell bell"></i>
+  <span>ওয়েবসাইটে যে কোন আপডেট পেতে আমাদের চ্যানেলে যোগ দিন 👉</span>
+  <div class="nb-s">
+    <a class="nb-b wa" href="https://wa.me/8801342627783" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    <a class="nb-b fb" href="https://www.facebook.com/IDcare.pro" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+    <a class="nb-b yt" href="https://www.youtube.com/@IDCareProOfficial" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="goHome()">
+    <div class="logo-i"><i class="fas fa-id-card"></i></div>
+    <div><div class="logo-n">IDCare <span>Digital</span> Pro</div><div class="logo-s">Free Online Tool</div></div>
+  </div>
+  <ul class="nav-l" id="nl">
+    <li><a href="#" class="active" onclick="goHome();setNav(this)">Home</a></li>
+    <li><a href="#" onclick="SP('about');setNav(this)">About</a></li>
+    <li><a href="#" onclick="SP('blog');setNav(this)">Blog</a></li>
+    <li><a href="#" onclick="SP('howto');setNav(this)">How to use</a></li>
+    <li><a href="#" onclick="SP('contact');setNav(this)">Contact</a></li>
+  </ul>
+  <div class="hb" onclick="document.getElementById('nl').classList.toggle('open')"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- LOADING -->
+<div class="lo" id="lo"><div class="sp"></div><div class="lt">প্রসেস হচ্ছে...</div></div>
+<!-- TOAST -->
+<div class="tst" id="tst"><i class="fas fa-check-circle" style="color:#4ade80"></i><span id="tm"></span></div>
+<!-- WA FLOAT -->
+<a class="fw" href="https://wa.me/8801342627783" target="_blank"><div class="wa2"><i class="fab fa-whatsapp"></i></div><div class="wt"><strong>Contact Support</strong><span>ON WHATSAPP</span></div></a>
+<!-- SCROLL TOP -->
+<button class="sct" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
+
+<!-- ═══ HOME ═══ -->
+<div class="page active" id="page-home">
+  <div class="mq"><div class="mq-i"><span>ফ্যামিলি কার্ড আবেদন ফরম ২০২৬</span><span>AI Passport Photo Maker আপডেট</span><span>Professional CV Builder ফ্রি</span><span>NID Front-Back Joiner নতুন</span><span>ওয়ারিশ সনদপত্র মেকার নতুন</span><span>Birth Certificate PDF Maker নতুন</span><span>ফ্যামিলি কার্ড আবেদন ফরম ২০২৬</span><span>AI Passport Photo Maker আপডেট</span><span>Professional CV Builder ফ্রি</span><span>NID Front-Back Joiner নতুন</span></div></div>
+  <div style="max-width:860px;margin:0 auto;padding:0 12px">
+    <div class="ha" onclick="ST('nid-scanner')"><div style="font-size:24px">📋</div><div class="ha-t">ফ্যামিলি কার্ড আবেদন ফরম ২০২৬ - Family Card Form 2026</div><div class="ha-b">নিউ ২০২৬</div></div>
+  </div>
+  <div class="tw">
+    <div class="sd"><span>TOLL SECTION 1</span></div>
+    <div class="tg">
+      <div class="tc" onclick="ST('nid-scanner')"><button class="sb">☆</button><div class="ti">🪪</div><div class="tn">ID Card Crop to PDF</div></div>
+      <div class="tc" onclick="ST('passport-crop')"><button class="sb">☆</button><div class="ti">🛂</div><div class="tn">Passport Crop to PDF</div></div>
+      <div class="tc" onclick="ST('nid-joiner')"><button class="sb">☆</button><div class="ti">🔗</div><div class="tn">NID Front-Back Joiner</div></div>
+      <div class="tc" onclick="ST('cv-maker')"><button class="sb">☆</button><div class="ti">📄</div><div class="tn">Professional CV Maker</div></div>
+      <div class="tc" onclick="ST('ai-passport')"><button class="sb">☆</button><div class="ti">🤖</div><div class="tn">AI Passport Photo Maker</div></div>
+      <div class="tc" onclick="ST('passport-photo')"><button class="sb">☆</button><div class="ti">📷</div><div class="tn">Passport Photo Maker</div></div>
+      <div class="tc" onclick="ST('studio-print')"><button class="sb">☆</button><div class="ti">🖨️</div><div class="tn">Studio Photo Print Layout</div></div>
+      <div class="tc" onclick="ST('joint-photo')"><button class="sb">☆</button><div class="ti">👥</div><div class="tn">Joint Photo Maker</div></div>
+    </div>
+    <div class="sd"><span>TOLL SECTION 2</span></div>
+    <div class="tg">
+      <div class="tc" onclick="ST('sign-maker')"><button class="sb">☆</button><div class="ti">✍️</div><div class="tn">Bangla Sign Maker</div></div>
+      <div class="tc hot" onclick="ST('sig-bg')"><button class="sb">☆</button><div class="ti">🖊️</div><div class="tn" style="color:#dc2626">Signature BG Remover</div></div>
+      <div class="tc" onclick="ST('img-bg')"><button class="sb">☆</button><div class="ti">✂️</div><div class="tn">Image BG Remover</div></div>
+      <div class="tc" onclick="ST('img-crop')"><button class="sb">☆</button><div class="ti">🔲</div><div class="tn">Advance Image Crop</div></div>
+      <div class="tc" onclick="ST('img-convert')"><button class="sb">☆</button><div class="ti">🔄</div><div class="tn">Image Converter</div></div>
+      <div class="tc" onclick="ST('pdf2img')"><button class="sb">☆</button><div class="ti">📄</div><div class="tn">PDF to Image</div></div>
+      <div class="tc" onclick="ST('img2pdf')"><button class="sb">☆</button><div class="ti">🖼️</div><div class="tn">Image to PDF</div></div>
+      <div class="tc" onclick="ST('img2text')"><button class="sb">☆</button><div class="ti">📝</div><div class="tn">Image to Text</div></div>
+    </div>
+    <div class="sd"><span>TOLL SECTION 3</span></div>
+    <div class="tg">
+      <div class="tc" onclick="ST('wedding')"><button class="sb">☆</button><div class="ti">💒</div><div class="tn">Wedding Memento Card</div></div>
+      <div class="tc" onclick="ST('usd-bdt')"><button class="sb">☆</button><div class="ti">💱</div><div class="tn">USD to BDT Converter</div></div>
+      <div class="tc" onclick="ST('age-calc')"><button class="sb">☆</button><div class="ti">🎂</div><div class="tn">Age Calculator</div></div>
+      <div class="tc" onclick="ST('date-words')"><button class="sb">☆</button><div class="ti">📅</div><div class="tn">Date to Words (BN-EN)</div></div>
+      <div class="tc" onclick="ST('bn-banglish')"><button class="sb">☆</button><div class="ti">🔤</div><div class="tn">Bangla to Banglish</div></div>
+      <div class="tc" onclick="ST('visiting-card')"><button class="sb">☆</button><div class="ti">💼</div><div class="tn">Visiting Card Maker</div></div>
+      <div class="tc" onclick="ST('qr-gen')"><button class="sb">☆</button><div class="ti">📱</div><div class="tn">QR Code Generator</div></div>
+      <div class="tc" onclick="ST('bn-phonetic')"><button class="sb">☆</button><div class="ti">🔡</div><div class="tn">English to Bengali Phonetic</div></div>
+    </div>
+    <div class="sd"><span>TOLL SECTION 4</span></div>
+    <div class="tg">
+      <div class="tc" onclick="ST('barcode-gen')"><button class="sb">☆</button><div class="ti">📊</div><div class="tn">QR & Barcode Scanner</div></div>
+      <div class="tc" onclick="ST('a4-typing')"><button class="sb">☆</button><div class="ti">⌨️</div><div class="tn">A4 Page Typing</div></div>
+      <div class="tc" onclick="ST('img-enhance')"><button class="sb">☆</button><div class="ti">✨</div><div class="tn">Image Enhancer</div></div>
+      <div class="tc" onclick="ST('stamp-writer')"><button class="sb">☆</button><div class="ti">🔏</div><div class="tn">Stamp / Document Writer</div></div>
+      <div class="tc" onclick="ST('excel-table')"><button class="sb">☆</button><div class="ti">📊</div><div class="tn">Excel Table Sheet</div></div>
+      <div class="tc" onclick="ST('ai-prompt')"><button class="sb">☆</button><div class="ti">🤖</div><div class="tn">AI Editing Prompt Hub</div></div>
+      <div class="tc" onclick="ST('img-compress')"><button class="sb">☆</button><div class="ti">🗜️</div><div class="tn">Image Compressor</div></div>
+      <div class="tc" onclick="ST('cash-memo')"><button class="sb">☆</button><div class="ti">🧾</div><div class="tn">Cash Memo Maker</div></div>
+    </div>
+    <div class="sd"><span>TOLL SECTION 5</span></div>
+    <div class="tg">
+      <div class="tc" onclick="ST('barcode-gen2')"><button class="sb">☆</button><div class="ti">📶</div><div class="tn">Barcode Generator</div></div>
+      <div class="tc" onclick="ST('teletalk')"><button class="sb">☆</button><div class="ti">📸</div><div class="tn">Teletalk Photo Resizer</div></div>
+      <div class="tc" onclick="ST('photo-print')"><button class="sb">☆</button><div class="ti">🖼️</div><div class="tn">Photo Print Layout</div></div>
+      <div class="tc" onclick="ST('job-letter')"><button class="sb">☆</button><div class="ti">📋</div><div class="tn">Job & Cover Letter</div></div>
+      <div class="tc" onclick="ST('a4-scan')"><button class="sb">☆</button><div class="ti">🔍</div><div class="tn">A4 Document Scan</div></div>
+      <div class="tc" onclick="ST('photo-name')"><button class="sb">☆</button><div class="ti">🏷️</div><div class="tn">Photo Name & Date Adder</div></div>
+      <div class="tc" onclick="ST('student-id')"><button class="sb">☆</button><div class="ti">🎓</div><div class="tn">Student ID Card Maker</div></div>
+      <div class="tc" onclick="ST('biodata')"><button class="sb">☆</button><div class="ti">👤</div><div class="tn">Biodata Maker</div></div>
+    </div>
+    <div class="sd"><span>TOLL SECTION 6</span></div>
+    <div class="tg">
+      <div class="tc" onclick="ST('en-bn-trans')"><button class="sb">☆</button><div class="ti">🌐</div><div class="tn">EN/BN Translator</div></div>
+      <div class="tc" onclick="ST('height-weight')"><button class="sb">☆</button><div class="ti">⚖️</div><div class="tn">Height & Weight Converter</div></div>
+      <div class="tc" onclick="ST('multi-pdf')"><button class="sb">☆</button><div class="ti">📑</div><div class="tn">Multi-Image to PDF</div></div>
+      <div class="tc" onclick="ST('dig-sign')"><button class="sb">☆</button><div class="ti">✒️</div><div class="tn">Digital Signature Pad</div></div>
+      <div class="tc" onclick="ST('notice-maker')"><button class="sb">☆</button><div class="ti">📢</div><div class="tn">Ready Notice Maker</div></div>
+      <div class="tc" onclick="ST('leaflet')"><button class="sb">☆</button><div class="ti">🗺️</div><div class="tn">Leaflet Maker</div></div>
+      <div class="tc" onclick="ST('land-area')"><button class="sb">☆</button><div class="ti">📐</div><div class="tn">Land Area Calculator</div></div>
+      <div class="tc" onclick="ST('omr-sheet')"><button class="sb">☆</button><div class="ti">📋</div><div class="tn">OMR Sheet Generator</div></div>
+    </div>
+    <div class="sd"><span>TOLL SECTION 7</span></div>
+    <div class="tg">
+      <div class="tc" onclick="ST('affidavit')"><button class="sb">☆</button><div class="ti">⚖️</div><div class="tn">Affidavit Writer</div></div>
+      <div class="tc" onclick="ST('photocopy-cost')"><button class="sb">☆</button><div class="ti">💰</div><div class="tn">Photocopy Cost Calculator</div></div>
+      <div class="tc" onclick="ST('exam-result')"><button class="sb">☆</button><div class="ti">🎓</div><div class="tn">Exam Result Check BD</div></div>
+      <div class="tc" onclick="ST('job-circular')"><button class="sb">☆</button><div class="ti">💼</div><div class="tn">Job Circular Finder BD</div></div>
+      <div class="tc" onclick="ST('online-services')"><button class="sb">☆</button><div class="ti">🌐</div><div class="tn">Online Services Apply BD</div></div>
+      <div class="tc" onclick="ST('iphone-img')"><button class="sb">☆</button><div class="ti">📱</div><div class="tn">iPhone Image Converter</div></div>
+      <div class="tc" onclick="ST('exam-question')"><button class="sb">☆</button><div class="ti">❓</div><div class="tn">Exam Question Maker</div></div>
+      <div class="tc" onclick="ST('agreement')"><button class="sb">☆</button><div class="ti">📝</div><div class="tn">Agreement Letter Writing</div></div>
+    </div>
+    <div class="sd"><span>TOLL SECTION 8</span></div>
+    <div class="tg">
+      <div class="tc" onclick="ST('pdf-merge')"><button class="sb">☆</button><div class="ti">📎</div><div class="tn">PDF Merge & Split</div></div>
+      <div class="tc" onclick="ST('police-gd')"><button class="sb">☆</button><div class="ti">🚔</div><div class="tn">Police GD Writing</div></div>
+      <div class="tc" onclick="ST('class-routine')"><button class="sb">☆</button><div class="ti">🗓️</div><div class="tn">Class Routine Maker</div></div>
+      <div class="tc" onclick="ST('property-dist')"><button class="sb">☆</button><div class="ti">⚖️</div><div class="tn">Property Distribution</div></div>
+      <div class="tc" onclick="ST('photoshop-sc')"><button class="sb">☆</button><div class="ti">🎨</div><div class="tn">Photoshop Shortcuts</div></div>
+      <div class="tc" onclick="ST('salary-sheet')"><button class="sb">☆</button><div class="ti">💵</div><div class="tn">Salary Sheet Maker</div></div>
+      <div class="tc" onclick="ST('visa-photo')"><button class="sb">☆</button><div class="ti">✈️</div><div class="tn">Visa Photo Cropper</div></div>
+      <div class="tc" onclick="ST('bn-calendar')"><button class="sb">☆</button><div class="ti">📆</div><div class="tn">Bengali Calendar</div></div>
+    </div>
+    <div class="sd"><span>TOLL SECTION 9</span></div>
+    <div class="tg">
+      <div class="tc" onclick="ST('airline')"><button class="sb">☆</button><div class="ti">✈️</div><div class="tn">Airline Ticket Check</div></div>
+      <div class="tc" onclick="ST('visa-check')"><button class="sb">☆</button><div class="ti">🌍</div><div class="tn">Online Visa Check</div></div>
+      <div class="tc" onclick="ST('date-convert')"><button class="sb">☆</button><div class="ti">📅</div><div class="tn">Date Converter EN-BN-AR</div></div>
+      <div class="tc" onclick="ST('travel-ticket')"><button class="sb">☆</button><div class="ti">🎫</div><div class="tn">Travel Ticket Booking</div></div>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- ═══ NEW TOOL SECTION 10 — নতুন টুলস ═══ -->
+    <!-- ══════════════════════════════════════ -->
+    <div class="sd"><span>TOLL SECTION 10 — নতুন সনদপত্র টুলস</span></div>
+    <div class="tg">
+
+      <!-- ১. Birth Certificate PDF Maker -->
+      <div class="tc new-tool" onclick="window.open('birth-cert-v4.html','_blank')">
+        <span class="new-badge">NEW</span>
+        <button class="sb">☆</button>
+        <div class="ti">📜</div>
+        <div class="tn">Birth Certificate PDF Maker</div>
+      </div>
+
+      <!-- ২. BDRIS Application Form -->
+      <div class="tc new-tool" onclick="window.open('bdris-final.html','_blank')">
+        <span class="new-badge">NEW</span>
+        <button class="sb">☆</button>
+        <div class="ti">🏛️</div>
+        <div class="tn">BDRIS Application Form</div>
+      </div>
+
+      <!-- ৩. Certificate of Experience -->
+      <div class="tc new-tool" onclick="window.open('cert-experience.html','_blank')">
+        <span class="new-badge">NEW</span>
+        <button class="sb">☆</button>
+        <div class="ti">🎖️</div>
+        <div class="tn">Certificate of Experience</div>
+      </div>
+
+      <!-- ৪. ওয়ারিশ সনদপত্র মেকার -->
+      <div class="tc new-tool" onclick="window.open('warish-sanad.html','_blank')">
+        <span class="new-badge">NEW</span>
+        <button class="sb">☆</button>
+        <div class="ti">⚖️</div>
+        <div class="tn">ওয়ারিশ সনদপত্র মেকার</div>
+      </div>
+
+      <!-- ৫. তথ্য সংগ্রহ PDF মেকার -->
+      <div class="tc new-tool" onclick="window.open('pdf-maker-v2.html','_blank')">
+        <span class="new-badge">NEW</span>
+        <button class="sb">☆</button>
+        <div class="ti">🪪</div>
+        <div class="tn">তথ্য সংগ্রহ PDF মেকার</div>
+      </div>
+
+
+
+    </div>
+    <!-- ══ END NEW SECTION ══ -->
+
+  </div>
+  <div class="cw">
+    <div class="sd"><span>CLOUD SECTION</span></div>
+    <div class="cc" onclick="T('✅ Studio Cloud Database শীঘ্রই আসছে!')"><button class="sb" style="position:absolute;top:8px;right:12px">☆</button><div class="ci"><i class="fas fa-cloud-upload-alt"></i></div><div class="cn">Studio Cloud File Database</div></div>
+  </div>
+  <div class="ts">
+    <div class="tc2"><h3><i class="fas fa-shield-alt" style="color:var(--p)"></i> Trusted & Secure Digital Studio Tools</h3><p><strong>IDCare Digital Pro</strong> is built with a "Security-First" approach. We use advanced <strong>Client-Side Processing</strong>. Your sensitive documents are processed entirely within your browser's RAM.</p><div class="ck"><i class="fas fa-check-circle"></i><span><strong>No Server Uploads:</strong> Your files never leave your device.</span></div><div class="ck"><i class="fas fa-check-circle"></i><span><strong>Instant Privacy:</strong> All data is wiped automatically when you refresh.</span></div></div>
+    <div class="tc2" style="border-left-color:#7c3aed"><h3><i class="fas fa-tools" style="color:#7c3aed"></i> 65+ Professional AI-Powered Tools</h3><p>Empowering thousands of studio owners daily. From <strong>AI Passport Photo Makers</strong> to <strong>Legal Affidavit Templates</strong> — studio-quality output in seconds. 100% responsive on Android, iPhone, and PC.</p></div>
+  </div>
+</div>
+
+<!-- ═══ TOOL PAGE ═══ -->
+<div class="page" id="page-tool">
+  <div class="tp">
+    <button class="bb" onclick="goHome()"><i class="fas fa-arrow-left"></i> হোমে ফিরুন</button>
+    <div id="tc3"></div>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<div class="page" id="page-about">
+  <div class="aw"><div class="ah"><div class="bi">🏢</div><h2>IDCare Digital Pro সম্পর্কে</h2><p>আমরা বাংলাদেশের স্টুডিও, ফটোকপি ও ডিজিটাল সেন্টারগুলোকে স্মার্ট ও প্রফেশনাল করতে কাজ করছি। আমাদের ৬৫+ টুলস সম্পূর্ণ বিনামূল্যে।</p></div>
+  <div class="fg2"><div class="fc"><div class="ic">🤖</div><h3>AI পাওয়ার্ড OCR</h3><p>উন্নত AI দিয়ে ID কার্ড থেকে স্বয়ংক্রিয়ভাবে তথ্য বের করা হয়।</p></div><div class="fc"><div class="ic">🔒</div><h3>সম্পূর্ণ নিরাপদ</h3><p>Client-Side Processing — আপনার ডকুমেন্ট সার্ভারে যায় না।</p></div><div class="fc"><div class="ic">📱</div><h3>মোবাইল ফ্রেন্ডলি</h3><p>Android, iPhone, PC — সব ডিভাইসে কাজ করে।</p></div><div class="fc"><div class="ic">🇧🇩</div><h3>বাংলা সাপোর্ট</h3><p>সম্পূর্ণ বাংলা ভাষায় ব্যবহার করুন।</p></div></div>
+  <div class="sr"><div class="sx"><div class="sn">৬৫+</div><div class="sl">ডিজিটাল টুলস</div></div><div class="sx"><div class="sn">৫০,০০০+</div><div class="sl">সক্রিয় ব্যবহারকারী</div></div><div class="sx"><div class="sn">১০০%</div><div class="sl">সম্পূর্ণ বিনামূল্যে</div></div></div></div>
+</div>
+
+<!-- ═══ BLOG ═══ -->
+<div class="page" id="page-blog">
+  <div class="bw"><h2 class="pgt">📝 Blog ও <span>Tutorial</span></h2>
+  <div class="bg">
+    <div class="bcard"><div class="bt" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe)">🪪</div><div class="bb2"><div class="bc">Tutorial</div><h3>NID কার্ড স্ক্যান করার সহজ পদ্ধতি</h3><p>মাত্র ৩ ধাপে NID কার্ডের সকল তথ্য বের করুন।</p><div class="bm"><span>📅 ১৫ মার্চ ২০২৬</span><span>👁️ ৫.২ হাজার</span></div></div></div>
+    <div class="bcard"><div class="bt" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0)">📷</div><div class="bb2"><div class="bc">Guide</div><h3>AI Passport Photo Maker কিভাবে ব্যবহার করবেন</h3><p>ঘরে বসেই পেশাদার পাসপোর্ট সাইজ ফটো তৈরি করুন।</p><div class="bm"><span>📅 ১০ মার্চ ২০২৬</span><span>👁️ ৮.৩ হাজার</span></div></div></div>
+    <div class="bcard"><div class="bt" style="background:linear-gradient(135deg,#fef3c7,#fde68a)">✂️</div><div class="bb2"><div class="bc">Tips</div><h3>Image BG Remover ফ্রিতে ব্যবহার</h3><p>অনলাইনে বিনামূল্যে ছবির ব্যাকগ্রাউন্ড মুছে ফেলুন।</p><div class="bm"><span>📅 ৫ মার্চ ২০২৬</span><span>👁️ ৭.১ হাজার</span></div></div></div>
+    <div class="bcard"><div class="bt" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe)">📊</div><div class="bb2"><div class="bc">Tutorial</div><h3>Excel Sheet দিয়ে ডেটা সাজান</h3><p>স্ক্যান করে Excel ফাইলে কিভাবে সেভ করবেন।</p><div class="bm"><span>📅 ১ মার্চ ২০২৬</span><span>👁️ ২.৪ হাজার</span></div></div></div>
+    <div class="bcard"><div class="bt" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8)">💒</div><div class="bb2"><div class="bc">Guide</div><h3>Wedding Card Maker গাইড</h3><p>বিয়ের কার্ড প্রফেশনাল ডিজাইনে তৈরি করুন।</p><div class="bm"><span>📅 ২৫ ফেব্রুয়ারি ২০২৬</span><span>👁️ ৪.৬ হাজার</span></div></div></div>
+    <div class="bcard"><div class="bt" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0)">🔒</div><div class="bb2"><div class="bc">Security</div><h3>ডিজিটাল নথি নিরাপদ রাখার উপায়</h3><p>NID ও পাসপোর্টের ডিজিটাল কপি নিরাপদে রাখুন।</p><div class="bm"><span>📅 ২০ ফেব্রুয়ারি ২০২৬</span><span>👁️ ৬.৩ হাজার</span></div></div></div>
+  </div></div>
+</div>
+
+<!-- ═══ HOW TO ═══ -->
+<div class="page" id="page-howto">
+  <div class="hw"><h2 class="pgt">📖 কিভাবে <span>ব্যবহার করবেন</span></h2>
+  <div class="st">
+    <div class="si"><div class="sn2">১</div><div class="sc"><h3>🛠️ টুল বেছে নিন</h3><p>হোম পেজ থেকে প্রয়োজনীয় টুলটি বেছে নিন। Section 1 থেকে 10 পর্যন্ত ৬৫+ টুলস আছে।</p></div></div>
+    <div class="si"><div class="sn2">২</div><div class="sc"><h3>📂 ফাইল আপলোড করুন</h3><p>ID কার্ড, ছবি বা ডকুমেন্ট আপলোড করুন। JPG, PNG, PDF সব ফরম্যাট সাপোর্টেড।</p></div></div>
+    <div class="si"><div class="sn2">৩</div><div class="sc"><h3>🤖 AI প্রসেস করবে</h3><p>আমাদের AI স্বয়ংক্রিয়ভাবে তথ্য বের করবে। Client-Side — ডেটা সার্ভারে যায় না।</p></div></div>
+    <div class="si"><div class="sn2">৪</div><div class="sc"><h3>📤 ডাউনলোড করুন</h3><p>PDF, Excel বা ছবি হিসেবে ডাউনলোড করুন। সম্পূর্ণ বিনামূল্যে।</p></div></div>
+  </div></div>
+</div>
+
+<!-- ═══ CONTACT ═══ -->
+<div class="page" id="page-contact">
+  <div class="ctw"><h2 class="pgt">📞 <span>যোগাযোগ</span> করুন</h2>
+  <div class="cg">
+    <div class="ci2">
+      <div class="cm"><div class="cic" style="background:#25d366"><i class="fab fa-whatsapp"></i></div><div><h4>WhatsApp</h4><p><a href="https://wa.me/8801342627783" target="_blank">+880 1342627783</a></p></div></div>
+      <div class="cm"><div class="cic" style="background:#1877f2"><i class="fab fa-facebook"></i></div><div><h4>Facebook</h4><p><a href="https://www.facebook.com/IDcare.pro" target="_blank">facebook.com/IDcare.pro</a></p></div></div>
+      <div class="cm"><div class="cic" style="background:#ff0000"><i class="fab fa-youtube"></i></div><div><h4>YouTube</h4><p><a href="https://www.youtube.com/@IDCareProOfficial" target="_blank">@IDCareProOfficial</a></p></div></div>
+      <div class="cm"><div class="cic" style="background:var(--p)"><i class="fas fa-envelope"></i></div><div><h4>Email</h4><p><a href="mailto:idcare.pro4@gmail.com">idcare.pro4@gmail.com</a></p></div></div>
+    </div>
+    <div class="cf"><h3>💬 মেসেজ পাঠান</h3>
+      <div class="fg3"><label>আপনার নাম</label><input type="text" placeholder="নাম লিখুন"></div>
+      <div class="fg3"><label>ফোন</label><input type="tel" placeholder="+880 1342627783"></div>
+      <div class="fg3"><label>বিষয়</label><select><option>সমস্যার বিবরণ</option><option>ফিচার রিকোয়েস্ট</option><option>পার্টনারশিপ</option><option>অন্যান্য</option></select></div>
+      <div class="fg3"><label>বার্তা</label><textarea placeholder="বিস্তারিত লিখুন..."></textarea></div>
+      <button class="sbb" onclick="T('✅ বার্তা পাঠানো হয়েছে!')">📤 মেসেজ পাঠান</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fg4">
+    <div><div class="fn">IDCare <span>Digital</span> Pro</div><div class="fd">বাংলাদেশের স্টুডিও ও ডিজিটাল সেন্টারগুলোর জন্য সেরা অনলাইন টুলস। ৬৫+ টুলস — সম্পূর্ণ বিনামূল্যে।</div><div class="fs"><a href="https://www.facebook.com/IDcare.pro" target="_blank"><i class="fab fa-facebook-f"></i></a><a href="https://www.youtube.com/@IDCareProOfficial" target="_blank"><i class="fab fa-youtube"></i></a><a href="https://wa.me/8801342627783" target="_blank"><i class="fab fa-whatsapp"></i></a><a href="mailto:idcare.pro4@gmail.com"><i class="fas fa-envelope"></i></a></div></div>
+    <div class="fl2"><h4>জনপ্রিয় টুলস</h4><ul><li><a onclick="ST('nid-scanner')">ID Card Scanner</a></li><li><a onclick="window.open('birth-cert-v4.html','_blank')">Birth Certificate PDF</a></li><li><a onclick="window.open('warish-sanad.html','_blank')">ওয়ারিশ সনদ</a></li><li><a onclick="ST('qr-gen')">QR Code Generator</a></li><li><a onclick="ST('age-calc')">Age Calculator</a></li></ul></div>
+    <div class="fl2"><h4>পেজ</h4><ul><li><a onclick="SP('about')">About</a></li><li><a onclick="SP('blog')">Blog</a></li><li><a onclick="SP('howto')">How to use</a></li><li><a onclick="SP('contact')">Contact</a></li></ul></div>
+    <div class="fl2"><h4>নতুন টুলস</h4><ul><li><a onclick="window.open('birth-cert-v4.html','_blank')">Birth Certificate PDF</a></li><li><a onclick="window.open('bdris-final.html','_blank')">BDRIS Form</a></li><li><a onclick="window.open('cert-experience.html','_blank')">Experience Certificate</a></li><li><a onclick="window.open('warish-sanad.html','_blank')">ওয়ারিশ সনদপত্র</a></li></ul></div>
+  </div>
+  <div class="fb2"><p>© 2026 IDCare Digital Pro. সকল অধিকার সংরক্ষিত।</p><p>Made with ❤️ in Bangladesh 🇧🇩</p></div>
+</footer>
+
+<script>
+// ═══ NAVIGATION ═══
+function SP(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+id)?.classList.add('active');window.scrollTo(0,0);document.getElementById('nl').classList.remove('open');}
+function setNav(el){document.querySelectorAll('.nav-l a').forEach(a=>a.classList.remove('active'));if(el)el.classList.add('active');}
+function goHome(){SP('home');document.querySelectorAll('.nav-l a').forEach((a,i)=>{if(i===0)a.classList.add('active');else a.classList.remove('active');});}
+function T(m){const t=document.getElementById('tst');document.getElementById('tm').textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+// STAR
+document.addEventListener('click',e=>{if(e.target.classList.contains('sb')){e.stopPropagation();const o=e.target.classList.toggle('on');e.target.textContent=o?'★':'☆';}});
+
+// ═══ TOOL PAGES ═══
+const TP={
+'nid-scanner':()=>`<div class="tph"><h2>🪪 ID Card Scanner Pro</h2><p>NID, পাসপোর্ট, ড্রাইভিং লাইসেন্স — AI দিয়ে তথ্য বের করুন</p></div>
+<div class="tb"><div class="uz" id="uz1"><input type="file" id="fi1" accept="image/*" onchange="hScan(this)"><div class="uzi">📤</div><div class="uzt">ID কার্ড আপলোড করুন</div><div class="uzs">JPG, PNG সাপোর্টেড</div><button class="uzb" type="button">📂 ফাইল বেছে নিন</button></div>
+<div class="pw" id="pw1"><img id="pi1" src="" alt=""></div>
+<button class="scb" id="sb1" onclick="doScan()" disabled><i class="fas fa-search"></i> AI দিয়ে স্ক্যান করুন</button></div>
+<div class="rb" id="sr"><div class="ri"><h3>✅ স্ক্যান সফল! তথ্য চেক করুন:</h3>
+<div class="fg"><div class="fgi"><label>পূর্ণ নাম (বাংলা)</label><input id="rn1" placeholder="বাংলা নাম"></div><div class="fgi"><label>Full Name</label><input id="rn2" placeholder="English Name"></div><div class="fgi"><label>জন্ম তারিখ</label><input id="rd" placeholder="DD/MM/YYYY"></div><div class="fgi"><label>NID নম্বর</label><input id="ri" placeholder="ID নম্বর"></div><div class="fgi"><label>পিতার নাম</label><input id="rf" placeholder="পিতার নাম"></div><div class="fgi"><label>মাতার নাম</label><input id="rm" placeholder="মাতার নাম"></div><div class="fgi full"><label>ঠিকানা</label><input id="ra" placeholder="ঠিকানা"></div><div class="fgi"><label>রক্তের গ্রুপ</label><input id="rb2" placeholder="A+"></div><div class="fgi"><label>কার্ডের ধরন</label><input id="rt" placeholder="NID/পাসপোর্ট"></div></div>
+<div class="er"><button class="eb ep" onclick="sPDF()"><i class="fas fa-file-pdf"></i> PDF</button><button class="eb ee" onclick="sXL()"><i class="fas fa-file-excel"></i> Excel</button><button class="eb ec" onclick="sCopy()"><i class="fas fa-copy"></i> কপি</button><button class="eb en" onclick="ST('nid-scanner')"><i class="fas fa-redo"></i> নতুন</button></div></div></div>`,
+};
+
+function ST(id){
+  const c=document.getElementById('tc3');
+  c.innerHTML=TP[id]?TP[id]():`<div class="tph"><h2>🛠️ ${id}</h2></div><div class="tb" style="text-align:center;padding:40px"><div style="font-size:50px">🚧</div><p style="margin-top:12px;color:var(--gr)">এই টুলটি শীঘ্রই যোগ করা হবে।</p></div>`;
+  SP('tool');
+}
+
+function V(id){return document.getElementById(id)?.value||'';}
+function T2(m){const t=document.getElementById('tst');document.getElementById('tm').textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+</script>
+<script src="ai-tools.js"></script>
+</body>
+</html>
