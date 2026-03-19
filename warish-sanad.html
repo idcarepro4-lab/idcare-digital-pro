@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ওয়ারিশ সনদপত্র মেকার</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f2f5;--card:#fff;--primary:#1a4a7c;--border:#c8d6e5;--text:#111;--muted:#555;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans Bengali',sans-serif;background:var(--bg);padding:16px 10px 40px;}
+
+/* ══ FORM AREA ══ */
+.form-wrap{max-width:780px;margin:0 auto 28px;}
+.form-card{background:#fff;border-radius:10px;box-shadow:0 3px 16px rgba(0,0,0,.1);overflow:hidden;}
+.fhd{background:linear-gradient(135deg,#1a4a7c,#2563a8);padding:15px 20px;display:flex;align-items:center;gap:12px;}
+.fhd h2{font-size:16px;font-weight:700;color:#fff;font-family:'Noto Serif Bengali',serif;}
+.fhd p{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px;}
+.fbd{padding:20px;}
+
+.sec{font-size:12px;font-weight:700;color:#1a4a7c;background:#e8f0fe;padding:5px 10px;border-radius:4px;border-left:3px solid #1a4a7c;margin:14px 0 9px;}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+.fg{margin-bottom:9px;}
+.fg label{font-size:11.5px;font-weight:600;color:#333;display:block;margin-bottom:3px;}
+.req{color:#d00;}
+.fg input,.fg select,.fg textarea{width:100%;border:1.5px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:'Noto Sans Bengali',sans-serif;color:var(--text);background:#fafcff;transition:border-color .2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#1a4a7c;background:#fff;}
+.fg input::placeholder{color:#aaa;font-size:12px;}
+
+/* WARISH TABLE in form */
+.warish-form-table{width:100%;border-collapse:collapse;margin-top:6px;}
+.warish-form-table th{background:#1a4a7c;color:#fff;font-size:11.5px;padding:6px 8px;text-align:left;font-weight:600;}
+.warish-form-table td{padding:4px 5px;border-bottom:1px solid #eee;}
+.warish-form-table td input{border:1px solid #ddd;border-radius:4px;padding:5px 7px;font-size:12.5px;width:100%;font-family:'Noto Sans Bengali',sans-serif;}
+.warish-form-table td input:focus{outline:none;border-color:#1a4a7c;}
+.add-row-btn{background:#e8f0fe;color:#1a4a7c;border:1.5px dashed #1a4a7c;padding:7px 16px;border-radius:6px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;}
+.add-row-btn:hover{background:#dbeafe;}
+.del-btn{background:#fee2e2;color:#dc2626;border:none;padding:4px 9px;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:16px;}
+.btn-gen{flex:2;padding:12px;background:linear-gradient(135deg,#1a4a7c,#2563a8);color:#fff;border:none;border-radius:7px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s;}
+.btn-gen:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(26,74,124,.35);}
+.btn-gen:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-rst{flex:1;padding:12px;background:#f3f4f6;color:#374151;border:1.5px solid #ddd;border-radius:7px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;}
+.st{margin-top:10px;padding:9px 13px;border-radius:7px;font-size:13px;display:none;align-items:center;gap:7px;}
+.st.show{display:flex;}
+.st.ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb;}
+.st.err{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;}
+
+/* ══ CERTIFICATE PREVIEW ══ */
+.cert-section{display:none;max-width:780px;margin:0 auto;}
+.cert-section.show{display:block;}
+.cert-prev-lbl{font-size:12px;font-weight:700;color:#555;text-align:center;margin-bottom:8px;}
+.cert-dl-row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+.cert-dl-btn{padding:11px 26px;background:#1a4a7c;color:#fff;border:none;border-radius:7px;font-size:13.5px;font-weight:700;font-family:'Noto Sans Bengali',inherit;cursor:pointer;display:flex;align-items:center;gap:7px;}
+.cert-dl-btn:hover{background:#0f3260;}
+.cert-print-btn{padding:11px 22px;background:#f0f4f8;color:#1a4a7c;border:1.5px solid #1a4a7c;border-radius:7px;font-size:13.5px;font-weight:700;font-family:inherit;cursor:pointer;}
+
+/* ══ THE CERTIFICATE ══ */
+#theCert{
+  background:#fff;
+  width:100%;
+  font-family:'Noto Serif Bengali',serif;
+  color:#111;
+  padding:28px 32px;
+  border:1px solid #ccc;
+  position:relative;
+  overflow:hidden;
+}
+
+/* decorative border */
+.cert-deco-border{
+  position:absolute; inset:8px;
+  border:2px solid #1a4a7c;
+  pointer-events:none; z-index:0;
+}
+.cert-deco-border2{
+  position:absolute; inset:12px;
+  border:0.5px solid #c8960c;
+  pointer-events:none; z-index:0;
+}
+
+.cert-inner{position:relative;z-index:1;}
+
+/* HEADER */
+.cert-header{text-align:center;margin-bottom:14px;}
+.cert-gov{font-size:12px;color:#333;margin-bottom:4px;font-family:'Noto Sans Bengali',sans-serif;}
+.cert-org{font-family:'Noto Serif Bengali',serif;font-size:22px;font-weight:700;color:#1a4a7c;line-height:1.2;}
+.cert-sub{font-size:13px;color:#333;margin-top:3px;}
+.cert-web{font-size:12px;color:#1a4a7c;margin-top:2px;}
+
+.cert-date{font-size:12.5px;margin:10px 0 4px;font-family:'Noto Sans Bengali',sans-serif;}
+
+.cert-divider{border:none;border-top:2px solid #1a4a7c;margin:10px 0;}
+.cert-divider-thin{border:none;border-top:0.5px solid #999;margin:8px 0;}
+
+/* TITLE */
+.cert-title{text-align:center;font-size:22px;font-weight:700;color:#1a4a7c;margin:10px 0;font-family:'Noto Serif Bengali',serif;}
+
+/* CERT NO BOX */
+.cert-no-box{border:1.5px solid #1a4a7c;border-radius:4px;padding:6px 16px;display:inline-block;font-size:14px;font-weight:600;margin:6px auto 12px;display:block;text-align:center;max-width:500px;font-family:'Noto Sans Bengali',sans-serif;}
+
+/* BODY TEXT */
+.cert-body-para{font-size:13px;line-height:1.9;text-align:justify;margin-bottom:10px;font-family:'Noto Sans Bengali',sans-serif;}
+
+/* WARISH TABLE */
+.cert-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px;}
+.cert-table th{background:#1a4a7c;color:#fff;padding:7px 8px;text-align:center;font-family:'Noto Sans Bengali',sans-serif;font-weight:600;border:1px solid #1a4a7c;}
+.cert-table td{padding:6px 8px;border:1px solid #c5cfe0;text-align:center;font-family:'Noto Sans Bengali',sans-serif;}
+.cert-table tr:nth-child(even) td{background:#f0f5fb;}
+
+/* NOTE */
+.cert-note{font-size:11.5px;color:#333;margin:10px 0;line-height:1.7;font-family:'Noto Sans Bengali',sans-serif;font-style:italic;}
+.cert-dua{font-size:13px;margin:8px 0 14px;font-family:'Noto Serif Bengali',serif;}
+
+/* APPLICANT ROW */
+.cert-applicant-row{display:flex;justify-content:space-between;margin:8px 0;font-size:12.5px;font-family:'Noto Sans Bengali',sans-serif;}
+
+/* SIGNATURE AREA */
+.cert-sig-area{display:flex;justify-content:space-between;align-items:flex-end;margin-top:20px;}
+.cert-sig-box{text-align:center;min-width:200px;}
+.cert-sig-line{border-bottom:1px solid #333;width:80%;margin:0 auto 5px;}
+.cert-sig-name{font-size:12.5px;font-weight:700;font-family:'Noto Sans Bengali',sans-serif;}
+.cert-sig-title{font-size:11.5px;color:#333;font-family:'Noto Sans Bengali',sans-serif;line-height:1.5;}
+.cert-sig-date{font-size:12px;color:#333;margin-bottom:4px;font-family:'Noto Sans Bengali',sans-serif;}
+
+/* QR placeholder */
+.cert-footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:16px;padding-top:10px;border-top:1px solid #ddd;font-size:10.5px;color:#555;font-family:'Noto Sans Bengali',sans-serif;}
+.cert-qr-placeholder{width:60px;height:60px;border:1px solid #aaa;display:flex;align-items:center;justify-content:center;font-size:8px;color:#888;}
+
+/* LOGO UPLOAD */
+.logo-upload-row{display:flex;gap:14px;align-items:center;margin-bottom:10px;}
+.logo-box{width:80px;height:80px;border:2px dashed #93c5fd;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#f0f7ff;overflow:hidden;flex-shrink:0;transition:all .2s;}
+.logo-box:hover{border-color:#1a4a7c;}
+.logo-box input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.logo-box img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:4px;}
+.logo-box .logo-ph{font-size:9.5px;color:#6b7280;text-align:center;pointer-events:none;}
+.logo-box .logo-ph span{font-size:22px;display:block;margin-bottom:2px;}
+.logo-box-lbl{font-size:11px;color:#1a4a7c;font-weight:600;text-align:center;margin-top:4px;}
+
+/* CERT watermark */
+.cert-watermark{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:260px;height:260px;
+  opacity:0.07;pointer-events:none;z-index:0;
+  object-fit:contain;
+}
+.cert-watermark-svg{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:280px;height:280px;
+  opacity:0.06;pointer-events:none;z-index:0;
+}
+
+/* cert header logos */
+.cert-header-logos{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.cert-logo-left,.cert-logo-right{width:70px;height:70px;object-fit:contain;display:block;}
+.cert-logo-placeholder{width:70px;height:70px;border:1px dashed #aaa;display:flex;align-items:center;justify-content:center;font-size:9px;color:#aaa;text-align:center;border-radius:4px;background:#f9f9f9;}
+.cert-header-center{flex:1;text-align:center;padding:0 10px;}
+
+
+@media print{
+  body{background:none;padding:0;}
+  .form-wrap,.cert-prev-lbl,.cert-dl-row,.st{display:none!important;}
+  .cert-section{display:block!important;}
+  #theCert{border:none;padding:18px 22px;}
+}
+@media(max-width:560px){.r2,.r3{grid-template-columns:1fr;}.btn-row{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<!-- ══ INPUT FORM ══ -->
+<div class="form-wrap">
+<div class="form-card">
+  <div class="fhd">
+    <div style="font-size:28px;">📜</div>
+    <div><h2>ওয়ারিশ সনদপত্র মেকার</h2><p>সব তথ্য পূরণ করুন → সনদপত্র + PDF তৈরি হবে</p></div>
+  </div>
+  <div class="fbd">
+
+    <!-- অফিস তথ্য -->
+    <div class="sec">🏛️ অফিস / ইউনিয়ন পরিষদের তথ্য</div>
+
+    <!-- LOGO UPLOAD -->
+    <div style="background:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 14px;margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:700;color:#1a4a7c;margin-bottom:10px;">🖼️ লোগো আপলোড করুন</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+        <div>
+          <div class="logo-box" id="logoLeftBox">
+            <input type="file" accept="image/*" onchange="loadLogo(event,'left')">
+            <img id="logoLeftImg" src="" style="display:none;">
+            <div class="logo-ph" id="logoLeftPh"><span>🖼️</span>বাম লোগো<br>(শেখ মুজিব)</div>
+          </div>
+          <div class="logo-box-lbl">বাম লোগো</div>
+        </div>
+        <div>
+          <div class="logo-box" id="logoRightBox">
+            <input type="file" accept="image/*" onchange="loadLogo(event,'right')">
+            <img id="logoRightImg" src="" style="display:none;">
+            <div class="logo-ph" id="logoRightPh"><span>🔵</span>ডান লোগো<br>(ইউনিয়ন সীল)</div>
+          </div>
+          <div class="logo-box-lbl">ডান লোগো</div>
+        </div>
+        <div>
+          <div class="logo-box" id="logoWmBox">
+            <input type="file" accept="image/*" onchange="loadLogo(event,'wm')">
+            <img id="logoWmImg" src="" style="display:none;">
+            <div class="logo-ph" id="logoWmPh"><span>💧</span>Watermark<br>(সীল/লোগো)</div>
+          </div>
+          <div class="logo-box-lbl">Watermark</div>
+        </div>
+        <div style="flex:1;min-width:180px;display:flex;align-items:center;">
+          <div style="font-size:11.5px;color:#555;line-height:1.7;">
+            💡 <strong>বাম লোগো:</strong> শেখ মুজিবুর রহমানের ছবি<br>
+            💡 <strong>ডান লোগো:</strong> ইউনিয়ন পরিষদের সীল<br>
+            💡 <strong>Watermark:</strong> পেছনের ব্যাকগ্রাউন্ড সীল
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="r2">
+      <div class="fg"><label>ইউনিয়ন পরিষদের নাম <span class="req">*</span></label><input id="unionName" placeholder="১০নং দিগনগর ইউনিয়ন পরিষদ" value="১০নং দিগনগর ইউনিয়ন পরিষদ"></div>
+      <div class="fg"><label>উপজেলা, জেলা</label><input id="upazila" placeholder="মুকসুদপুর, গোপালগঞ্জ" value="মুকসুদপুর, গোপালগঞ্জ"></div>
+    </div>
+    <div class="r2">
+      <div class="fg"><label>ওয়েবসাইট</label><input id="website" placeholder="dignagar.upsheba.com" value="dignagar.upsheba.com"></div>
+      <div class="fg"><label>সনদ নম্বর <span class="req">*</span></label><input id="certNo" placeholder="২০২৩৩৫১৫৮২৭০২০০০১৭৩"></div>
+    </div>
+    <div class="fg"><label>তারিখ <span class="req">*</span></label><input type="date" id="certDate"></div>
+
+    <!-- মৃত ব্যক্তির তথ্য -->
+    <div class="sec">💀 মৃত ব্যক্তির তথ্য</div>
+    <div class="r2">
+      <div class="fg"><label>মৃত ব্যক্তির নাম <span class="req">*</span></label><input id="deadName" placeholder="মোঃ আজহার জাফর শাহ"></div>
+      <div class="fg"><label>পিতা/স্বামীর নাম</label><input id="deadFather" placeholder="মোঃ মঈনুদ্দীন জাহাঙ্গীর"></div>
+    </div>
+    <div class="r2">
+      <div class="fg"><label>মাতার নাম</label><input id="deadMother" placeholder="মৃত বেগম রহিমা জাহাঙ্গীর"></div>
+      <div class="fg"><label>ঠিকানা</label><input id="deadAddress" placeholder="দিগনগর"></div>
+    </div>
+    <div class="fg"><label>জাতীয় আইডি নং</label><input id="deadNID" placeholder="৫০৯৪৮২৯৬৭৭"></div>
+
+    <!-- আবেদনকারীর তথ্য -->
+    <div class="sec">👤 আবেদনকারীর তথ্য</div>
+    <div class="r2">
+      <div class="fg"><label>আবেদনকারীর নাম <span class="req">*</span></label><input id="applicantName" placeholder="শাহ মোঃ আশরাফুজ্জামান"></div>
+      <div class="fg"><label>পিতা/স্বামীর নাম</label><input id="applicantFather" placeholder="শাহ মহিউদ্দীন আহমেদ"></div>
+    </div>
+
+    <!-- স্বাক্ষর তথ্য -->
+    <div class="sec">✍️ স্বাক্ষর তথ্য</div>
+    <div class="r2">
+      <div class="fg"><label>বাম স্বাক্ষরকারীর নাম</label><input id="sigLeftName" placeholder="৫ নং ওয়ার্ড মেম্বার"></div>
+      <div class="fg"><label>বাম স্বাক্ষরকারীর পদবী</label><input id="sigLeftTitle" placeholder="১০নং দিগনগর ইউনিয়ন পরিষদ&#10;মুকসুদপুর, গোপালগঞ্জ"></div>
+    </div>
+    <div class="r2">
+      <div class="fg"><label>বাম স্বাক্ষরের তারিখ</label><input type="date" id="sigLeftDate"></div>
+      <div class="fg"><label>ডান স্বাক্ষরকারীর নাম <span class="req">*</span></label><input id="sigRightName" placeholder="মোহাম্মদ আলী শেখ"></div>
+    </div>
+    <div class="r2">
+      <div class="fg"><label>ডান স্বাক্ষরকারীর পদবী</label><input id="sigRightTitle" placeholder="চেয়ারম্যান&#10;১০নং দিগনগর ইউনিয়ন পরিষদ"></div>
+      <div class="fg"><label>ডান স্বাক্ষরের তারিখ</label><input type="date" id="sigRightDate"></div>
+    </div>
+
+    <!-- ফোন -->
+    <div class="r2">
+      <div class="fg"><label>যোগাযোগ নম্বর</label><input id="phone" placeholder="01712366690"></div>
+      <div class="fg"><label>ইমেইল</label><input id="email" placeholder="mohiuddinmir17@gmail.com"></div>
+    </div>
+
+    <!-- ওয়ারিশ তালিকা -->
+    <div class="sec">👨‍👩‍👧‍👦 ওয়ারিশগণের তালিকা</div>
+    <table class="warish-form-table" id="warishTable">
+      <thead>
+        <tr>
+          <th style="width:36px;">নং</th>
+          <th>নাম</th>
+          <th style="width:130px;">সম্পর্ক</th>
+          <th style="width:70px;">বয়স</th>
+          <th style="width:42px;"></th>
+        </tr>
+      </thead>
+      <tbody id="warishBody">
+        <!-- rows added by JS -->
+      </tbody>
+    </table>
+    <button class="add-row-btn" onclick="addWarishRow()">+ নতুন ওয়ারিশ যোগ করুন</button>
+
+    <!-- GENERATE -->
+    <div class="btn-row">
+      <button class="btn-rst" onclick="resetAll()">🔄 রিসেট</button>
+      <button class="btn-gen" id="genBtn" onclick="generateCert()">📜 সনদপত্র তৈরি করুন</button>
+    </div>
+    <div class="st" id="st"></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ CERTIFICATE PREVIEW ══ -->
+<div class="cert-section" id="certSection">
+  <div class="cert-prev-lbl">📋 ওয়ারিশ সনদপত্র প্রিভিউ</div>
+
+  <div id="theCert">
+    <div class="cert-deco-border"></div>
+    <div class="cert-deco-border2"></div>
+    <!-- WATERMARK -->
+    <img id="c_watermark" class="cert-watermark" src="" style="display:none;">
+    <!-- fallback SVG watermark if no image -->
+    <svg class="cert-watermark-svg" id="c_watermark_svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+      <circle cx="100" cy="100" r="90" fill="none" stroke="#1a4a7c" stroke-width="3"/>
+      <circle cx="100" cy="100" r="75" fill="none" stroke="#1a4a7c" stroke-width="1.5"/>
+      <text x="100" y="95" text-anchor="middle" font-size="13" font-family="serif" fill="#1a4a7c">ওয়ারিশ সনদ</text>
+      <text x="100" y="115" text-anchor="middle" font-size="11" font-family="serif" fill="#1a4a7c">বাংলাদেশ</text>
+    </svg>
+
+    <div class="cert-inner">
+
+      <!-- HEADER WITH LOGOS -->
+      <div class="cert-header-logos">
+        <!-- LEFT LOGO -->
+        <div>
+          <img id="c_logoLeft" class="cert-logo-left" src="" style="display:none;">
+          <div class="cert-logo-placeholder" id="c_logoLeftPh" style="display:none;"></div>
+        </div>
+        <!-- CENTER TEXT -->
+        <div class="cert-header-center">
+          <div class="cert-gov">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</div>
+          <div class="cert-org" id="c_unionName">১০নং দিগনগর ইউনিয়ন পরিষদ</div>
+          <div class="cert-sub" id="c_upazila">মুকসুদপুর, গোপালগঞ্জ</div>
+          <div class="cert-web" id="c_website">dignagar.upsheba.com</div>
+        </div>
+        <!-- RIGHT LOGO -->
+        <div>
+          <img id="c_logoRight" class="cert-logo-right" src="" style="display:none;">
+          <div class="cert-logo-placeholder" id="c_logoRightPh" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div class="cert-date">তারিখ: <span id="c_date"></span></div>
+      <hr class="cert-divider">
+
+      <div class="cert-title">ওয়ারিশ সনদপত্র</div>
+
+      <div class="cert-no-box">ওয়ারিশ সনদপত্র নং : <span id="c_certNo"></span></div>
+
+      <div class="cert-body-para" id="c_bodyPara"></div>
+
+      <div class="cert-body-para">তিনি এত ইউনিয়ন এর স্থায়ী অধিবাসী ছিলেন। মৃত্যুকালে তিনি নিম্নলিখিত ওয়ারিশগণ কে রেখে মৃত্যুবরণ করেন।</div>
+
+      <!-- WARISH TABLE -->
+      <table class="cert-table" id="c_warishTable">
+        <thead>
+          <tr>
+            <th style="width:36px;">নং</th>
+            <th>নাম</th>
+            <th style="width:140px;">সম্পর্ক</th>
+            <th style="width:70px;">বয়স</th>
+          </tr>
+        </thead>
+        <tbody id="c_warishBody"></tbody>
+      </table>
+
+      <div class="cert-note">বিঃদ্রঃ উদ্দেশ্য প্রণোদিত ও জালিয়াতিপূর্ণভাবে কোনো ওয়ারিশগণের নাম বাদ পড়লে অত্র ওয়ারিশ সনদ বাতিল বলে গণ্য হবে। এর জন্য ইস্যুকারী কর্তৃপক্ষ দায়ী থাকবে না।</div>
+
+      <div class="cert-dua">আমি মৃতের বিদেহী আত্মার মাগফেরাত এবং উওরাধিকারীগণের মঙ্গল কামনা করি।</div>
+
+      <hr class="cert-divider-thin">
+
+      <div class="cert-applicant-row">
+        <div>আবেদনকারী: <strong id="c_applicantName"></strong></div>
+        <div>পিতা/স্বামীর নাম: <strong id="c_applicantFather"></strong></div>
+      </div>
+
+      <!-- SIGNATURES -->
+      <div class="cert-sig-area">
+        <div class="cert-sig-box">
+          <div class="cert-sig-date" id="c_sigLeftDate"></div>
+          <div style="height:36px;"></div>
+          <div class="cert-sig-line"></div>
+          <div class="cert-sig-name" id="c_sigLeftName"></div>
+          <div class="cert-sig-title" id="c_sigLeftTitle"></div>
+        </div>
+        <div class="cert-sig-box">
+          <div class="cert-sig-date" id="c_sigRightDate"></div>
+          <div style="height:36px;"></div>
+          <div class="cert-sig-line"></div>
+          <div class="cert-sig-name" id="c_sigRightName"></div>
+          <div class="cert-sig-title" id="c_sigRightTitle"></div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="cert-footer">
+        <div class="cert-qr-placeholder">QR Code</div>
+        <div style="text-align:right;line-height:1.7;">
+          <div>নিশ্চিতকরণে সার্টিফিকেট QR Code দিয়ে অথবা <span id="c_website2"></span> ওয়েবসাইট থেকে যাচাই করুন।</div>
+          <div>যোগাযোগ তথ্য: <span id="c_phone"></span> | <span id="c_email"></span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="cert-dl-row">
+    <button class="cert-dl-btn" onclick="downloadPDF(this)">📥 PDF ডাউনলোড</button>
+    <button class="cert-print-btn" onclick="window.print()">🖨️ প্রিন্ট করুন</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+// ── LOGO LOAD ──
+let logos = {left:'', right:'', wm:''};
+
+function loadLogo(e, side){
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    logos[side] = ev.target.result;
+    const img = document.getElementById('logoLeftImg'.replace('Left', side==='left'?'Left':side==='right'?'Right':'Wm'));
+    const ph  = document.getElementById('logoLeftPh'.replace('Left', side==='left'?'Left':side==='right'?'Right':'Wm'));
+    if(img){ img.src=logos[side]; img.style.display='block'; }
+    if(ph)  ph.style.display='none';
+  };
+  r.readAsDataURL(f);
+}
+
+
+let warishCount = 0;
+
+function addWarishRow(name='', relation='চাচাতো ভাই', age=''){
+  warishCount++;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="text-align:center;font-size:12px;">${warishCount}</td>
+    <td><input placeholder="ওয়ারিশের নাম" value="${name}" class="w-name"></td>
+    <td><input placeholder="সম্পর্ক" value="${relation}" class="w-rel" style="text-align:center;"></td>
+    <td><input placeholder="বয়স" value="${age}" class="w-age" style="text-align:center;" maxlength="3"></td>
+    <td><button class="del-btn" onclick="this.closest('tr').remove();renum()">✕</button></td>`;
+  document.getElementById('warishBody').appendChild(tr);
+}
+
+function renum(){
+  document.querySelectorAll('#warishBody tr').forEach((tr,i)=>{
+    tr.cells[0].textContent = i+1;
+  });
+  warishCount = document.querySelectorAll('#warishBody tr').length;
+}
+
+// Add 5 default rows
+for(let i=0;i<5;i++) addWarishRow('','চাচাতো ভাই','');
+
+// ── HELPERS ──
+function v(id){ return (document.getElementById(id)?.value||'').trim(); }
+
+function fmtDate(s){
+  if(!s) return '';
+  const d = new Date(s);
+  const bn = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+  return `${toBn(d.getDate())} ${bn[d.getMonth()]} ${toBn(d.getFullYear())}`;
+}
+
+function toBn(n){
+  return String(n).split('').map(c=>'০১২৩৪৫৬৭৮৯'[+c]??c).join('');
+}
+
+function setText(id, txt){
+  const el=document.getElementById(id);
+  if(el) el.textContent=txt;
+}
+function setHTML(id, html){
+  const el=document.getElementById(id);
+  if(el) el.innerHTML=html;
+}
+
+// ── GENERATE ──
+function generateCert(){
+  const unionName = v('unionName');
+  const certNo    = v('certNo');
+  const deadName  = v('deadName');
+  const applicant = v('applicantName');
+  const certDate  = v('certDate');
+
+  if(!unionName){ showSt('❌ ইউনিয়ন পরিষদের নাম দিন!','err'); return; }
+  if(!certNo)   { showSt('❌ সনদ নম্বর দিন!','err'); return; }
+  if(!deadName) { showSt('❌ মৃত ব্যক্তির নাম দিন!','err'); return; }
+  if(!applicant){ showSt('❌ আবেদনকারীর নাম দিন!','err'); return; }
+
+  // logos
+  const cLL = document.getElementById('c_logoLeft');
+  const cLR = document.getElementById('c_logoRight');
+  const cWm = document.getElementById('c_watermark');
+  const cWmSvg = document.getElementById('c_watermark_svg');
+  const cLLPh = document.getElementById('c_logoLeftPh');
+  const cLRPh = document.getElementById('c_logoRightPh');
+
+  if(logos.left){
+    cLL.src=logos.left; cLL.style.display='block';
+    if(cLLPh) cLLPh.style.display='none';
+  } else {
+    cLL.style.display='none';
+    if(cLLPh) cLLPh.style.display='none';
+  }
+  if(logos.right){
+    cLR.src=logos.right; cLR.style.display='block';
+    if(cLRPh) cLRPh.style.display='none';
+  } else {
+    cLR.style.display='none';
+    if(cLRPh) cLRPh.style.display='none';
+  }
+  if(logos.wm){
+    cWm.src=logos.wm; cWm.style.display='block';
+    cWmSvg.style.display='none';
+  } else {
+    cWm.style.display='none';
+    cWmSvg.style.display='block'; // show default SVG watermark
+  }
+
+  // header
+  setText('c_unionName', unionName);
+  setText('c_upazila',   v('upazila'));
+  setText('c_website',   v('website'));
+  setText('c_website2',  v('website'));
+  setText('c_date',      fmtDate(certDate));
+  setText('c_certNo',    certNo);
+
+  // body paragraph
+  const deadFather  = v('deadFather');
+  const deadMother  = v('deadMother');
+  const deadAddr    = v('deadAddress');
+  const deadNID     = v('deadNID');
+  let para = `এই মর্মে প্রত্যয়ন করা যাইতেছে যে, মৃত ${deadName}`;
+  if(deadFather) para += `, পিতা/স্বামীর নাম: মৃত ${deadFather}`;
+  if(deadMother) para += `, মাতা: ${deadMother}`;
+  if(deadAddr)   para += `, ঠিকানা: ${deadAddr}`;
+  if(deadNID)    para += `, জাতীয় আইডি নং : ${deadNID}`;
+  para += '।';
+  setText('c_bodyPara', para);
+
+  // warish table
+  const rows = document.querySelectorAll('#warishBody tr');
+  let tbodyHTML = '';
+  rows.forEach((tr, i)=>{
+    const nm  = tr.querySelector('.w-name')?.value||'';
+    const rel = tr.querySelector('.w-rel')?.value||'';
+    const age = tr.querySelector('.w-age')?.value||'';
+    if(nm.trim()){
+      tbodyHTML += `<tr>
+        <td>${toBn(i+1)}</td>
+        <td style="text-align:left;padding-left:10px;">${nm}</td>
+        <td>${rel}</td>
+        <td>${toBn(parseInt(age)||0)||age}</td>
+      </tr>`;
+    }
+  });
+  setHTML('c_warishBody', tbodyHTML);
+
+  // applicant
+  setText('c_applicantName',   applicant);
+  setText('c_applicantFather', v('applicantFather'));
+
+  // signatures
+  setText('c_sigLeftName',  v('sigLeftName'));
+  setText('c_sigLeftTitle', v('sigLeftTitle'));
+  setText('c_sigLeftDate',  fmtDate(v('sigLeftDate')));
+  setText('c_sigRightName',  v('sigRightName'));
+  setText('c_sigRightTitle', v('sigRightTitle'));
+  setText('c_sigRightDate',  fmtDate(v('sigRightDate')));
+
+  // footer
+  setText('c_phone', v('phone'));
+  setText('c_email', v('email'));
+
+  // show
+  const sec = document.getElementById('certSection');
+  sec.classList.add('show');
+  setTimeout(()=>sec.scrollIntoView({behavior:'smooth'}), 100);
+  showSt('✅ সনদপত্র তৈরি হয়েছে! নিচে PDF ডাউনলোড করুন।','ok');
+}
+
+// ── PDF ──
+async function downloadPDF(btn){
+  const orig = btn.innerHTML;
+  btn.innerHTML='⏳ তৈরি হচ্ছে...'; btn.disabled=true;
+  try{
+    const el = document.getElementById('theCert');
+    const canvas = await html2canvas(el,{
+      scale:2, useCORS:true, allowTaint:true,
+      backgroundColor:'#ffffff', logging:false,
+      width:el.offsetWidth, height:el.offsetHeight
+    });
+    const imgData = canvas.toDataURL('image/jpeg',0.96);
+    const {jsPDF} = window.jspdf;
+    const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pw = pdf.internal.pageSize.getWidth();
+    const ph = pdf.internal.pageSize.getHeight();
+    pdf.addImage(imgData,'JPEG',0,0,pw,ph);
+    const certNo = v('certNo')||'warish';
+    pdf.save('ওয়ারিশ_সনদপত্র_'+certNo+'.pdf');
+    showSt('✅ PDF সফলভাবে ডাউনলোড হয়েছে!','ok');
+  }catch(e){
+    showSt('❌ Error: '+e.message,'err');
+  }
+  btn.innerHTML=orig; btn.disabled=false;
+}
+
+// ── RESET ──
+function resetAll(){
+  document.querySelectorAll('input').forEach(i=>i.value='');
+  document.getElementById('certSection').classList.remove('show');
+  document.getElementById('st').classList.remove('show');
+  document.getElementById('warishBody').innerHTML='';
+  warishCount=0;
+  for(let i=0;i<5;i++) addWarishRow('','চাচাতো ভাই','');
+}
+
+function showSt(msg,type){
+  const el=document.getElementById('st');
+  el.textContent=msg; el.className='st show '+type;
+  setTimeout(()=>el.classList.remove('show'),6000);
+}
+</script>
+</body>
+</html>
