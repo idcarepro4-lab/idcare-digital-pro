@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Passport Info Summary Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f4f8;--card:#fff;--primary:#1a4a7c;--accent:#c8960c;--border:#dde3ec;--text:#111;--muted:#555;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans Bengali',sans-serif;background:var(--bg);padding:18px 10px 40px;}
+
+/* FORM */
+.form-wrap{max-width:720px;margin:0 auto 24px;}
+.form-card{background:#fff;border-radius:12px;box-shadow:0 3px 16px rgba(0,0,0,.1);overflow:hidden;}
+.fhd{background:linear-gradient(135deg,#1a4a7c,#2563a8);padding:15px 20px;display:flex;align-items:center;gap:12px;}
+.fhd h2{font-size:16px;font-weight:700;color:#fff;}
+.fhd p{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px;}
+.fbd{padding:20px;}
+.sec{font-size:12px;font-weight:700;color:#1a4a7c;background:#e8f0fe;padding:5px 10px;border-radius:4px;border-left:3px solid #1a4a7c;margin:14px 0 9px;}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+.fg{margin-bottom:9px;}
+.fg label{font-size:11.5px;font-weight:600;color:#333;display:block;margin-bottom:3px;}
+.req{color:#d00;}
+.fg input,.fg select{width:100%;border:1.5px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:'Roboto',sans-serif;color:var(--text);background:#fafcff;transition:border-color .2s;}
+.fg input:focus,.fg select:focus{outline:none;border-color:#1a4a7c;background:#fff;}
+.fg input::placeholder{color:#aaa;font-size:12px;}
+
+/* PHOTO UPLOAD */
+.photo-sec{display:flex;justify-content:center;margin-bottom:16px;}
+.photo-box{width:100px;height:120px;border:2px dashed #93c5fd;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#f0f7ff;overflow:hidden;transition:all .2s;}
+.photo-box:hover{border-color:#1a4a7c;}
+.photo-box input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+#photoPreview{display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.photo-ph{font-size:10px;color:#6b7280;text-align:center;pointer-events:none;}
+.photo-ph span{font-size:24px;display:block;margin-bottom:3px;}
+.photo-lbl{font-size:11px;color:#1a4a7c;font-weight:600;text-align:center;margin-top:5px;}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:16px;}
+.btn-gen{flex:2;padding:12px;background:linear-gradient(135deg,#1a4a7c,#2563a8);color:#fff;border:none;border-radius:7px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s;}
+.btn-gen:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(26,74,124,.35);}
+.btn-gen:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-rst{flex:1;padding:12px;background:#f3f4f6;color:#374151;border:1.5px solid #ddd;border-radius:7px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;}
+.st{margin-top:10px;padding:9px 13px;border-radius:7px;font-size:13px;display:none;align-items:center;gap:7px;}
+.st.show{display:flex;}
+.st.ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb;}
+.st.err{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;}
+
+/* CARD PREVIEW */
+.card-section{display:none;max-width:720px;margin:0 auto;}
+.card-section.show{display:block;}
+.prev-lbl{font-size:12px;font-weight:700;color:#555;text-align:center;margin-bottom:8px;}
+.dl-row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+.dl-btn{padding:11px 24px;background:#1a4a7c;color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:7px;}
+.dl-btn:hover{background:#0f3260;}
+.print-btn{padding:11px 20px;background:#f0f4f8;color:#1a4a7c;border:1.5px solid #1a4a7c;border-radius:7px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;}
+
+/* ══ THE SUMMARY CARD ══ */
+#theCard{
+  background:#fff;
+  border:2px solid #1a4a7c;
+  border-radius:8px;
+  overflow:hidden;
+  font-family:'Roboto',sans-serif;
+  color:#111;
+  box-shadow:0 4px 20px rgba(0,0,0,.15);
+}
+
+/* Card Header */
+.card-hdr{
+  background:linear-gradient(135deg,#1a4a7c,#2563a8);
+  padding:12px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-hdr-left{color:#fff;}
+.card-hdr-title{font-size:13px;font-weight:700;letter-spacing:.5px;}
+.card-hdr-sub{font-size:10px;opacity:.8;margin-top:2px;}
+.card-hdr-badge{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  border-radius:4px;padding:4px 10px;font-size:10px;color:#fff;font-weight:700;
+  letter-spacing:1px;
+}
+
+/* Gold stripe */
+.gold-stripe{height:4px;background:repeating-linear-gradient(90deg,#c8960c 0,#c8960c 20px,#f0c040 20px,#f0c040 40px);}
+
+/* Card Body */
+.card-body{padding:14px 16px;}
+
+/* Top row: photo + main info */
+.card-top{display:flex;gap:14px;margin-bottom:12px;}
+.card-photo-box{
+  width:90px;height:108px;border:2px solid #1a4a7c;
+  flex-shrink:0;overflow:hidden;border-radius:4px;
+  background:#e8f0fe;display:flex;align-items:center;justify-content:center;
+}
+.card-photo-box img{width:100%;height:100%;object-fit:cover;}
+.card-photo-placeholder{font-size:9px;color:#93c5fd;text-align:center;}
+
+.card-main-info{flex:1;}
+.card-name{font-size:16px;font-weight:700;color:#1a4a7c;margin-bottom:2px;letter-spacing:.3px;}
+.card-surname{font-size:11px;color:#555;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;}
+.info-item{}
+.info-item .lbl{font-size:9.5px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.info-item .val{font-size:12px;font-weight:600;color:#111;margin-top:1px;}
+
+/* Passport number highlight */
+.pp-no-box{
+  background:linear-gradient(135deg,#e8f0fe,#dbeafe);
+  border:1px solid #93c5fd;border-radius:5px;
+  padding:7px 12px;margin-bottom:10px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.pp-no-lbl{font-size:10px;color:#555;font-weight:600;}
+.pp-no-val{font-size:15px;font-weight:800;color:#1a4a7c;letter-spacing:2px;font-family:'Roboto',monospace;}
+
+/* Info sections */
+.card-sec-title{
+  font-size:10px;font-weight:700;color:#1a4a7c;
+  border-bottom:1.5px solid #dbeafe;padding-bottom:4px;
+  margin:10px 0 6px;text-transform:uppercase;letter-spacing:.8px;
+}
+.card-row{display:flex;margin-bottom:5px;font-size:11.5px;}
+.card-row .k{width:130px;color:#666;font-weight:600;flex-shrink:0;}
+.card-row .v{color:#111;flex:1;}
+
+/* Machine Readable Zone */
+.mrz{
+  background:#f8f9fa;border-top:1px solid #e5e7eb;
+  padding:8px 14px;font-family:'Courier New',monospace;
+  font-size:9.5px;letter-spacing:1px;color:#555;
+  line-height:1.6;
+}
+.mrz-lbl{font-size:9px;color:#aaa;margin-bottom:3px;font-family:'Roboto',sans-serif;letter-spacing:0;}
+
+/* UNOFFICIAL WATERMARK */
+.unoff-stamp{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) rotate(-35deg);
+  font-size:40px;font-weight:900;color:rgba(239,68,68,.08);
+  letter-spacing:3px;pointer-events:none;white-space:nowrap;
+  font-family:'Roboto',sans-serif;
+}
+
+/* Card footer */
+.card-footer{
+  background:#f8fafc;border-top:1px solid #e5e7eb;
+  padding:7px 14px;display:flex;justify-content:space-between;
+  font-size:9.5px;color:#999;
+}
+
+/* PRINT */
+@media print{
+  body{background:#fff;padding:0;}
+  .form-wrap,.prev-lbl,.dl-row,.st{display:none!important;}
+  .card-section{display:block!important;}
+  #theCard{box-shadow:none;border:1.5px solid #1a4a7c;}
+}
+@media(max-width:540px){.r2,.r3{grid-template-columns:1fr;}.btn-row{flex-direction:column;}.info-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- FORM -->
+<div class="form-wrap">
+<div class="form-card">
+  <div class="fhd">
+    <div style="font-size:26px;">🛂</div>
+    <div>
+      <h2>Passport Info Summary Card Maker</h2>
+      <p>তথ্য দিন → সুন্দর Summary Card + PDF তৈরি হবে (Unofficial Reference Only)</p>
+    </div>
+  </div>
+  <div class="fbd">
+
+    <!-- Photo -->
+    <div class="photo-sec">
+      <div>
+        <div class="photo-box">
+          <input type="file" id="photoFile" accept="image/*" onchange="loadPhoto(event)">
+          <img id="photoPreview" alt="photo">
+          <div class="photo-ph" id="photoPh"><span>📷</span>ছবি<br>আপলোড</div>
+        </div>
+        <div class="photo-lbl">পাসপোর্ট ছবি</div>
+      </div>
+    </div>
+
+    <!-- Passport Info -->
+    <div class="sec">🛂 পাসপোর্ট তথ্য</div>
+    <div class="r3">
+      <div class="fg"><label>Passport No. <span class="req">*</span></label><input id="ppNo" placeholder="A17501794" style="text-transform:uppercase;letter-spacing:1px;"></div>
+      <div class="fg"><label>Type</label><input id="ppType" placeholder="P" maxlength="2" style="text-transform:uppercase;"></div>
+      <div class="fg"><label>Country Code</label><input id="ppCountry" placeholder="BGD" maxlength="3" style="text-transform:uppercase;"></div>
+    </div>
+    <div class="r2">
+      <div class="fg"><label>Date of Issue</label><input type="date" id="ppIssue"></div>
+      <div class="fg"><label>Date of Expiry</label><input type="date" id="ppExpiry"></div>
+    </div>
+    <div class="fg"><label>Issuing Authority</label><input id="ppAuthority" placeholder="DIP/DHAKA" style="text-transform:uppercase;"></div>
+
+    <!-- Personal Info -->
+    <div class="sec">👤 ব্যক্তিগত তথ্য</div>
+    <div class="r2">
+      <div class="fg"><label>Surname / পদবী <span class="req">*</span></label><input id="surname" placeholder="ISLAM" style="text-transform:uppercase;"></div>
+      <div class="fg"><label>Given Name / নাম <span class="req">*</span></label><input id="givenName" placeholder="MD JAYIDUL" style="text-transform:uppercase;"></div>
+    </div>
+    <div class="r3">
+      <div class="fg"><label>Date of Birth <span class="req">*</span></label><input type="date" id="dob"></div>
+      <div class="fg"><label>Place of Birth</label><input id="pob" placeholder="CHANDPUR" style="text-transform:uppercase;"></div>
+      <div class="fg"><label>Sex / লিঙ্গ</label>
+        <select id="sex">
+          <option value="M">M (Male)</option>
+          <option value="F">F (Female)</option>
+        </select>
+      </div>
+    </div>
+    <div class="r2">
+      <div class="fg"><label>Nationality</label><input id="nationality" placeholder="BANGLADESHI" style="text-transform:uppercase;"></div>
+      <div class="fg"><label>Personal No.</label><input id="personalNo" placeholder="3777743398"></div>
+    </div>
+    <div class="fg"><label>Previous Passport No.</label><input id="prevPP" placeholder="394071"></div>
+
+    <!-- Family Info -->
+    <div class="sec">👨‍👩‍👧 পরিবারের তথ্য</div>
+    <div class="r2">
+      <div class="fg"><label>Father's Name</label><input id="fatherName" placeholder="BACHO MIA" style="text-transform:uppercase;"></div>
+      <div class="fg"><label>Mother's Name</label><input id="motherName" placeholder="MARIOM BEGUM" style="text-transform:uppercase;"></div>
+    </div>
+    <div class="fg"><label>Legal Guardian's Name</label><input id="guardianName" placeholder="(যদি প্রযোজ্য)" style="text-transform:uppercase;"></div>
+
+    <!-- Address -->
+    <div class="sec">📍 ঠিকানা</div>
+    <div class="fg"><label>Permanent Address</label><input id="permAddress" placeholder="ATOMOR, SOHID MASTER BARI, W-02, KACHUA, CHANDPUR"></div>
+
+    <!-- Emergency -->
+    <div class="sec">🆘 Emergency Contact</div>
+    <div class="r2">
+      <div class="fg"><label>Contact Name</label><input id="emgName" placeholder="BACHO MIA" style="text-transform:uppercase;"></div>
+      <div class="fg"><label>Relationship</label><input id="emgRel" placeholder="FATHER" style="text-transform:uppercase;"></div>
+    </div>
+    <div class="r2">
+      <div class="fg"><label>Phone No.</label><input id="emgPhone" placeholder="+8801814062383"></div>
+      <div class="fg"><label>Address</label><input id="emgAddress" placeholder="Same as permanent address"></div>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="btn-row">
+      <button class="btn-rst" onclick="resetAll()">🔄 রিসেট</button>
+      <button class="btn-gen" id="genBtn" onclick="generateCard()">🛂 Summary Card তৈরি করুন</button>
+    </div>
+    <div class="st" id="st"></div>
+  </div>
+</div>
+</div>
+
+<!-- CARD PREVIEW -->
+<div class="card-section" id="cardSection">
+  <div class="prev-lbl">📋 Passport Info Summary Card — Unofficial Reference</div>
+
+  <div id="theCard" style="position:relative;">
+
+    <!-- UNOFFICIAL WATERMARK -->
+    <div class="unoff-stamp">UNOFFICIAL</div>
+
+    <!-- HEADER -->
+    <div class="card-hdr">
+      <div class="card-hdr-left">
+        <div class="card-hdr-title">PASSPORT INFORMATION SUMMARY</div>
+        <div class="card-hdr-sub">Personal Reference Card — Not a Government Document</div>
+      </div>
+      <div class="card-hdr-badge">UNOFFICIAL</div>
+    </div>
+    <div class="gold-stripe"></div>
+
+    <!-- BODY -->
+    <div class="card-body">
+
+      <!-- Passport No Box -->
+      <div class="pp-no-box">
+        <div>
+          <div class="pp-no-lbl">Passport Number</div>
+          <div class="pp-no-val" id="c_ppNo">—</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="pp-no-lbl">Type / Country</div>
+          <div style="font-size:12px;font-weight:700;color:#1a4a7c;" id="c_typeCountry">P / BGD</div>
+        </div>
+      </div>
+
+      <!-- TOP: Photo + Main Info -->
+      <div class="card-top">
+        <div>
+          <div class="card-photo-box">
+            <img id="c_photo" src="" style="display:none;">
+            <div class="card-photo-placeholder" id="c_photoPh">📷<br>Photo</div>
+          </div>
+        </div>
+        <div class="card-main-info">
+          <div class="card-name" id="c_name">—</div>
+          <div class="card-surname" id="c_surname">—</div>
+          <div class="info-grid">
+            <div class="info-item"><div class="lbl">Date of Birth</div><div class="val" id="c_dob">—</div></div>
+            <div class="info-item"><div class="lbl">Sex</div><div class="val" id="c_sex">—</div></div>
+            <div class="info-item"><div class="lbl">Nationality</div><div class="val" id="c_nationality">—</div></div>
+            <div class="info-item"><div class="lbl">Place of Birth</div><div class="val" id="c_pob">—</div></div>
+            <div class="info-item"><div class="lbl">Issue Date</div><div class="val" id="c_issue">—</div></div>
+            <div class="info-item"><div class="lbl">Expiry Date</div><div class="val" id="c_expiry">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Passport Details -->
+      <div class="card-sec-title">Passport Details</div>
+      <div class="card-row"><span class="k">Issuing Authority</span><span class="v" id="c_authority">—</span></div>
+      <div class="card-row"><span class="k">Personal No.</span><span class="v" id="c_personalNo">—</span></div>
+      <div class="card-row"><span class="k">Previous PP No.</span><span class="v" id="c_prevPP">—</span></div>
+
+      <!-- Family Info -->
+      <div class="card-sec-title">Family Information</div>
+      <div class="card-row"><span class="k">Father's Name</span><span class="v" id="c_father">—</span></div>
+      <div class="card-row"><span class="k">Mother's Name</span><span class="v" id="c_mother">—</span></div>
+      <div class="card-row"><span class="k">Legal Guardian</span><span class="v" id="c_guardian">—</span></div>
+      <div class="card-row"><span class="k">Permanent Address</span><span class="v" id="c_address">—</span></div>
+
+      <!-- Emergency Contact -->
+      <div class="card-sec-title">Emergency Contact</div>
+      <div class="card-row"><span class="k">Name</span><span class="v" id="c_emgName">—</span></div>
+      <div class="card-row"><span class="k">Relationship</span><span class="v" id="c_emgRel">—</span></div>
+      <div class="card-row"><span class="k">Phone</span><span class="v" id="c_emgPhone">—</span></div>
+      <div class="card-row"><span class="k">Address</span><span class="v" id="c_emgAddress">—</span></div>
+
+      <!-- MRZ -->
+      <div class="card-sec-title">Machine Readable Zone (Reference)</div>
+      <div class="mrz">
+        <div class="mrz-lbl">MRZ Line 1</div>
+        <div id="c_mrz1">P&lt;BGD—</div>
+        <div class="mrz-lbl" style="margin-top:4px;">MRZ Line 2</div>
+        <div id="c_mrz2">—</div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="card-footer">
+      <span>⚠️ এটি একটি Unofficial Reference Card — সরকারি কাজে ব্যবহারযোগ্য নয়</span>
+      <span id="c_generated">Generated: —</span>
+    </div>
+
+  </div>
+
+  <div class="dl-row">
+    <button class="dl-btn" onclick="downloadPDF(this)">📥 PDF ডাউনলোড</button>
+    <button class="print-btn" onclick="window.print()">🖨️ প্রিন্ট করুন</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+let photoURL = '';
+
+function loadPhoto(e){
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    photoURL = ev.target.result;
+    document.getElementById('photoPreview').src = photoURL;
+    document.getElementById('photoPreview').style.display = 'block';
+    document.getElementById('photoPh').style.display = 'none';
+  };
+  r.readAsDataURL(f);
+}
+
+function v(id){ return (document.getElementById(id)?.value||'').trim(); }
+
+function fmtDate(s){
+  if(!s) return '—';
+  const d = new Date(s);
+  const m = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  return String(d.getDate()).padStart(2,'0')+' '+m[d.getMonth()]+' '+d.getFullYear();
+}
+
+function buildMRZ(){
+  const surname  = (v('surname')||'').replace(/\s/g,'<').padEnd(8,'<');
+  const given    = (v('givenName')||'').replace(/\s/g,'<').padEnd(12,'<');
+  const ppNo     = (v('ppNo')||'').padEnd(9,'<');
+  const country  = (v('ppCountry')||'BGD').padEnd(3,'<');
+  const dob      = v('dob') ? new Date(v('dob')).toISOString().slice(2,4)+String(new Date(v('dob')).getMonth()+1).padStart(2,'0')+String(new Date(v('dob')).getDate()).padStart(2,'0') : '000000';
+  const sex      = v('sex')||'M';
+  const expiry   = v('ppExpiry') ? new Date(v('ppExpiry')).toISOString().slice(2,4)+String(new Date(v('ppExpiry')).getMonth()+1).padStart(2,'0')+String(new Date(v('ppExpiry')).getDate()).padStart(2,'0') : '000000';
+  const personal = (v('personalNo')||'').padEnd(14,'<');
+
+  const line1 = `P<${country}${surname}<<${given}`.slice(0,44).padEnd(44,'<');
+  const line2 = `${ppNo}${country}${dob}${sex}${expiry}${personal}`.slice(0,44).padEnd(44,'<');
+  return { line1, line2 };
+}
+
+function setText(id, val){ const el=document.getElementById(id); if(el) el.textContent=val||'—'; }
+
+function generateCard(){
+  const ppNo = v('ppNo'), givenName = v('givenName'), surname = v('surname'), dob = v('dob');
+  if(!ppNo)       { showSt('❌ Passport Number দিন!','err'); return; }
+  if(!givenName)  { showSt('❌ Given Name দিন!','err'); return; }
+  if(!surname)    { showSt('❌ Surname দিন!','err'); return; }
+
+  // Photo
+  const cp = document.getElementById('c_photo');
+  const cph = document.getElementById('c_photoPh');
+  if(photoURL){ cp.src=photoURL; cp.style.display='block'; cph.style.display='none'; }
+  else { cp.style.display='none'; cph.style.display='block'; }
+
+  // Fill fields
+  setText('c_ppNo',     ppNo.toUpperCase());
+  setText('c_typeCountry', (v('ppType')||'P').toUpperCase() + ' / ' + (v('ppCountry')||'BGD').toUpperCase());
+  setText('c_name',     givenName.toUpperCase());
+  setText('c_surname',  surname.toUpperCase());
+  setText('c_dob',      fmtDate(dob));
+  setText('c_sex',      v('sex')==='F' ? 'F (Female)' : 'M (Male)');
+  setText('c_nationality', v('nationality')||'BANGLADESHI');
+  setText('c_pob',      v('pob')||'—');
+  setText('c_issue',    fmtDate(v('ppIssue')));
+  setText('c_expiry',   fmtDate(v('ppExpiry')));
+  setText('c_authority',  v('ppAuthority')||'—');
+  setText('c_personalNo', v('personalNo')||'—');
+  setText('c_prevPP',     v('prevPP')||'—');
+  setText('c_father',   v('fatherName')||'—');
+  setText('c_mother',   v('motherName')||'—');
+  setText('c_guardian', v('guardianName')||'—');
+  setText('c_address',  v('permAddress')||'—');
+  setText('c_emgName',  v('emgName')||'—');
+  setText('c_emgRel',   v('emgRel')||'—');
+  setText('c_emgPhone', v('emgPhone')||'—');
+  setText('c_emgAddress', v('emgAddress')||'—');
+
+  // MRZ
+  const mrz = buildMRZ();
+  setText('c_mrz1', mrz.line1);
+  setText('c_mrz2', mrz.line2);
+
+  // Generated date
+  setText('c_generated', 'Generated: ' + new Date().toLocaleDateString('en-GB'));
+
+  document.getElementById('cardSection').classList.add('show');
+  setTimeout(()=>document.getElementById('cardSection').scrollIntoView({behavior:'smooth'}), 100);
+  showSt('✅ Summary Card তৈরি হয়েছে! PDF ডাউনলোড করুন।','ok');
+}
+
+async function downloadPDF(btn){
+  const orig = btn.innerHTML;
+  btn.innerHTML='⏳ তৈরি হচ্ছে...'; btn.disabled=true;
+  try{
+    const el = document.getElementById('theCard');
+    const canvas = await html2canvas(el,{
+      scale:2, useCORS:true, allowTaint:true,
+      backgroundColor:'#ffffff', logging:false
+    });
+    const imgData = canvas.toDataURL('image/jpeg',0.96);
+    const {jsPDF} = window.jspdf;
+    const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pw = pdf.internal.pageSize.getWidth();
+    const ph = (canvas.height * pw) / canvas.width;
+    pdf.addImage(imgData,'JPEG',0,0,pw,Math.min(ph,297));
+    const name = (v('surname')+'_'+v('givenName')).replace(/\s+/g,'_')||'passport_summary';
+    pdf.save('Passport_Summary_'+name+'.pdf');
+    showSt('✅ PDF ডাউনলোড হয়েছে!','ok');
+  }catch(e){
+    showSt('❌ Error: '+e.message,'err');
+  }
+  btn.innerHTML=orig; btn.disabled=false;
+}
+
+function resetAll(){
+  document.querySelectorAll('input:not([type=file])').forEach(i=>i.value='');
+  document.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+  photoURL='';
+  document.getElementById('photoPreview').style.display='none';
+  document.getElementById('photoPh').style.display='block';
+  document.getElementById('cardSection').classList.remove('show');
+  document.getElementById('st').classList.remove('show');
+}
+
+function showSt(msg,type){
+  const el=document.getElementById('st');
+  el.textContent=msg; el.className='st show '+type;
+  setTimeout(()=>el.classList.remove('show'),6000);
+}
+</script>
+</body>
+</html>
