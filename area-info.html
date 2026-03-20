@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>বাংলাদেশ এলাকা তথ্য সিস্টেম</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans Bengali',sans-serif;background:#f0f4f8;min-height:100vh;}
+
+.nav{background:linear-gradient(135deg,#006a4e,#00a550);padding:14px 22px;display:flex;align-items:center;gap:12px;}
+.nav-icon{width:42px;height:42px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.nav-title{font-size:17px;font-weight:700;color:#fff;}
+.nav-sub{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px;}
+.nav-flag{margin-left:auto;font-size:28px;}
+
+.wrap{max-width:1100px;margin:0 auto;padding:20px 14px 40px;}
+
+/* COUNTRY SELECT */
+.country-wrap{background:#fff;border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,.08);padding:18px 20px;margin-bottom:18px;}
+.sec-title{font-size:13px;font-weight:700;color:#006a4e;background:#e8f5ee;padding:5px 10px;border-radius:4px;border-left:3px solid #006a4e;margin-bottom:12px;}
+.fg{margin-bottom:10px;}
+.fg label{font-size:12px;font-weight:600;color:#333;display:block;margin-bottom:4px;}
+.fg select,.fg input{width:100%;border:1.5px solid #d1d5db;border-radius:7px;padding:9px 11px;font-size:13.5px;font-family:inherit;color:#111;background:#fafcff;transition:border-color .2s;}
+.fg select:focus,.fg input:focus{outline:none;border-color:#006a4e;background:#fff;}
+
+/* CASCADE ROW */
+.cascade-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+.cascade-card{background:#fff;border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,.08);padding:16px;}
+.cc-title{font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.cc-select{width:100%;border:1.5px solid #d1d5db;border-radius:7px;padding:9px 11px;font-size:13.5px;font-family:inherit;color:#111;background:#fafcff;transition:all .2s;}
+.cc-select:focus{outline:none;border-color:#006a4e;}
+.cc-select:disabled{background:#f3f4f6;color:#aaa;}
+
+/* INFO CARD */
+.info-card{background:#fff;border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,.08);padding:18px 20px;margin-bottom:18px;display:none;}
+.info-card.show{display:block;}
+
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0;}
+.stat-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:9px;padding:12px;text-align:center;}
+.stat-val{font-size:22px;font-weight:800;color:#166534;}
+.stat-lbl{font-size:11px;color:#555;margin-top:3px;}
+.stat-inp{width:100%;border:1px solid #86efac;border-radius:5px;padding:5px;font-size:13px;font-family:inherit;text-align:center;background:#fff;color:#166534;font-weight:700;}
+
+/* MAP BTN */
+.map-btn{display:inline-flex;align-items:center;gap:7px;background:#4285f4;color:#fff;padding:9px 18px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;margin-top:10px;border:none;cursor:pointer;font-family:inherit;}
+.map-btn:hover{background:#1a73e8;}
+
+/* VILLAGE LIST */
+.village-wrap{background:#fff;border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,.08);padding:18px 20px;margin-bottom:18px;display:none;}
+.village-wrap.show{display:block;}
+
+.village-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:14px;margin-bottom:10px;}
+.village-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.village-name-inp{flex:1;border:1.5px solid #d1d5db;border-radius:6px;padding:7px 10px;font-size:14px;font-family:inherit;font-weight:700;color:#006a4e;}
+.village-name-inp:focus{outline:none;border-color:#006a4e;}
+.del-vill-btn{background:#fee2e2;color:#dc2626;border:none;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;}
+
+.vd-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;}
+.vd-item label{font-size:11px;font-weight:600;color:#555;display:block;margin-bottom:3px;}
+.vd-item input{width:100%;border:1px solid #d1d5db;border-radius:5px;padding:6px 8px;font-size:13px;font-family:inherit;}
+.vd-item input:focus{outline:none;border-color:#006a4e;}
+
+/* PERSON LIST */
+.person-list{margin-top:10px;}
+.person-hdr{font-size:12px;font-weight:700;color:#1a4a7c;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
+.add-person-btn{background:#dbeafe;color:#1e40af;border:none;padding:4px 12px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;}
+.person-item{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:6px;align-items:center;margin-bottom:5px;}
+.person-item input{border:1px solid #d1d5db;border-radius:5px;padding:5px 7px;font-size:12px;font-family:inherit;width:100%;}
+.person-item input:focus{outline:none;border-color:#1a4a7c;}
+.del-p-btn{background:#fee2e2;color:#dc2626;border:none;padding:4px 8px;border-radius:4px;font-size:11px;cursor:pointer;}
+
+.add-village-btn{background:#e8f5ee;color:#006a4e;border:1.5px dashed #006a4e;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;margin-top:4px;}
+.add-village-btn:hover{background:#d1fae5;}
+
+/* EXPORT */
+.export-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.exp-btn{padding:10px 20px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;}
+.exp-pdf{background:linear-gradient(135deg,#006a4e,#00a550);color:#fff;}
+.exp-print{background:#f0f4f8;color:#333;border:1.5px solid #d1d5db;}
+
+/* TOAST */
+.toast{position:fixed;bottom:18px;right:14px;background:#1e293b;color:#fff;padding:10px 16px;border-radius:9px;font-size:13px;z-index:9999;opacity:0;transform:translateY(40px);transition:all .3s;max-width:280px;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* OTHER COUNTRIES */
+.other-country-info{background:#fffbeb;border:1px solid #fcd34d;border-radius:9px;padding:14px;margin-top:14px;font-size:13px;color:#92400e;display:none;}
+.other-country-info.show{display:block;}
+
+@media(max-width:700px){
+  .cascade-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .vd-grid{grid-template-columns:1fr 1fr;}
+  .person-item{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;}
+}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-icon">🗺️</div>
+  <div>
+    <div class="nav-title">এলাকা তথ্য সিস্টেম</div>
+    <div class="nav-sub">বিভাগ → জেলা → উপজেলা → ইউনিয়ন → গ্রাম — সম্পূর্ণ তথ্য</div>
+  </div>
+  <div class="nav-flag">🇧🇩</div>
+</div>
+
+<div class="wrap">
+
+  <!-- COUNTRY SELECT -->
+  <div class="country-wrap">
+    <div class="sec-title">🌍 দেশ নির্বাচন করুন</div>
+    <div class="fg">
+      <label>দেশের নাম</label>
+      <select id="countrySelect" onchange="onCountry()">
+        <option value="">-- দেশ নির্বাচন করুন --</option>
+        <option value="BD">🇧🇩 বাংলাদেশ (Bangladesh)</option>
+        <optgroup label="─── এশিয়া ───">
+          <option value="IN">🇮🇳 ভারত (India)</option>
+          <option value="PK">🇵🇰 পাকিস্তান (Pakistan)</option>
+          <option value="NP">🇳🇵 নেপাল (Nepal)</option>
+          <option value="LK">🇱🇰 শ্রীলঙ্কা (Sri Lanka)</option>
+          <option value="MY">🇲🇾 মালয়েশিয়া (Malaysia)</option>
+          <option value="SG">🇸🇬 সিঙ্গাপুর (Singapore)</option>
+          <option value="TH">🇹🇭 থাইল্যান্ড (Thailand)</option>
+          <option value="JP">🇯🇵 জাপান (Japan)</option>
+          <option value="CN">🇨🇳 চীন (China)</option>
+          <option value="KR">🇰🇷 দক্ষিণ কোরিয়া (South Korea)</option>
+          <option value="SA">🇸🇦 সৌদি আরব (Saudi Arabia)</option>
+          <option value="AE">🇦🇪 সংযুক্ত আরব আমিরাত (UAE)</option>
+          <option value="QA">🇶🇦 কাতার (Qatar)</option>
+          <option value="KW">🇰🇼 কুয়েত (Kuwait)</option>
+          <option value="OM">🇴🇲 ওমান (Oman)</option>
+          <option value="BH">🇧🇭 বাহরাইন (Bahrain)</option>
+        </optgroup>
+        <optgroup label="─── ইউরোপ ───">
+          <option value="GB">🇬🇧 যুক্তরাজ্য (UK)</option>
+          <option value="DE">🇩🇪 জার্মানি (Germany)</option>
+          <option value="FR">🇫🇷 ফ্রান্স (France)</option>
+          <option value="IT">🇮🇹 ইতালি (Italy)</option>
+          <option value="GR">🇬🇷 গ্রিস (Greece)</option>
+          <option value="PT">🇵🇹 পর্তুগাল (Portugal)</option>
+          <option value="SE">🇸🇪 সুইডেন (Sweden)</option>
+          <option value="NO">🇳🇴 নরওয়ে (Norway)</option>
+          <option value="FI">🇫🇮 ফিনল্যান্ড (Finland)</option>
+          <option value="NL">🇳🇱 নেদারল্যান্ডস (Netherlands)</option>
+          <option value="BE">🇧🇪 বেলজিয়াম (Belgium)</option>
+          <option value="CH">🇨🇭 সুইজারল্যান্ড (Switzerland)</option>
+          <option value="AT">🇦🇹 অস্ট্রিয়া (Austria)</option>
+          <option value="ES">🇪🇸 স্পেন (Spain)</option>
+        </optgroup>
+        <optgroup label="─── আমেরিকা ───">
+          <option value="US">🇺🇸 যুক্তরাষ্ট্র (USA)</option>
+          <option value="CA">🇨🇦 কানাডা (Canada)</option>
+          <option value="AU">🇦🇺 অস্ট্রেলিয়া (Australia)</option>
+          <option value="NZ">🇳🇿 নিউজিল্যান্ড (New Zealand)</option>
+        </optgroup>
+        <optgroup label="─── আফ্রিকা ───">
+          <option value="ZA">🇿🇦 দক্ষিণ আফ্রিকা (South Africa)</option>
+          <option value="NG">🇳🇬 নাইজেরিয়া (Nigeria)</option>
+          <option value="EG">🇪🇬 মিশর (Egypt)</option>
+          <option value="LY">🇱🇾 লিবিয়া (Libya)</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <!-- OTHER COUNTRY INFO -->
+    <div class="other-country-info" id="otherInfo">
+      <strong>ℹ️ এই দেশের বিস্তারিত তথ্য সিস্টেমে নেই।</strong><br>
+      নিচে Google Maps এ দেখুন অথবা নিজে তথ্য যোগ করুন।<br>
+      <a class="map-btn" id="otherMapBtn" href="#" target="_blank" style="margin-top:8px;display:inline-flex;">
+        🗺️ Google Maps এ দেখুন
+      </a>
+    </div>
+  </div>
+
+  <!-- BANGLADESH CASCADE -->
+  <div id="bdSection" style="display:none;">
+
+    <div class="cascade-grid">
+      <div class="cascade-card">
+        <div class="cc-title">📍 বিভাগ</div>
+        <select class="cc-select" id="divSel" onchange="fillDist()">
+          <option value="">-- বিভাগ নির্বাচন --</option>
+          <option>ঢাকা</option><option>চট্টগ্রাম</option><option>রাজশাহী</option>
+          <option>খুলনা</option><option>বরিশাল</option><option>সিলেট</option>
+          <option>রংপুর</option><option>ময়মনসিংহ</option>
+        </select>
+      </div>
+      <div class="cascade-card">
+        <div class="cc-title">🏙️ জেলা</div>
+        <select class="cc-select" id="distSel" onchange="fillUpa()" disabled>
+          <option value="">-- আগে বিভাগ নিন --</option>
+        </select>
+      </div>
+      <div class="cascade-card">
+        <div class="cc-title">🏘️ উপজেলা</div>
+        <select class="cc-select" id="upaSel" onchange="fillUnion()" disabled>
+          <option value="">-- আগে জেলা নিন --</option>
+        </select>
+      </div>
+      <div class="cascade-card">
+        <div class="cc-title">🏡 ইউনিয়ন / পৌরসভা</div>
+        <select class="cc-select" id="unionSel" onchange="showAreaInfo()" disabled>
+          <option value="">-- আগে উপজেলা নিন --</option>
+        </select>
+      </div>
+      <div class="cascade-card">
+        <div class="cc-title">🌾 ওয়ার্ড</div>
+        <select class="cc-select" id="wardSel" onchange="showAreaInfo()" disabled>
+          <option value="">-- আগে ইউনিয়ন নিন --</option>
+        </select>
+      </div>
+      <div class="cascade-card">
+        <div class="cc-title">📮 পোস্ট কোড</div>
+        <input class="cc-select" id="postCode" placeholder="পোস্ট কোড লিখুন..." style="border:1.5px solid #d1d5db;">
+      </div>
+    </div>
+
+    <!-- AREA INFO -->
+    <div class="info-card" id="areaInfo">
+      <div class="sec-title">📊 এলাকার তথ্য (নিজে পূরণ করুন)</div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-lbl">👥 মোট জনসংখ্যা</div>
+          <input class="stat-inp" id="popCount" placeholder="—" type="number">
+        </div>
+        <div class="stat-box" style="background:#eff6ff;border-color:#93c5fd;">
+          <div class="stat-lbl">🏫 স্কুল/মাদ্রাসা</div>
+          <input class="stat-inp" id="schoolCount" placeholder="—" type="number" style="color:#1d4ed8;border-color:#93c5fd;">
+        </div>
+        <div class="stat-box" style="background:#fef3c7;border-color:#fcd34d;">
+          <div class="stat-lbl">🕌 মসজিদ/মন্দির</div>
+          <input class="stat-inp" id="mosqueCount" placeholder="—" type="number" style="color:#92400e;border-color:#fcd34d;">
+        </div>
+        <div class="stat-box" style="background:#fce7f3;border-color:#f9a8d4;">
+          <div class="stat-lbl">🏥 হাসপাতাল/ক্লিনিক</div>
+          <input class="stat-inp" id="hospitalCount" placeholder="—" type="number" style="color:#9d174d;border-color:#f9a8d4;">
+        </div>
+        <div class="stat-box" style="background:#f0fdf4;border-color:#86efac;">
+          <div class="stat-lbl">🏪 বাজার/হাট</div>
+          <input class="stat-inp" id="bazarCount" placeholder="—" type="number" style="color:#166534;border-color:#86efac;">
+        </div>
+        <div class="stat-box" style="background:#f5f3ff;border-color:#c4b5fd;">
+          <div class="stat-lbl">🏦 ব্যাংক/NGO</div>
+          <input class="stat-inp" id="bankCount" placeholder="—" type="number" style="color:#5b21b6;border-color:#c4b5fd;">
+        </div>
+        <div class="stat-box" style="background:#fff7ed;border-color:#fdba74;">
+          <div class="stat-lbl">🛣️ রাস্তার দৈর্ঘ্য (কিমি)</div>
+          <input class="stat-inp" id="roadLen" placeholder="—" type="number" style="color:#c2410c;border-color:#fdba74;">
+        </div>
+        <div class="stat-box" style="background:#f0f9ff;border-color:#7dd3fc;">
+          <div class="stat-lbl">🏠 পরিবার সংখ্যা</div>
+          <input class="stat-inp" id="familyCount" placeholder="—" type="number" style="color:#0369a1;border-color:#7dd3fc;">
+        </div>
+      </div>
+
+      <!-- MAP -->
+      <div style="margin-top:12px;">
+        <div style="font-size:12.5px;font-weight:600;margin-bottom:6px;color:#333;">🗺️ Google Maps</div>
+        <a class="map-btn" id="mapBtn" href="#" target="_blank">🗺️ Google Maps এ দেখুন</a>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
+          <input id="customMapLink" placeholder="নিজের Google Maps লিংক বসান..." style="flex:1;border:1.5px solid #d1d5db;border-radius:7px;padding:8px 10px;font-size:12.5px;font-family:inherit;">
+          <button onclick="setCustomMap()" style="background:#4285f4;color:#fff;border:none;padding:9px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Set</button>
+        </div>
+      </div>
+
+      <!-- NOTES -->
+      <div style="margin-top:12px;">
+        <div style="font-size:12.5px;font-weight:600;margin-bottom:5px;color:#333;">📝 বিশেষ নোট</div>
+        <textarea id="areaNotes" placeholder="এলাকা সম্পর্কে যেকোনো তথ্য লিখুন..." style="width:100%;border:1.5px solid #d1d5db;border-radius:7px;padding:9px 11px;font-size:13px;font-family:inherit;min-height:70px;resize:vertical;"></textarea>
+      </div>
+    </div>
+
+    <!-- VILLAGE SECTION -->
+    <div class="village-wrap" id="villageWrap">
+      <div class="sec-title">🌾 গ্রামের তালিকা ও তথ্য</div>
+      <div id="villageList"></div>
+      <button class="add-village-btn" onclick="addVillage()">+ নতুন গ্রাম যোগ করুন</button>
+
+      <div class="export-row">
+        <button class="exp-btn exp-pdf" onclick="exportPDF()">📥 PDF ডাউনলোড</button>
+        <button class="exp-btn exp-print" onclick="window.print()">🖨️ প্রিন্ট করুন</button>
+        <button class="exp-btn" onclick="saveData()" style="background:#f0fdf4;color:#166534;border:1.5px solid #86efac;">💾 ডেটা সেভ করুন</button>
+        <button class="exp-btn" onclick="loadData()" style="background:#eff6ff;color:#1d4ed8;border:1.5px solid #93c5fd;">📂 ডেটা লোড করুন</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+// ══ DISTRICT DATA ══
+const DIST = {
+  'ঢাকা':['ঢাকা','গাজীপুর','নারায়ণগঞ্জ','মানিকগঞ্জ','মুন্সীগঞ্জ','নরসিংদী','রাজবাড়ী','শরীয়তপুর','ফরিদপুর','মাদারীপুর','গোপালগঞ্জ','কিশোরগঞ্জ','টাঙ্গাইল'],
+  'চট্টগ্রাম':['চট্টগ্রাম','কক্সবাজার','ফেনী','নোয়াখালী','লক্ষ্মীপুর','কুমিল্লা','চাঁদপুর','ব্রাহ্মণবাড়িয়া','রাঙ্গামাটি','বান্দরবান','খাগড়াছড়ি'],
+  'রাজশাহী':['রাজশাহী','নওগাঁ','চাঁপাইনবাবগঞ্জ','নাটোর','বগুড়া','জয়পুরহাট','পাবনা','সিরাজগঞ্জ'],
+  'খুলনা':['খুলনা','যশোর','বাগেরহাট','সাতক্ষীরা','নড়াইল','মাগুরা','কুষ্টিয়া','মেহেরপুর','চুয়াডাঙ্গা','ঝিনাইদহ'],
+  'বরিশাল':['বরিশাল','ঝালকাঠি','পটুয়াখালী','পিরোজপুর','ভোলা','বরগুনা'],
+  'সিলেট':['সিলেট','মৌলভীবাজার','হবিগঞ্জ','সুনামগঞ্জ'],
+  'রংপুর':['রংপুর','গাইবান্ধা','কুড়িগ্রাম','লালমনিরহাট','নীলফামারী','পঞ্চগড়','ঠাকুরগাঁও','দিনাজপুর'],
+  'ময়মনসিংহ':['ময়মনসিংহ','জামালপুর','শেরপুর','নেত্রকোণা']
+};
+
+// উপজেলা ডেটা (বড় জেলা)
+const UPA = {
+  'ঢাকা':['ধামরাই','সাভার','কেরানীগঞ্জ','নবাবগঞ্জ','দোহার','ঢাকা সদর'],
+  'গাজীপুর':['গাজীপুর সদর','কালিয়াকৈর','কালীগঞ্জ','কাপাসিয়া','শ্রীপুর'],
+  'চট্টগ্রাম':['চট্টগ্রাম সদর','আনোয়ারা','বাঁশখালী','বোয়ালখালী','চন্দনাইশ','ফটিকছড়ি','হাটহাজারী','কর্ণফুলী','লোহাগাড়া','মিরসরাই','পটিয়া','রাঙ্গুনিয়া','রাউজান','সন্দ্বীপ','সাতকানিয়া','সীতাকুণ্ড'],
+  'রাজশাহী':['রাজশাহী সদর','বাঘমারা','চারঘাট','দুর্গাপুর','গোদাগাড়ী','মোহনপুর','পবা','পুঠিয়া','তানোর'],
+  'খুলনা':['খুলনা সদর','বটিয়াঘাটা','ডুমুরিয়া','দিঘলিয়া','ফুলতলা','কয়রা','পাইকগাছা','তেরখাদা'],
+  'সিলেট':['সিলেট সদর','বালাগঞ্জ','বিয়ানীবাজার','বিশ্বনাথ','ছাতক','দোয়ারাবাজার','ফেঞ্চুগঞ্জ','গোলাপগঞ্জ','গোয়াইনঘাট','জৈন্তাপুর','কানাইঘাট','কোম্পানীগঞ্জ','ওসমানীনগর','জকিগঞ্জ'],
+  'রংপুর':['রংপুর সদর','বদরগঞ্জ','গঙ্গাচড়া','কাউনিয়া','মিঠাপুকুর','পীরগঞ্জ','পীরগাছা','তারাগঞ্জ'],
+  'ময়মনসিংহ':['ময়মনসিংহ সদর','ভালুকা','ধোবাউড়া','ফুলবাড়িয়া','গফরগাঁও','গৌরীপুর','হালুয়াঘাট','ঈশ্বরগঞ্জ','মুক্তাগাছা','নান্দাইল','ফুলপুর','তারাকান্দা','ত্রিশাল'],
+};
+
+function getUpa(dist){
+  return UPA[dist] || [dist+' সদর', dist+' উত্তর', dist+' দক্ষিণ', dist+' পূর্ব', dist+' পশ্চিম'];
+}
+
+// ══ CASCADE ══
+function fillDist(){
+  const div = document.getElementById('divSel').value;
+  const ds = document.getElementById('distSel');
+  ds.innerHTML = '<option value="">-- জেলা নির্বাচন --</option>';
+  (DIST[div]||[]).forEach(d=>{const o=document.createElement('option');o.value=o.text=d;ds.appendChild(o);});
+  ds.disabled = !div;
+  document.getElementById('upaSel').innerHTML='<option value="">-- আগে জেলা নিন --</option>';
+  document.getElementById('upaSel').disabled=true;
+  document.getElementById('unionSel').innerHTML='<option value="">-- আগে উপজেলা নিন --</option>';
+  document.getElementById('unionSel').disabled=true;
+  document.getElementById('wardSel').innerHTML='<option value="">-- আগে ইউনিয়ন নিন --</option>';
+  document.getElementById('wardSel').disabled=true;
+  document.getElementById('areaInfo').classList.remove('show');
+  document.getElementById('villageWrap').classList.remove('show');
+}
+
+function fillUpa(){
+  const dist = document.getElementById('distSel').value;
+  const us = document.getElementById('upaSel');
+  us.innerHTML = '<option value="">-- উপজেলা নির্বাচন --</option>';
+  getUpa(dist).forEach(u=>{const o=document.createElement('option');o.value=o.text=u;us.appendChild(o);});
+  us.disabled = !dist;
+  document.getElementById('unionSel').innerHTML='<option value="">-- আগে উপজেলা নিন --</option>';
+  document.getElementById('unionSel').disabled=true;
+  document.getElementById('wardSel').innerHTML='<option value="">-- আগে ইউনিয়ন নিন --</option>';
+  document.getElementById('wardSel').disabled=true;
+}
+
+function fillUnion(){
+  const upa = document.getElementById('upaSel').value;
+  const us = document.getElementById('unionSel');
+  us.innerHTML = '<option value="">-- ইউনিয়ন নির্বাচন --</option>';
+  const unions = ['১নং ইউনিয়ন','২নং ইউনিয়ন','৩নং ইউনিয়ন','৪নং ইউনিয়ন','৫নং ইউনিয়ন','৬নং ইউনিয়ন','৭নং ইউনিয়ন','৮নং ইউনিয়ন','৯নং ইউনিয়ন','পৌরসভা','সিটি কর্পোরেশন'];
+  unions.forEach(u=>{const o=document.createElement('option');o.value=o.text=u;us.appendChild(o);});
+  us.disabled = !upa;
+
+  const ws = document.getElementById('wardSel');
+  ws.innerHTML = '<option value="">-- ওয়ার্ড নির্বাচন --</option>';
+  for(let i=1;i<=9;i++){const o=document.createElement('option');o.value=o.text=i+'নং ওয়ার্ড';ws.appendChild(o);}
+  ws.disabled = !upa;
+}
+
+function showAreaInfo(){
+  const div=document.getElementById('divSel').value;
+  const dist=document.getElementById('distSel').value;
+  const upa=document.getElementById('upaSel').value;
+  if(!div||!dist||!upa)return;
+  document.getElementById('areaInfo').classList.add('show');
+  document.getElementById('villageWrap').classList.add('show');
+
+  // Map link
+  const q = encodeURIComponent((document.getElementById('unionSel').value||upa)+', '+dist+', Bangladesh');
+  document.getElementById('mapBtn').href = 'https://www.google.com/maps/search/?api=1&query='+q;
+}
+
+// ══ COUNTRY ══
+function onCountry(){
+  const c = document.getElementById('countrySelect').value;
+  const bdSec = document.getElementById('bdSection');
+  const otherInfo = document.getElementById('otherInfo');
+  if(c==='BD'){
+    bdSec.style.display='block';
+    otherInfo.classList.remove('show');
+  } else if(c){
+    bdSec.style.display='none';
+    otherInfo.classList.add('show');
+    const countryNames = {IN:'India',PK:'Pakistan',NP:'Nepal',LK:'Sri Lanka',MY:'Malaysia',SG:'Singapore',TH:'Thailand',JP:'Japan',CN:'China',KR:'South Korea',SA:'Saudi Arabia',AE:'UAE',QA:'Qatar',KW:'Kuwait',OM:'Oman',BH:'Bahrain',GB:'United Kingdom',DE:'Germany',FR:'France',IT:'Italy',GR:'Greece',PT:'Portugal',SE:'Sweden',NO:'Norway',FI:'Finland',NL:'Netherlands',BE:'Belgium',CH:'Switzerland',AT:'Austria',ES:'Spain',US:'United States',CA:'Canada',AU:'Australia',NZ:'New Zealand',ZA:'South Africa',NG:'Nigeria',EG:'Egypt',LY:'Libya'};
+    const mapLink = 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(countryNames[c]||c);
+    document.getElementById('otherMapBtn').href = mapLink;
+  } else {
+    bdSec.style.display='none';
+    otherInfo.classList.remove('show');
+  }
+}
+
+function setCustomMap(){
+  const link = document.getElementById('customMapLink').value.trim();
+  if(!link){showToast('❌ লিংক দিন!');return;}
+  document.getElementById('mapBtn').href = link;
+  showToast('✅ Map লিংক সেট হয়েছে!');
+}
+
+// ══ VILLAGE ══
+let villCount = 0;
+function addVillage(data={}){
+  villCount++;
+  const id = 'vill_'+villCount;
+  const div = document.createElement('div');
+  div.className = 'village-item';
+  div.id = id;
+  div.innerHTML = `
+    <div class="village-hdr">
+      <span style="font-size:16px;">🌾</span>
+      <input class="village-name-inp" placeholder="গ্রামের নাম লিখুন..." value="${data.name||''}">
+      <button class="del-vill-btn" onclick="document.getElementById('${id}').remove()">✕ মুছুন</button>
+    </div>
+    <div class="vd-grid">
+      <div class="vd-item"><label>👥 জনসংখ্যা</label><input type="number" placeholder="—" value="${data.pop||''}"></div>
+      <div class="vd-item"><label>🏠 পরিবার</label><input type="number" placeholder="—" value="${data.fam||''}"></div>
+      <div class="vd-item"><label>🏫 স্কুল</label><input type="number" placeholder="—" value="${data.school||''}"></div>
+      <div class="vd-item"><label>🕌 মসজিদ</label><input type="number" placeholder="—" value="${data.mosque||''}"></div>
+      <div class="vd-item"><label>⛪ মন্দির/গির্জা</label><input type="number" placeholder="—" value="${data.temple||''}"></div>
+      <div class="vd-item"><label>🏥 ক্লিনিক</label><input type="number" placeholder="—" value="${data.clinic||''}"></div>
+      <div class="vd-item"><label>🏪 হাট/বাজার</label><input type="number" placeholder="—" value="${data.bazar||''}"></div>
+      <div class="vd-item"><label>💧 পুকুর/নদী</label><input placeholder="—" value="${data.water||''}"></div>
+      <div class="vd-item"><label>📮 পোস্ট কোড</label><input placeholder="—" value="${data.post||''}"></div>
+    </div>
+    <div style="margin-top:6px;">
+      <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:4px;">📝 বিশেষ তথ্য</div>
+      <textarea placeholder="গ্রামের ইতিহাস, বিশেষত্ব, যোগাযোগ ইত্যাদি..." style="width:100%;border:1px solid #d1d5db;border-radius:6px;padding:8px;font-size:12.5px;font-family:inherit;min-height:55px;resize:vertical;">${data.notes||''}</textarea>
+    </div>
+    <div class="person-list" id="pl_${id}">
+      <div class="person-hdr">
+        <span>👤 স্থানীয় ব্যক্তিত্ব / গণ্যমান্য ব্যক্তি</span>
+        <button class="add-person-btn" onclick="addPerson('pl_${id}')">+ ব্যক্তি যোগ করুন</button>
+      </div>
+      <div id="persons_${id}"></div>
+    </div>`;
+  document.getElementById('villageList').appendChild(div);
+
+  // Load persons if data provided
+  if(data.persons&&data.persons.length){
+    data.persons.forEach(p=>addPerson('pl_'+id, p));
+  }
+}
+
+function addPerson(plId, data={}){
+  const pid = 'p_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+  const row = document.createElement('div');
+  row.className = 'person-item';
+  row.id = pid;
+  row.innerHTML = `
+    <input placeholder="নাম" value="${data.name||''}">
+    <input placeholder="পেশা / পদবী" value="${data.job||''}">
+    <input placeholder="মোবাইল নম্বর" value="${data.phone||''}">
+    <input placeholder="বিশেষ তথ্য" value="${data.note||''}">
+    <button class="del-p-btn" onclick="document.getElementById('${pid}').remove()">✕</button>`;
+  const container = document.getElementById('persons_'+plId.replace('pl_',''));
+  if(container) container.appendChild(row);
+  else {
+    // find closest persons div
+    const pl = document.getElementById(plId);
+    if(pl){
+      const personsDiv = pl.querySelector('[id^="persons_"]');
+      if(personsDiv) personsDiv.appendChild(row);
+    }
+  }
+}
+
+// ══ SAVE / LOAD ══
+function saveData(){
+  const data = {
+    country: document.getElementById('countrySelect').value,
+    div: document.getElementById('divSel').value,
+    dist: document.getElementById('distSel').value,
+    upa: document.getElementById('upaSel').value,
+    union: document.getElementById('unionSel').value,
+    ward: document.getElementById('wardSel').value,
+    postCode: document.getElementById('postCode').value,
+    pop: document.getElementById('popCount').value,
+    school: document.getElementById('schoolCount').value,
+    mosque: document.getElementById('mosqueCount').value,
+    hospital: document.getElementById('hospitalCount').value,
+    bazar: document.getElementById('bazarCount').value,
+    bank: document.getElementById('bankCount').value,
+    road: document.getElementById('roadLen').value,
+    family: document.getElementById('familyCount').value,
+    notes: document.getElementById('areaNotes').value,
+    villages: []
+  };
+  document.querySelectorAll('.village-item').forEach(v=>{
+    const inputs = v.querySelectorAll('input,textarea');
+    const persons = [];
+    v.querySelectorAll('.person-item').forEach(p=>{
+      const pi = p.querySelectorAll('input');
+      persons.push({name:pi[0]?.value||'',job:pi[1]?.value||'',phone:pi[2]?.value||'',note:pi[3]?.value||''});
+    });
+    data.villages.push({
+      name:inputs[0]?.value||'',pop:inputs[1]?.value||'',fam:inputs[2]?.value||'',
+      school:inputs[3]?.value||'',mosque:inputs[4]?.value||'',temple:inputs[5]?.value||'',
+      clinic:inputs[6]?.value||'',bazar:inputs[7]?.value||'',water:inputs[8]?.value||'',
+      post:inputs[9]?.value||'',notes:v.querySelector('textarea')?.value||'',persons
+    });
+  });
+  localStorage.setItem('bdAreaData', JSON.stringify(data));
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'area_data_'+(data.dist||'bd')+'_'+Date.now()+'.json';
+  a.click();
+  showToast('✅ ডেটা সেভ হয়েছে!');
+}
+
+function loadData(){
+  const inp = document.createElement('input');
+  inp.type='file'; inp.accept='.json';
+  inp.onchange = e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      try{
+        const data=JSON.parse(ev.target.result);
+        document.getElementById('countrySelect').value=data.country||'BD';
+        onCountry();
+        if(data.country==='BD'){
+          document.getElementById('divSel').value=data.div||'';fillDist();
+          setTimeout(()=>{
+            document.getElementById('distSel').value=data.dist||'';fillUpa();
+            setTimeout(()=>{
+              document.getElementById('upaSel').value=data.upa||'';fillUnion();
+              document.getElementById('unionSel').value=data.union||'';
+              document.getElementById('wardSel').value=data.ward||'';
+              document.getElementById('postCode').value=data.postCode||'';
+              showAreaInfo();
+              document.getElementById('popCount').value=data.pop||'';
+              document.getElementById('schoolCount').value=data.school||'';
+              document.getElementById('mosqueCount').value=data.mosque||'';
+              document.getElementById('hospitalCount').value=data.hospital||'';
+              document.getElementById('bazarCount').value=data.bazar||'';
+              document.getElementById('bankCount').value=data.bank||'';
+              document.getElementById('roadLen').value=data.road||'';
+              document.getElementById('familyCount').value=data.family||'';
+              document.getElementById('areaNotes').value=data.notes||'';
+              document.getElementById('villageList').innerHTML='';
+              villCount=0;
+              (data.villages||[]).forEach(v=>addVillage(v));
+              showToast('✅ ডেটা লোড হয়েছে!');
+            },200);
+          },200);
+        }
+      }catch(e){showToast('❌ ফাইল পড়তে সমস্যা!');}
+    };
+    r.readAsText(f);
+  };
+  inp.click();
+}
+
+// ══ EXPORT PDF ══
+async function exportPDF(){
+  showToast('⏳ PDF তৈরি হচ্ছে...');
+  try{
+    const el = document.getElementById('villageWrap');
+    const canvas = await html2canvas(el,{scale:1.5,backgroundColor:'#fff',useCORS:true,logging:false});
+    const img = canvas.toDataURL('image/jpeg',.92);
+    const {jsPDF} = window.jspdf;
+    const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pw = pdf.internal.pageSize.getWidth();
+    const ph = (canvas.height*pw)/canvas.width;
+    let y=0, pageH=297;
+    while(y<ph){
+      if(y>0) pdf.addPage();
+      pdf.addImage(img,'JPEG',0,-y,pw,ph);
+      y+=pageH;
+    }
+    const dist = document.getElementById('distSel').value||'area';
+    pdf.save('এলাকা_তথ্য_'+dist+'.pdf');
+    showToast('✅ PDF ডাউনলোড হয়েছে!');
+  }catch(e){showToast('❌ Error: '+e.message);}
+}
+
+function showToast(m){
+  const t=document.getElementById('toast');
+  t.textContent=m;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
+</body>
+</html>
