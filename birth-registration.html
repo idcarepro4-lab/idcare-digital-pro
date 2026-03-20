@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>জন্ম নিবন্ধন আবেদন সহায়তা</title>
+  <link href="https://fonts.maateen.me/kalpurush/font.css" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Kalpurush', 'SolaimanLipi', 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+      padding: 2.2rem 2.8rem;
+    }
+    .header { margin-bottom: 2rem; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #EAF3DE; color: #3B6D11;
+      font-size: 13px; padding: 4px 14px;
+      border-radius: 20px; margin-bottom: 12px;
+    }
+    .dot { width: 7px; height: 7px; background: #639922; border-radius: 50%; display:inline-block; }
+    .header h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; color: #111; }
+    .header p { font-size: 14px; color: #666; }
+
+    .top-btns { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .top-btn {
+      padding: 9px 18px; border-radius: 8px; font-size: 13px;
+      cursor: pointer; border: 1px solid #ddd;
+      background: #fff; color: #333; font-family: 'Kalpurush', sans-serif;
+      transition: all 0.15s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .top-btn.blue { background: #185FA5; color: #fff; border-color: #185FA5; }
+    .top-btn.blue:hover { background: #0C447C; }
+    .top-btn.green { background: #1a7a4a; color: #fff; border-color: #1a7a4a; }
+    .top-btn.green:hover { background: #145c37; }
+
+    .steps {
+      display: flex; margin-bottom: 2rem;
+      border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden;
+    }
+    .step {
+      flex: 1; padding: 10px 6px; text-align: center;
+      font-size: 12px; color: #888; background: #f8f8f8;
+      cursor: pointer; border-right: 1px solid #e0e0e0;
+      transition: background 0.2s; font-family: 'Kalpurush', sans-serif;
+    }
+    .step:last-child { border-right: none; }
+    .step.active { background: #fff; color: #111; font-weight: 700; }
+    .step.done { background: #EAF3DE; color: #3B6D11; }
+    .step-num { display: block; font-size: 10px; margin-bottom: 2px; opacity: 0.6; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .section-title {
+      font-size: 12px; font-weight: 700; color: #888;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      margin-bottom: 1rem; padding-bottom: 6px;
+      border-bottom: 1px solid #eee;
+    }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .grid1 { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 14px; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 13px; color: #555; font-weight: 600; }
+    .req { color: #E24B4A; }
+
+    input[type=text], input[type=date], select, textarea {
+      width: 100%; padding: 9px 12px; font-size: 14px;
+      border: 1px solid #ddd; border-radius: 8px;
+      background: #fff; color: #111; outline: none;
+      font-family: 'Kalpurush', sans-serif;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #378ADD;
+      box-shadow: 0 0 0 3px rgba(55,138,221,0.12);
+    }
+    textarea { resize: vertical; min-height: 72px; }
+    .radio-group { display: flex; gap: 18px; flex-wrap: wrap; }
+    .radio-opt { display: flex; align-items: center; gap: 7px; cursor: pointer; font-size: 14px; color: #222; }
+    .radio-opt input[type=radio] { accent-color: #185FA5; width: 16px; height: 16px; }
+
+    .btn-row { display: flex; gap: 10px; margin-top: 1.8rem; justify-content: flex-end; flex-wrap: wrap; }
+    .btn {
+      padding: 10px 22px; border-radius: 8px; font-size: 14px;
+      cursor: pointer; border: 1px solid #ccc;
+      background: #fff; color: #333; font-family: 'Kalpurush', sans-serif;
+      transition: background 0.15s; text-decoration: none; display: inline-block;
+    }
+    .btn:hover { background: #f5f5f5; }
+    .btn.primary { background: #185FA5; color: #fff; border-color: #185FA5; font-weight: 600; }
+    .btn.primary:hover { background: #0C447C; }
+    .btn.green { background: #1a7a4a; color: #fff; border-color: #1a7a4a; font-weight: 600; }
+    .btn.green:hover { background: #145c37; }
+
+    .hint { font-size: 12px; color: #999; margin-top: 2px; }
+    .info-box {
+      background: #E6F1FB; border: 1px solid #B5D4F4;
+      border-radius: 8px; padding: 12px 16px;
+      margin-bottom: 1.5rem; font-size: 13px; color: #0C447C; line-height: 1.8;
+    }
+    .warn {
+      font-size: 13px; color: #854F0B; background: #FAEEDA;
+      border-radius: 8px; padding: 9px 13px; margin-top: 10px; line-height: 1.7;
+    }
+    .summary-card {
+      background: #f8f9fb; border-radius: 10px;
+      border: 1px solid #e8e8e8; padding: 1.25rem; margin-bottom: 1rem;
+    }
+    .summary-row {
+      display: flex; justify-content: space-between;
+      padding: 6px 0; font-size: 13px; border-bottom: 1px solid #efefef;
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row .lbl { color: #777; }
+    .summary-row .val { color: #111; font-weight: 600; text-align: right; max-width: 60%; }
+
+    footer {
+      text-align: center; margin-top: 2rem;
+      font-size: 12px; color: #bbb;
+    }
+
+    /* ===== PRINT STYLES ===== */
+    @media print {
+      body { background: #fff; padding: 0; }
+      .container { box-shadow: none; border-radius: 0; padding: 1cm 1.5cm; max-width: 100%; }
+      .top-btns, .steps, .btn-row, .info-box, .warn,
+      #panel1, #panel2, #panel3, #panel4, #panel5, footer { display: none !important; }
+      #panel-print { display: block !important; }
+
+      .print-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 20px; }
+      .print-header h2 { font-size: 20px; font-weight: 700; font-family: 'Kalpurush', sans-serif; }
+      .print-header p { font-size: 12px; color: #444; font-family: 'Kalpurush', sans-serif; margin-top: 4px; }
+
+      .print-section { margin-bottom: 16px; }
+      .print-section-title {
+        font-size: 13px; font-weight: 700; background: #eee;
+        padding: 5px 8px; margin-bottom: 10px;
+        font-family: 'Kalpurush', sans-serif;
+      }
+      .print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+      .print-field { margin-bottom: 8px; font-family: 'Kalpurush', sans-serif; }
+      .print-field .plbl { font-size: 11px; color: #555; margin-bottom: 2px; }
+      .print-field .pval {
+        border-bottom: 1px solid #888; min-height: 24px;
+        padding: 2px 4px; font-size: 13px; font-weight: 600;
+        font-family: 'Kalpurush', sans-serif;
+      }
+      .seal-box {
+        border: 1px dashed #999; height: 80px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px; color: #aaa; margin-top: 16px;
+        font-family: 'Kalpurush', sans-serif;
+      }
+      .print-sign { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 40px; }
+      .print-sign div {
+        border-top: 1px solid #000; padding-top: 6px;
+        font-size: 12px; font-family: 'Kalpurush', sans-serif; text-align: center;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .container { padding: 1.2rem 1rem; }
+      .grid2 { grid-template-columns: 1fr; }
+      .steps { flex-wrap: wrap; }
+      .step { flex: 1 1 40%; border-bottom: 1px solid #e0e0e0; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="badge"><span class="dot"></span> অফিশিয়াল প্রক্রিয়া অনুযায়ী</div>
+    <h1>জন্ম নিবন্ধন আবেদন সহায়তা</h1>
+    <p>বাংলাদেশ জন্ম ও মৃত্যু নিবন্ধন আইন ২০০৪ অনুযায়ী</p>
+  </div>
+
+  <div class="top-btns">
+    <a href="https://bdris.gov.bd" target="_blank" class="top-btn blue">🌐 bdris.gov.bd — অনলাইন আবেদন</a>
+    <button class="top-btn green" onclick="printForm()">🖨️ প্রিন্ট / PDF করুন</button>
+  </div>
+
+  <div class="steps">
+    <div class="step active" id="s1"><span class="step-num">ধাপ ১</span>ব্যক্তিগত</div>
+    <div class="step" id="s2"><span class="step-num">ধাপ ২</span>জন্ম তথ্য</div>
+    <div class="step" id="s3"><span class="step-num">ধাপ ৩</span>পিতামাতা</div>
+    <div class="step" id="s4"><span class="step-num">ধাপ ৪</span>ঠিকানা</div>
+    <div class="step" id="s5"><span class="step-num">ধাপ ৫</span>পর্যালোচনা</div>
+  </div>
+
+  <!-- Panel 1 -->
+  <div class="panel active" id="panel1">
+    <div class="info-box"><strong>গুরুত্বপূর্ণ:</strong> জন্মের ৪৫ দিনের মধ্যে নিবন্ধন করলে কোনো ফি নেই। অনলাইনে bdris.gov.bd-তে আবেদন করুন অথবা স্থানীয় ইউনিয়ন পরিষদ/পৌরসভায় যান।</div>
+    <div class="section-title">ব্যক্তিগত তথ্য</div>
+    <div class="grid2">
+      <div class="field"><label>পুরো নাম (বাংলা) <span class="req">*</span></label><input type="text" id="name_bn" placeholder="যেমন: মোহাম্মদ রাহিম"></div>
+      <div class="field"><label>পুরো নাম (ইংরেজি) <span class="req">*</span></label><input type="text" id="name_en" placeholder="e.g. Mohammad Rahim"></div>
+    </div>
+    <div class="grid1">
+      <div class="field">
+        <label>লিঙ্গ <span class="req">*</span></label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="gender" value="পুরুষ" checked> পুরুষ</label>
+          <label class="radio-opt"><input type="radio" name="gender" value="মহিলা"> মহিলা</label>
+          <label class="radio-opt"><input type="radio" name="gender" value="তৃতীয় লিঙ্গ"> তৃতীয় লিঙ্গ</label>
+        </div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>ধর্ম</label>
+        <select id="religion"><option value="">নির্বাচন করুন</option><option>ইসলাম</option><option>হিন্দু</option><option>খ্রিস্টান</option><option>বৌদ্ধ</option><option>অন্যান্য</option></select>
+      </div>
+      <div class="field"><label>জাতীয়তা <span class="req">*</span></label>
+        <select id="nationality"><option value="বাংলাদেশি">বাংলাদেশি</option><option>দ্বৈত নাগরিক</option><option>অন্যান্য</option></select>
+      </div>
+    </div>
+    <div class="btn-row"><button class="btn primary" onclick="goTo(2)">পরবর্তী ধাপ →</button></div>
+  </div>
+
+  <!-- Panel 2 -->
+  <div class="panel" id="panel2">
+    <div class="section-title">জন্ম সংক্রান্ত তথ্য</div>
+    <div class="grid2">
+      <div class="field"><label>জন্ম তারিখ <span class="req">*</span></label><input type="date" id="dob"></div>
+      <div class="field"><label>জন্মের সময়</label><input type="text" id="tob" placeholder="যেমন: সকাল ৮:৩০"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>জন্মের স্থানের ধরন <span class="req">*</span></label>
+        <select id="birth_place_type"><option value="">নির্বাচন করুন</option><option>হাসপাতাল/ক্লিনিক</option><option>বাড়িতে</option><option>অন্যান্য</option></select>
+      </div>
+      <div class="field"><label>হাসপাতাল/স্থানের নাম</label><input type="text" id="birth_place" placeholder="যেমন: ঢাকা মেডিকেল কলেজ হাসপাতাল"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>জন্মের জেলা <span class="req">*</span></label>
+        <select id="birth_district">
+          <option value="">জেলা নির্বাচন করুন</option>
+          <option>ঢাকা</option><option>চট্টগ্রাম</option><option>রাজশাহী</option><option>খুলনা</option>
+          <option>বরিশাল</option><option>সিলেট</option><option>রংপুর</option><option>ময়মনসিংহ</option>
+          <option>কুমিল্লা</option><option>গাজীপুর</option><option>নারায়ণগঞ্জ</option><option>অন্যান্য জেলা</option>
+        </select>
+      </div>
+      <div class="field"><label>জন্মের উপজেলা/থানা <span class="req">*</span></label><input type="text" id="birth_upazila" placeholder="উপজেলা/থানার নাম"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="goTo(1)">← পূর্ববর্তী</button>
+      <button class="btn primary" onclick="goTo(3)">পরবর্তী ধাপ →</button>
+    </div>
+  </div>
+
+  <!-- Panel 3 -->
+  <div class="panel" id="panel3">
+    <div class="section-title">পিতার তথ্য</div>
+    <div class="grid2">
+      <div class="field"><label>পিতার নাম (বাংলা) <span class="req">*</span></label><input type="text" id="father_bn" placeholder="পিতার পুরো নাম"></div>
+      <div class="field"><label>পিতার নাম (ইংরেজি) <span class="req">*</span></label><input type="text" id="father_en" placeholder="Father's full name"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>পিতার NID নং</label><input type="text" id="father_nid" placeholder="১৭ সংখ্যার NID নম্বর"><span class="hint">NID না থাকলে পাসপোর্ট / জন্ম নিবন্ধন নম্বর দিন</span></div>
+      <div class="field"><label>পিতার জাতীয়তা</label><select id="father_nat"><option>বাংলাদেশি</option><option>অন্যান্য</option></select></div>
+    </div>
+    <div class="section-title" style="margin-top:1.2rem">মাতার তথ্য</div>
+    <div class="grid2">
+      <div class="field"><label>মাতার নাম (বাংলা) <span class="req">*</span></label><input type="text" id="mother_bn" placeholder="মাতার পুরো নাম"></div>
+      <div class="field"><label>মাতার নাম (ইংরেজি) <span class="req">*</span></label><input type="text" id="mother_en" placeholder="Mother's full name"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>মাতার NID নং</label><input type="text" id="mother_nid" placeholder="১৭ সংখ্যার NID নম্বর"></div>
+      <div class="field"><label>মাতার জাতীয়তা</label><select id="mother_nat"><option>বাংলাদেশি</option><option>অন্যান্য</option></select></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="goTo(2)">← পূর্ববর্তী</button>
+      <button class="btn primary" onclick="goTo(4)">পরবর্তী ধাপ →</button>
+    </div>
+  </div>
+
+  <!-- Panel 4 -->
+  <div class="panel" id="panel4">
+    <div class="section-title">স্থায়ী ঠিকানা</div>
+    <div class="grid2">
+      <div class="field"><label>বিভাগ <span class="req">*</span></label>
+        <select id="division"><option value="">বিভাগ নির্বাচন করুন</option><option>ঢাকা</option><option>চট্টগ্রাম</option><option>রাজশাহী</option><option>খুলনা</option><option>বরিশাল</option><option>সিলেট</option><option>রংপুর</option><option>ময়মনসিংহ</option></select>
+      </div>
+      <div class="field"><label>জেলা <span class="req">*</span></label><input type="text" id="district" placeholder="জেলার নাম"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>উপজেলা/থানা <span class="req">*</span></label><input type="text" id="upazila" placeholder="উপজেলা/থানার নাম"></div>
+      <div class="field"><label>ইউনিয়ন/পৌরসভা <span class="req">*</span></label><input type="text" id="union" placeholder="ইউনিয়ন বা পৌরসভার নাম"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>ওয়ার্ড নং</label><input type="text" id="ward" placeholder="ওয়ার্ড নম্বর"></div>
+      <div class="field"><label>গ্রাম/মহল্লা <span class="req">*</span></label><input type="text" id="village" placeholder="গ্রাম বা মহল্লার নাম"></div>
+    </div>
+    <div class="grid1">
+      <div class="field"><label>বাড়ি নং / রাস্তা</label><input type="text" id="house" placeholder="বাড়ি নং, রাস্তার নাম"></div>
+    </div>
+    <div class="section-title" style="margin-top:1.2rem">আবেদনকারীর তথ্য</div>
+    <div class="grid2">
+      <div class="field"><label>আবেদনকারীর সম্পর্ক <span class="req">*</span></label>
+        <select id="applicant_rel"><option value="">নির্বাচন করুন</option><option>পিতা</option><option>মাতা</option><option>নিজে (প্রাপ্তবয়স্ক হলে)</option><option>আইনি অভিভাবক</option></select>
+      </div>
+      <div class="field"><label>মোবাইল নম্বর <span class="req">*</span></label><input type="text" id="mobile" placeholder="০১XXXXXXXXX"></div>
+    </div>
+    <div class="warn">⚠ সঠিক মোবাইল নম্বর দিন — ট্র্যাকিং নম্বর এই নম্বরে পাঠানো হবে।</div>
+    <div class="btn-row">
+      <button class="btn" onclick="goTo(3)">← পূর্ববর্তী</button>
+      <button class="btn primary" onclick="goTo(5)">পর্যালোচনা করুন →</button>
+    </div>
+  </div>
+
+  <!-- Panel 5 -->
+  <div class="panel" id="panel5">
+    <div class="info-box">তথ্যগুলো যাচাই করুন। এরপর প্রিন্ট করে ইউনিয়ন পরিষদে নিয়ে যান অথবা bdris.gov.bd-তে সরাসরি জমা দিন।</div>
+    <div class="summary-card">
+      <div class="section-title">ব্যক্তিগত তথ্য</div>
+      <div class="summary-row"><span class="lbl">নাম (বাংলা)</span><span class="val" id="r_name_bn">—</span></div>
+      <div class="summary-row"><span class="lbl">নাম (ইংরেজি)</span><span class="val" id="r_name_en">—</span></div>
+      <div class="summary-row"><span class="lbl">লিঙ্গ</span><span class="val" id="r_gender">—</span></div>
+      <div class="summary-row"><span class="lbl">ধর্ম</span><span class="val" id="r_religion">—</span></div>
+      <div class="summary-row"><span class="lbl">জাতীয়তা</span><span class="val" id="r_nat">—</span></div>
+    </div>
+    <div class="summary-card">
+      <div class="section-title">জন্ম সংক্রান্ত</div>
+      <div class="summary-row"><span class="lbl">জন্ম তারিখ</span><span class="val" id="r_dob">—</span></div>
+      <div class="summary-row"><span class="lbl">জন্মের স্থান</span><span class="val" id="r_bplace">—</span></div>
+      <div class="summary-row"><span class="lbl">জন্মের জেলা</span><span class="val" id="r_bdistrict">—</span></div>
+    </div>
+    <div class="summary-card">
+      <div class="section-title">পিতামাতার তথ্য</div>
+      <div class="summary-row"><span class="lbl">পিতার নাম</span><span class="val" id="r_father">—</span></div>
+      <div class="summary-row"><span class="lbl">মাতার নাম</span><span class="val" id="r_mother">—</span></div>
+    </div>
+    <div class="summary-card">
+      <div class="section-title">ঠিকানা ও আবেদনকারী</div>
+      <div class="summary-row"><span class="lbl">জেলা</span><span class="val" id="r_dist">—</span></div>
+      <div class="summary-row"><span class="lbl">উপজেলা</span><span class="val" id="r_upa">—</span></div>
+      <div class="summary-row"><span class="lbl">গ্রাম/মহল্লা</span><span class="val" id="r_vil">—</span></div>
+      <div class="summary-row"><span class="lbl">আবেদনকারীর সম্পর্ক</span><span class="val" id="r_rel">—</span></div>
+      <div class="summary-row"><span class="lbl">মোবাইল</span><span class="val" id="r_mobile">—</span></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="goTo(4)">← সম্পাদনা</button>
+      <button class="btn green" onclick="printForm()">🖨️ প্রিন্ট / PDF</button>
+      <a href="https://bdris.gov.bd" target="_blank" class="btn primary">🌐 bdris.gov.bd-তে জমা দিন →</a>
+    </div>
+  </div>
+
+  <!-- Print Panel (hidden, shown only on print) -->
+  <div class="panel" id="panel-print">
+    <div class="print-header">
+      <h2>জন্ম নিবন্ধন আবেদন ফর্ম</h2>
+      <p>বাংলাদেশ জন্ম ও মৃত্যু নিবন্ধন আইন ২০০৪ · bdris.gov.bd</p>
+      <p>আবেদনের তারিখ: <span id="p_date"></span></p>
+    </div>
+    <div class="print-section">
+      <div class="print-section-title">১. ব্যক্তিগত তথ্য</div>
+      <div class="print-grid">
+        <div class="print-field"><div class="plbl">পুরো নাম (বাংলা)</div><div class="pval" id="p_name_bn"></div></div>
+        <div class="print-field"><div class="plbl">পুরো নাম (ইংরেজি)</div><div class="pval" id="p_name_en"></div></div>
+        <div class="print-field"><div class="plbl">লিঙ্গ</div><div class="pval" id="p_gender"></div></div>
+        <div class="print-field"><div class="plbl">ধর্ম</div><div class="pval" id="p_religion"></div></div>
+        <div class="print-field"><div class="plbl">জাতীয়তা</div><div class="pval" id="p_nat"></div></div>
+      </div>
+    </div>
+    <div class="print-section">
+      <div class="print-section-title">২. জন্ম সংক্রান্ত তথ্য</div>
+      <div class="print-grid">
+        <div class="print-field"><div class="plbl">জন্ম তারিখ</div><div class="pval" id="p_dob"></div></div>
+        <div class="print-field"><div class="plbl">জন্মের সময়</div><div class="pval" id="p_tob"></div></div>
+        <div class="print-field"><div class="plbl">জন্মের স্থানের ধরন</div><div class="pval" id="p_btype"></div></div>
+        <div class="print-field"><div class="plbl">হাসপাতাল/স্থানের নাম</div><div class="pval" id="p_bplace"></div></div>
+        <div class="print-field"><div class="plbl">জন্মের জেলা</div><div class="pval" id="p_bdistrict"></div></div>
+        <div class="print-field"><div class="plbl">জন্মের উপজেলা</div><div class="pval" id="p_bupazila"></div></div>
+      </div>
+    </div>
+    <div class="print-section">
+      <div class="print-section-title">৩. পিতার তথ্য</div>
+      <div class="print-grid">
+        <div class="print-field"><div class="plbl">পিতার নাম (বাংলা)</div><div class="pval" id="p_father_bn"></div></div>
+        <div class="print-field"><div class="plbl">পিতার নাম (ইংরেজি)</div><div class="pval" id="p_father_en"></div></div>
+        <div class="print-field"><div class="plbl">পিতার NID নং</div><div class="pval" id="p_father_nid"></div></div>
+        <div class="print-field"><div class="plbl">পিতার জাতীয়তা</div><div class="pval" id="p_father_nat"></div></div>
+      </div>
+    </div>
+    <div class="print-section">
+      <div class="print-section-title">৪. মাতার তথ্য</div>
+      <div class="print-grid">
+        <div class="print-field"><div class="plbl">মাতার নাম (বাংলা)</div><div class="pval" id="p_mother_bn"></div></div>
+        <div class="print-field"><div class="plbl">মাতার নাম (ইংরেজি)</div><div class="pval" id="p_mother_en"></div></div>
+        <div class="print-field"><div class="plbl">মাতার NID নং</div><div class="pval" id="p_mother_nid"></div></div>
+        <div class="print-field"><div class="plbl">মাতার জাতীয়তা</div><div class="pval" id="p_mother_nat"></div></div>
+      </div>
+    </div>
+    <div class="print-section">
+      <div class="print-section-title">৫. স্থায়ী ঠিকানা ও আবেদনকারী</div>
+      <div class="print-grid">
+        <div class="print-field"><div class="plbl">বিভাগ</div><div class="pval" id="p_division"></div></div>
+        <div class="print-field"><div class="plbl">জেলা</div><div class="pval" id="p_district"></div></div>
+        <div class="print-field"><div class="plbl">উপজেলা/থানা</div><div class="pval" id="p_upazila"></div></div>
+        <div class="print-field"><div class="plbl">ইউনিয়ন/পৌরসভা</div><div class="pval" id="p_union"></div></div>
+        <div class="print-field"><div class="plbl">ওয়ার্ড নং</div><div class="pval" id="p_ward"></div></div>
+        <div class="print-field"><div class="plbl">গ্রাম/মহল্লা</div><div class="pval" id="p_village"></div></div>
+        <div class="print-field"><div class="plbl">বাড়ি নং / রাস্তা</div><div class="pval" id="p_house"></div></div>
+        <div class="print-field"><div class="plbl">আবেদনকারীর সম্পর্ক</div><div class="pval" id="p_rel"></div></div>
+        <div class="print-field"><div class="plbl">মোবাইল নম্বর</div><div class="pval" id="p_mobile"></div></div>
+      </div>
+    </div>
+    <div class="seal-box">সিল / অফিস ব্যবহারের জন্য</div>
+    <div class="print-sign">
+      <div>আবেদনকারীর স্বাক্ষর</div>
+      <div>নিবন্ধকের স্বাক্ষর ও সিল</div>
+    </div>
+  </div>
+
+  <footer>তৈরি করা হয়েছে Claude AI দ্বারা · এটি একটি সহায়তা টুল, অফিসিয়াল সরকারি সাইট নয়</footer>
+</div>
+
+<script>
+let current = 1;
+function goTo(n) {
+  document.getElementById('panel' + current).classList.remove('active');
+  document.getElementById('s' + current).classList.remove('active');
+  if (current < n) document.getElementById('s' + current).classList.add('done');
+  current = n;
+  if (n <= 5) {
+    document.getElementById('panel' + n).classList.add('active');
+    document.getElementById('s' + n).classList.add('active');
+  }
+  if (n === 5) fillReview();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function g(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function gr(name) { const el = document.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
+
+function fillReview() {
+  document.getElementById('r_name_bn').textContent = g('name_bn') || '—';
+  document.getElementById('r_name_en').textContent = g('name_en') || '—';
+  document.getElementById('r_gender').textContent = gr('gender') || '—';
+  document.getElementById('r_religion').textContent = g('religion') || '—';
+  document.getElementById('r_nat').textContent = g('nationality') || '—';
+  document.getElementById('r_dob').textContent = g('dob') || '—';
+  document.getElementById('r_bplace').textContent = (g('birth_place_type') || '') + (g('birth_place') ? ': ' + g('birth_place') : '') || '—';
+  document.getElementById('r_bdistrict').textContent = g('birth_district') || '—';
+  document.getElementById('r_father').textContent = (g('father_bn') || '—') + (g('father_en') ? ' / ' + g('father_en') : '');
+  document.getElementById('r_mother').textContent = (g('mother_bn') || '—') + (g('mother_en') ? ' / ' + g('mother_en') : '');
+  document.getElementById('r_dist').textContent = g('district') || '—';
+  document.getElementById('r_upa').textContent = g('upazila') || '—';
+  document.getElementById('r_vil').textContent = g('village') || '—';
+  document.getElementById('r_rel').textContent = g('applicant_rel') || '—';
+  document.getElementById('r_mobile').textContent = g('mobile') || '—';
+}
+
+function printForm() {
+  document.getElementById('p_date').textContent = new Date().toLocaleDateString('bn-BD');
+  document.getElementById('p_name_bn').textContent = g('name_bn');
+  document.getElementById('p_name_en').textContent = g('name_en');
+  document.getElementById('p_gender').textContent = gr('gender');
+  document.getElementById('p_religion').textContent = g('religion');
+  document.getElementById('p_nat').textContent = g('nationality');
+  document.getElementById('p_dob').textContent = g('dob');
+  document.getElementById('p_tob').textContent = g('tob');
+  document.getElementById('p_btype').textContent = g('birth_place_type');
+  document.getElementById('p_bplace').textContent = g('birth_place');
+  document.getElementById('p_bdistrict').textContent = g('birth_district');
+  document.getElementById('p_bupazila').textContent = g('birth_upazila');
+  document.getElementById('p_father_bn').textContent = g('father_bn');
+  document.getElementById('p_father_en').textContent = g('father_en');
+  document.getElementById('p_father_nid').textContent = g('father_nid');
+  document.getElementById('p_father_nat').textContent = g('father_nat');
+  document.getElementById('p_mother_bn').textContent = g('mother_bn');
+  document.getElementById('p_mother_en').textContent = g('mother_en');
+  document.getElementById('p_mother_nid').textContent = g('mother_nid');
+  document.getElementById('p_mother_nat').textContent = g('mother_nat');
+  document.getElementById('p_division').textContent = g('division');
+  document.getElementById('p_district').textContent = g('district');
+  document.getElementById('p_upazila').textContent = g('upazila');
+  document.getElementById('p_union').textContent = g('union');
+  document.getElementById('p_ward').textContent = g('ward');
+  document.getElementById('p_village').textContent = g('village');
+  document.getElementById('p_house').textContent = g('house');
+  document.getElementById('p_rel').textContent = g('applicant_rel');
+  document.getElementById('p_mobile').textContent = g('mobile');
+  window.print();
+}
+</script>
+</body>
+</html>
