@@ -1451,5 +1451,157 @@ async function doOCR(){
 
 function V(id){return document.getElementById(id)?.value||'';}
 </script>
-<script src="ai-tools.js"></script></body>
+<script src="ai-tools.js"></script><!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>IDCare Patch — Section 10 যোগ করুন</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f0f4f8;padding:30px;max-width:700px;margin:0 auto}
+h2{color:#1a56db;border-bottom:3px solid #1a56db;padding-bottom:10px}
+.step{background:#fff;border-radius:12px;padding:20px;margin:16px 0;box-shadow:0 2px 10px rgba(0,0,0,.08);border-left:4px solid #1a56db}
+.step h3{margin:0 0 10px;color:#1a56db;font-size:15px}
+.step p{margin:6px 0;font-size:14px;color:#444;line-height:1.8}
+.code{background:#1e293b;color:#7dd3fc;padding:12px 16px;border-radius:8px;font-family:monospace;font-size:13px;margin:10px 0;word-break:break-all;line-height:1.8}
+.btn{display:inline-block;padding:12px 24px;background:#1a56db;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;border:none;cursor:pointer;margin:6px 4px}
+.btn.gn{background:#16a34a}
+.btn.rd{background:#dc2626}
+.done{background:#f0fdf4;border-left-color:#16a34a}
+.done h3{color:#16a34a}
+textarea{width:100%;height:120px;font-family:monospace;font-size:12px;padding:10px;border:1.5px solid #ddd;border-radius:8px;resize:vertical}
+.badge{display:inline-block;background:#dbeafe;color:#1a56db;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:700;margin-left:8px}
+</style>
+</head>
+<body>
+
+<h2>🛠️ IDCare Section 10 — Auto Patch</h2>
+<p style="color:#666;font-size:14px">নিচের কোড কপি করে আপনার <strong>index.html</strong> এর <code>&lt;/body&gt;</code> ট্যাগের ঠিক আগে paste করুন। ব্যস!</p>
+
+<div class="step">
+  <h3>📋 ধাপ ১ — এই কোড কপি করুন</h3>
+  <p>নিচের সব কোড সিলেক্ট করে কপি করুন:</p>
+  <button class="btn" onclick="copyCode()">📋 কোড কপি করুন</button>
+  <div id="copy-status" style="color:#16a34a;font-size:13px;margin-top:6px;display:none">✅ কপি হয়েছে!</div>
+</div>
+
+<div class="step">
+  <h3>✏️ ধাপ ২ — GitHub এ index.html Edit করুন</h3>
+  <p>1. GitHub এ যান → <strong>index.html</strong> ক্লিক করুন</p>
+  <p>2. পেন্সিল আইকন (✏️) ক্লিক করুন</p>
+  <p>3. <strong>Ctrl+End</strong> চাপুন (একদম শেষে যান)</p>
+  <p>4. <code>&lt;/body&gt;</code> এর আগে কপি করা কোড <strong>Paste</strong> করুন</p>
+  <p>5. নিচে <strong>"Commit changes"</strong> বাটন চাপুন</p>
+</div>
+
+<div class="step done">
+  <h3>✅ ধাপ ৩ — সাইট রিফ্রেশ করুন</h3>
+  <p>কয়েক সেকেন্ড পর আপনার সাইটে <strong>SECTION 10</strong> দেখা যাবে!</p>
+  <a class="btn gn" href="https://idcarepro4-lab.github.io/idcare-digital-pro/" target="_blank">🌐 সাইট দেখুন</a>
+  <a class="btn" href="https://github.com/idcarepro4-lab/idcare-digital-pro/edit/main/index.html" target="_blank">✏️ GitHub Edit</a>
+</div>
+
+<!-- THE ACTUAL PATCH CODE -->
+<textarea id="patch-code" style="display:none"></textarea>
+
+<script>
+const patchCode = `
+<script>
+// ═══ IDCare Section 10 Auto-Patch ═══
+(function(){
+  // 1. SECTION 10 HTML যোগ করা
+  const sec9 = document.querySelector('.tw');
+  if(!sec9) return;
+
+  const s10html = \`
+    <div class="sd"><span>TOLL SECTION 10</span></div>
+    <div class="tg">
+      <div class="tc hot" onclick="ST('birth-reg')" style="border-color:#86efac;background:#f0fdf4">
+        <button class="sb">☆</button><div class="ti">🏛️</div>
+        <div class="tn" style="color:#166534">জন্ম নিবন্ধন আবেদন</div>
+      </div>
+      <div class="tc" onclick="window.open('bdris-final.html','_blank')">
+        <button class="sb">☆</button><div class="ti">📝</div>
+        <div class="tn">জন্ম নিবন্ধন সংশোধন</div>
+      </div>
+      <div class="tc" onclick="window.open('birth-cert-v4.html','_blank')">
+        <button class="sb">☆</button><div class="ti">📄</div>
+        <div class="tn">জন্ম সনদ PDF মেকার v4</div>
+      </div>
+      <div class="tc" onclick="window.open('birth-certificate-maker.html','_blank')">
+        <button class="sb">☆</button><div class="ti">🗂️</div>
+        <div class="tn">Birth Certificate Maker</div>
+      </div>
+      <div class="tc" onclick="window.open('warish-sanad.html','_blank')">
+        <button class="sb">☆</button><div class="ti">⚖️</div>
+        <div class="tn">ওয়ারিশ সনদপত্র মেকার</div>
+      </div>
+      <div class="tc" onclick="window.open('area-info.html','_blank')">
+        <button class="sb">☆</button><div class="ti">🗺️</div>
+        <div class="tn">বাংলাদেশ এলাকা তথ্য</div>
+      </div>
+      <div class="tc" onclick="window.open('birth-registration.html','_blank')">
+        <button class="sb">☆</button><div class="ti">📋</div>
+        <div class="tn">জন্ম নিবন্ধন ফর্ম</div>
+      </div>
+    </div>\`;
+
+  sec9.insertAdjacentHTML('beforeend', s10html);
+
+  // 2. TP object এ birth-reg tool যোগ করা
+  if(typeof TP !== 'undefined'){
+    TP['birth-reg'] = () => \`<div class="tph"><h2>🏛️ জন্ম নিবন্ধন সহায়তা কেন্দ্র</h2><p>সব জন্ম নিবন্ধন সেবা এক জায়গায়</p></div>
+<div class="tb">
+<div style="background:#E6F1FB;border:1px solid #B5D4F4;border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px;color:#0C447C;line-height:1.9">
+<strong>গুরুত্বপূর্ণ:</strong> জন্মের ৪৫ দিনের মধ্যে নিবন্ধন করলে কোনো ফি নেই। অনলাইনে bdris.gov.bd-তে আবেদন করুন।
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+<button class="ab gn" onclick="window.open('birth-registration.html','_blank')" style="margin:0"><i class="fas fa-file-alt"></i> নতুন আবেদন ফর্ম</button>
+<button class="ab" onclick="window.open('https://bdris.gov.bd','_blank')" style="margin:0;background:linear-gradient(135deg,#0f766e,#0d9488)"><i class="fas fa-external-link-alt"></i> bdris.gov.bd অফিসিয়াল</button>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+<button class="ab" onclick="window.open('bdris-final.html','_blank')" style="margin:0;background:linear-gradient(135deg,#7c3aed,#8b5cf6)"><i class="fas fa-edit"></i> সংশোধন আবেদন</button>
+<button class="ab" onclick="window.open('birth-cert-v4.html','_blank')" style="margin:0;background:linear-gradient(135deg,#b45309,#d97706)"><i class="fas fa-file-pdf"></i> সনদ PDF মেকার</button>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+<button class="ab" onclick="window.open('birth-certificate-maker.html','_blank')" style="margin:0;background:linear-gradient(135deg,#0e7490,#0891b2)"><i class="fas fa-certificate"></i> Birth Certificate Maker</button>
+<button class="ab" onclick="window.open('warish-sanad.html','_blank')" style="margin:0;background:linear-gradient(135deg,#be185d,#ec4899)"><i class="fas fa-scroll"></i> ওয়ারিশ সনদপত্র</button>
+</div>
+<div style="background:#f8f9fb;border-radius:10px;padding:14px;font-size:13px;border:1px solid #e8e8e8;line-height:2.1;margin-bottom:12px">
+<div style="font-weight:700;margin-bottom:8px;color:#222">📄 প্রয়োজনীয় কাগজপত্র:</div>
+<div style="color:#555">✔ পিতা/মাতার জাতীয় পরিচয়পত্র (NID)<br>✔ হাসপাতালের জন্ম সনদ (যদি থাকে)<br>✔ টিকা কার্ড (EPI কার্ড)<br>✔ পাসপোর্ট আকারের ছবি (প্রযোজ্য হলে)</div>
+</div>
+<div style="background:#FAEEDA;border-radius:8px;padding:10px 14px;font-size:12px;color:#854F0B;line-height:1.8">
+⚠ <strong>৪৫ দিনের বেশি হলে:</strong> বিলম্ব ফি প্রযোজ্য। ৫ বছরের বেশি হলে ম্যাজিস্ট্রেটের আদেশ প্রয়োজন।
+</div>
+</div>\`;
+  }
+
+  // Footer এ link যোগ
+  const footerUl = document.querySelector('.fl2 ul');
+  if(footerUl){
+    const li = document.createElement('li');
+    li.innerHTML = '<a onclick="ST(\'birth-reg\')">জন্ম নিবন্ধন সেবা</a>';
+    footerUl.appendChild(li);
+  }
+
+  console.log('✅ IDCare Section 10 Patch Applied!');
+})();
+<\/script>`;
+
+document.getElementById('patch-code').value = patchCode;
+
+function copyCode(){
+  const ta = document.getElementById('patch-code');
+  ta.style.display = 'block';
+  ta.select();
+  document.execCommand('copy');
+  ta.style.display = 'none';
+  document.getElementById('copy-status').style.display = 'block';
+  setTimeout(()=> document.getElementById('copy-status').style.display = 'none', 3000);
+}
+</script>
+
+</body>
+</html>
+</body>
 </html>
