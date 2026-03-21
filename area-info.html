@@ -204,13 +204,13 @@ body{font-family:'Noto Sans Bengali',sans-serif;background:#f0f4f8;min-height:10
       </div>
       <div class="cascade-card">
         <div class="cc-title">🏡 ইউনিয়ন / পৌরসভা</div>
-        <select class="cc-select" id="unionSel" onchange="showAreaInfo()" disabled>
+        <select class="cc-select" id="unionSel" onchange="onUnionChange()" disabled>
           <option value="">-- আগে উপজেলা নিন --</option>
         </select>
       </div>
       <div class="cascade-card">
         <div class="cc-title">🌾 ওয়ার্ড</div>
-        <select class="cc-select" id="wardSel" onchange="showAreaInfo()" disabled>
+        <select class="cc-select" id="wardSel" onchange="onWardChange()" disabled>
           <option value="">-- আগে ইউনিয়ন নিন --</option>
         </select>
       </div>
@@ -221,6 +221,32 @@ body{font-family:'Noto Sans Bengali',sans-serif;background:#f0f4f8;min-height:10
     </div>
 
     <!-- AREA INFO -->
+    <div id="addressFormWrap" style="display:none;background:#fff;border-radius:12px;box-shadow:0 3px 14px rgba(0,0,0,.08);padding:18px 20px;margin-bottom:18px;border-left:4px solid #006a4e;">
+      <div class="sec-title">📍 ঠিকানা তথ্য — <span id="wardLabel" style="color:#006a4e;font-weight:700;"></span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">
+        <div class="fg">
+          <label>👤 নাম</label>
+          <input id="addrName" placeholder="আপনার পূর্ণ নাম লিখুন" style="width:100%;border:1.5px solid #d1d5db;border-radius:7px;padding:9px 11px;font-size:13.5px;font-family:inherit;background:#fafcff;">
+        </div>
+        <div class="fg">
+          <label>📱 মোবাইল নম্বর</label>
+          <input id="addrPhone" placeholder="০১XXXXXXXXX" type="tel" style="width:100%;border:1.5px solid #d1d5db;border-radius:7px;padding:9px 11px;font-size:13.5px;font-family:inherit;background:#fafcff;">
+        </div>
+        <div class="fg">
+          <label>🏡 গ্রামের নাম</label>
+          <input id="addrVillage" placeholder="গ্রামের নাম লিখুন" style="width:100%;border:1.5px solid #d1d5db;border-radius:7px;padding:9px 11px;font-size:13.5px;font-family:inherit;background:#fafcff;">
+        </div>
+        <div class="fg">
+          <label>👨 বাবার নাম</label>
+          <input id="addrFather" placeholder="পিতার পূর্ণ নাম লিখুন" style="width:100%;border:1.5px solid #d1d5db;border-radius:7px;padding:9px 11px;font-size:13.5px;font-family:inherit;background:#fafcff;">
+        </div>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button onclick="saveAddressEntry()" style="background:linear-gradient(135deg,#006a4e,#00a550);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">💾 সেভ করুন</button>
+        <button onclick="clearAddressForm()" style="background:#f0f4f8;color:#333;border:1.5px solid #d1d5db;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">🗑️ মুছুন</button>
+      </div>
+      <div id="addressEntries" style="margin-top:14px;"></div>
+    </div>
     <div class="info-card" id="areaInfo">
       <div class="sec-title">📊 এলাকার তথ্য (নিজে পূরণ করুন)</div>
       <div class="stats-grid">
@@ -312,14 +338,78 @@ const DIST = {
 
 // উপজেলা ডেটা (বড় জেলা)
 const UPA = {
-  'ঢাকা':['ধামরাই','সাভার','কেরানীগঞ্জ','নবাবগঞ্জ','দোহার','ঢাকা সদর'],
+  // ঢাকা বিভাগ
+  'ঢাকা':['ধামরাই','দোহার','কেরানীগঞ্জ','নবাবগঞ্জ','সাভার'],
+  'ফরিদপুর':['আলফাডাঙ্গা','ভাঙ্গা','বোয়ালমারী','চরভদ্রাসন','ফরিদপুর সদর','মধুখালী','নগরকান্দা','সদরপুর','সালথা'],
   'গাজীপুর':['গাজীপুর সদর','কালিয়াকৈর','কালীগঞ্জ','কাপাসিয়া','শ্রীপুর'],
-  'চট্টগ্রাম':['চট্টগ্রাম সদর','আনোয়ারা','বাঁশখালী','বোয়ালখালী','চন্দনাইশ','ফটিকছড়ি','হাটহাজারী','কর্ণফুলী','লোহাগাড়া','মিরসরাই','পটিয়া','রাঙ্গুনিয়া','রাউজান','সন্দ্বীপ','সাতকানিয়া','সীতাকুণ্ড'],
-  'রাজশাহী':['রাজশাহী সদর','বাঘমারা','চারঘাট','দুর্গাপুর','গোদাগাড়ী','মোহনপুর','পবা','পুঠিয়া','তানোর'],
-  'খুলনা':['খুলনা সদর','বটিয়াঘাটা','ডুমুরিয়া','দিঘলিয়া','ফুলতলা','কয়রা','পাইকগাছা','তেরখাদা'],
-  'সিলেট':['সিলেট সদর','বালাগঞ্জ','বিয়ানীবাজার','বিশ্বনাথ','ছাতক','দোয়ারাবাজার','ফেঞ্চুগঞ্জ','গোলাপগঞ্জ','গোয়াইনঘাট','জৈন্তাপুর','কানাইঘাট','কোম্পানীগঞ্জ','ওসমানীনগর','জকিগঞ্জ'],
-  'রংপুর':['রংপুর সদর','বদরগঞ্জ','গঙ্গাচড়া','কাউনিয়া','মিঠাপুকুর','পীরগঞ্জ','পীরগাছা','তারাগঞ্জ'],
-  'ময়মনসিংহ':['ময়মনসিংহ সদর','ভালুকা','ধোবাউড়া','ফুলবাড়িয়া','গফরগাঁও','গৌরীপুর','হালুয়াঘাট','ঈশ্বরগঞ্জ','মুক্তাগাছা','নান্দাইল','ফুলপুর','তারাকান্দা','ত্রিশাল'],
+  'গোপালগঞ্জ':['গোপালগঞ্জ সদর','কাশিয়ানী','কোটালীপাড়া','মুকসুদপুর','টুঙ্গিপাড়া'],
+  'কিশোরগঞ্জ':['অষ্টগ্রাম','বাজিতপুর','ভৈরব','হোসেনপুর','ইটনা','করিমগঞ্জ','কটিয়াদী','কিশোরগঞ্জ সদর','কুলিয়ারচর','মিঠামইন','নিকলী','পাকুন্দিয়া','তাড়াইল'],
+  'মাদারীপুর':['রাজোয়ার','মাদারীপুর সদর','কালকিনি','শিবচর','ডাসার'],
+  'মানিকগঞ্জ':['দৌলতপুর','ঘিওর','হরিরামপুর','মানিকগঞ্জ সদর','সাটুরিয়া','শিবালয়','সিঙ্গাইর'],
+  'মুন্সীগঞ্জ':['গজারিয়া','লোহাজং','মুন্সীগঞ্জ সদর','সিরাজদিখান','শ্রীনগর','টঙ্গীবাড়ী'],
+  'নারায়ণগঞ্জ':['আড়াইহাজার','বন্দর','নারায়ণগঞ্জ সদর','রূপগঞ্জ','সোনারগাঁও'],
+  'নরসিংদী':['নরসিংদী সদর','বেলাব','মনোহরদী','পলাশ','রায়পুরা','শিবপুর'],
+  'রাজবাড়ী':['বালিয়াকান্দি','গোয়ালন্দঘাট','পাংশা','রাজবাড়ী সদর','কালুখালী'],
+  'শরীয়তপুর':['ভেদরগঞ্জ','দামুদ্যা','গোসাইরহাট','নড়িয়া','শরীয়তপুর সদর','জাজিরা'],
+  'টাঙ্গাইল':['গোপালপুর','বাসাইল','ভূয়াপুর','দেলদুয়ার','ঘাটাইল','কালিহাতী','মধুপুর','মির্জাপুর','নাগরপুর','সখিপুর','ধনবাড়ী','টাঙ্গাইল সদর'],
+  // চট্টগ্রাম বিভাগ
+  'বান্দরবান':['আলীকদম','বান্দরবান সদর','লামা','নাইক্ষ্যংছড়ি','রোয়াংছড়ি','রুমা','থানচি'],
+  'ব্রাহ্মণবাড়িয়া':['আখাউড়া','বাঞ্ছারামপুর','ব্রাহ্মণবাড়িয়া সদর','কসবা','নবীনগর','নাসিরনগর','সরাইল','আশুগঞ্জ','বিজয়নগর'],
+  'চাঁদপুর':['চাঁদপুর সদর','ফরিদগঞ্জ','হাইমচর','হাজীগঞ্জ','কচুয়া','মতলব দক্ষিণ','মতলব উত্তর','শাহরাস্তি'],
+  'চট্টগ্রাম':['আনোয়ারা','বাঁশখালী','বোয়ালখালী','চন্দনাইশ','ফটিকছড়ি','হাটহাজারী','কর্ণফুলী','লোহাগাড়া','মিরসরাই','পটিয়া','রাঙ্গুনিয়া','রাউজান','সন্দ্বীপ','সাতকানিয়া','সীতাকুণ্ড'],
+  'কুমিল্লা':['বরুড়া','ব্রাহ্মণপাড়া','বুড়িচং','চান্দিনা','চৌদ্দগ্রাম','দাউদকান্দি','দেবিদ্বার','হোমনা','লাকসাম','লালমাই','মেঘনা','মুরাদনগর','নাঙ্গলকোট','কুমিল্লা আদর্শ সদর','তিতাস','মনোহরগঞ্জ','কুমিল্লা সদর দক্ষিণ'],
+  'কক্সবাজার':['চকরিয়া','কক্সবাজার সদর','কুতুবদিয়া','মহেশখালী','রামু','টেকনাফ','উখিয়া','পেকুয়া','ঈদগাঁও'],
+  'ফেনী':['ছাগলনাইয়া','দাগনভূঞা','ফেনী সদর','পরশুরাম','সোনাগাজী','ফুলগাজী'],
+  'খাগড়াছড়ি':['দীঘিনালা','খাগড়াছড়ি সদর','লক্ষ্মীছড়ি','মহালছড়ি','মানিকছড়ি','মাটিরাঙ্গা','পানছড়ি','রামগড়','গুইমারা'],
+  'লক্ষ্মীপুর':['লক্ষ্মীপুর সদর','রায়পুর','রামগঞ্জ','রামগতি','কমলনগর'],
+  'নোয়াখালী':['বেগমগঞ্জ','নোয়াখালী সদর','চাটখিল','কোম্পানীগঞ্জ','হাতিয়া','সেনবাগ','সোনাইমুড়ী','সুবর্ণচর','কবিরহাট'],
+  'রাঙ্গামাটি':['বাঘাইছড়ি','বরকল','কাউখালী','বেলাইছড়ি','কাপ্তাই','জুরাছড়ি','লংগদু','নানিয়ারচর','রাজস্থলী','রাঙ্গামাটি সদর'],
+  // রাজশাহী বিভাগ
+  'বগুড়া':['আদমদীঘি','বগুড়া সদর','ধুনট','দুপচাঁচিয়া','গাবতলী','কাহালু','নন্দীগ্রাম','সারিয়াকান্দি','শাজাহানপুর','শেরপুর','শিবগঞ্জ','সোনাতলা'],
+  'চাঁপাইনবাবগঞ্জ':['ভোলাহাট','গোমস্তাপুর','নাচোল','নবাবগঞ্জ সদর','শিবগঞ্জ'],
+  'জয়পুরহাট':['আক্কেলপুর','জয়পুরহাট সদর','কালাই','ক্ষেতলাল','পাঁচবিবি'],
+  'নওগাঁ':['আত্রাই','বদলগাছী','মান্দা','ধামইরহাট','মহাদেবপুর','নওগাঁ সদর','নিয়ামতপুর','পত্নীতলা','পোরশা','রানীনগর','সাপাহার'],
+  'নাটোর':['বাগাতিপাড়া','বড়াইগ্রাম','গুরুদাসপুর','লালপুর','নাটোর সদর','সিংড়া','নলডাঙ্গা'],
+  'পাবনা':['আটঘরিয়া','বেড়া','ভাঙ্গুড়া','চাটমোহর','ফরিদপুর','ঈশ্বরদী','পাবনা সদর','সাঁথিয়া','সুজানগর'],
+  'রাজশাহী':['বাঘা','বাগমারা','চারঘাট','দুর্গাপুর','গোদাগাড়ী','মোহনপুর','পবা','পুঠিয়া','তানোর'],
+  'সিরাজগঞ্জ':['বেলকুচি','চৌহালি','কামারখন্দ','কাজিপুর','রায়গঞ্জ','শাহজাদপুর','সিরাজগঞ্জ সদর','তাড়াশ','উল্লাপাড়া'],
+  // রংপুর বিভাগ
+  'দিনাজপুর':['বীরামপুর','বীরগঞ্জ','বিরল','বোচাগঞ্জ','চিরিরবন্দর','ফুলবাড়ী','ঘোড়াঘাট','হাকিমপুর','কাহারোল','খানসামা','দিনাজপুর সদর','নবাবগঞ্জ','পার্বতীপুর'],
+  'গাইবান্ধা':['ফুলছড়ি','গাইবান্ধা সদর','গোবিন্দগঞ্জ','পলাশবাড়ী','সাদুল্লাপুর','সুঘাট','সুন্দরগঞ্জ'],
+  'কুড়িগ্রাম':['ভূরুঙ্গামারী','চর রাজিবপুর','চিলমারী','ফুলবাড়ী','কুড়িগ্রাম সদর','নাগেশ্বরী','রাজারহাট','রৌমারী','উলিপুর'],
+  'লালমনিরহাট':['আদিতমারী','হাতীবান্ধা','কালীগঞ্জ','লালমনিরহাট সদর','পাটগ্রাম'],
+  'নীলফামারী':['ডিমলা','ডোমার','জলঢাকা','কিশোরগঞ্জ','নীলফামারী সদর','সৈয়দপুর'],
+  'পঞ্চগড়':['আটোয়ারী','বোদা','দেবীগঞ্জ','পঞ্চগড় সদর','তেতুলিয়া'],
+  'রংপুর':['বদরগঞ্জ','গঙ্গাচড়া','কাউনিয়া','রংপুর সদর','মিঠাপুকুর','পীরগাছা','পীরগঞ্জ','তারাগঞ্জ'],
+  'ঠাকুরগাঁও':['বালিয়াডাঙ্গী','হরিপুর','পীরগঞ্জ','রানীশংকৈল','ঠাকুরগাঁও সদর'],
+  // ময়মনসিংহ বিভাগ
+  'জামালপুর':['বকশীগঞ্জ','দেওয়ানগঞ্জ','ইসলামপুর','জামালপুর সদর','মাদারগঞ্জ','মেলান্দহ','সরিষাবাড়ী'],
+  'ময়মনসিংহ':['ত্রিশাল','ধোবাউড়া','ফুলবাড়িয়া','গফরগাঁও','গৌরীপুর','হালুয়াঘাট','ঈশ্বরগঞ্জ','ময়মনসিংহ সদর','মুক্তাগাছা','নান্দাইল','ফুলপুর','ভালুকা','তারাকান্দা'],
+  'নেত্রকোণা':['আটপাড়া','বারহাট্টা','দুর্গাপুর','খালিয়াজুরী','কলমাকান্দা','কেন্দুয়া','মদন','মোহনগঞ্জ','নেত্রকোণা সদর','পূর্বধলা'],
+  'শেরপুর':['ঝিনাইগাতী','নকলা','নালিতাবাড়ী','শেরপুর সদর','শ্রীবরদী'],
+  // বরিশাল বিভাগ
+  'বরগুনা':['আমতলী','বামনা','বরগুনা সদর','বেতাগী','পাথরঘাটা','তালতলী'],
+  'বরিশাল':['আগৈলঝাড়া','বাবুগঞ্জ','বাকেরগঞ্জ','বানারীপাড়া','গৌরনদী','হিজলা','বরিশাল সদর','মেহেন্দিগঞ্জ','মুলাদী','উজিরপুর'],
+  'ভোলা':['ভোলা সদর','বোরহানউদ্দিন','চরফ্যাশন','দৌলতখান','লালমোহন','মনপুরা','তজুমদ্দিন'],
+  'ঝালকাঠি':['ঝালকাঠি সদর','কাঁঠালিয়া','নলছিটি','রাজাপুর'],
+  'পটুয়াখালী':['বাউফল','দশমিনা','গলাচিপা','কলাপাড়া','মির্জাগঞ্জ','পটুয়াখালী সদর','রাঙ্গাবালী','দুমকি'],
+  'পিরোজপুর':['ভাণ্ডারিয়া','কাউখালী','মঠবাড়িয়া','নাজিরপুর','পিরোজপুর সদর','নেছারাবাদ','ইন্দুরকানী'],
+  // খুলনা বিভাগ
+  'বাগেরহাট':['বাগেরহাট সদর','চিতলমারী','ফকিরহাট','কচুয়া','মোল্লাহাট','মোংলা','মোরেলগঞ্জ','রামপাল','শরণখোলা'],
+  'চুয়াডাঙ্গা':['আলমডাঙ্গা','চুয়াডাঙ্গা সদর','দামুড়হুদা','জীবননগর'],
+  'যশোর':['অভয়নগর','বাঘারপাড়া','চৌগাছা','ঝিকরগাছা','কেশবপুর','যশোর সদর','মণিরামপুর','শার্শা'],
+  'ঝিনাইদহ':['হরিণাকুণ্ডু','ঝিনাইদহ সদর','কালীগঞ্জ','কোটচাঁদপুর','মহেশপুর','শৈলকুপা'],
+  'খুলনা':['বটিয়াঘাটা','দাকোপ','ডুমুরিয়া','দিঘলিয়া','কয়রা','পাইকগাছা','ফুলতলা','রূপসা','তেরখাদা'],
+  'কুষ্টিয়া':['ভেড়ামারা','দৌলতপুর','খোকসা','কুমারখালী','কুষ্টিয়া সদর','মিরপুর'],
+  'মাগুরা':['মাগুরা সদর','মোহাম্মদপুর','শালিখা','শ্রীপুর'],
+  'মেহেরপুর':['গাংনী','মেহেরপুর সদর','মুজিবনগর'],
+  'নড়াইল':['কালিয়া','লোহাগাড়া','নড়াইল সদর'],
+  'সাতক্ষীরা':['আশাশুনি','দেবহাটা','কালারোয়া','কালীগঞ্জ','সাতক্ষীরা সদর','শ্যামনগর','তালা'],
+  // সিলেট বিভাগ
+  'হবিগঞ্জ':['আজমিরীগঞ্জ','বাহুবল','বানিয়াচং','চুনারুঘাট','হবিগঞ্জ সদর','লাখাই','মাধবপুর','নবীগঞ্জ','শায়েস্তাগঞ্জ'],
+  'মৌলভীবাজার':['বড়লেখা','জুড়ী','কমলগঞ্জ','কুলাউড়া','মৌলভীবাজার সদর','রাজনগর','শ্রীমঙ্গল'],
+  'সুনামগঞ্জ':['বিশ্বম্ভরপুর','ছাতক','শান্তিগঞ্জ','দেরাই','ধর্মপাশা','দোয়ারাবাজার','জগন্নাথপুর','জামালগঞ্জ','সুল্লা','সুনামগঞ্জ সদর','তাহিরপুর','মধ্যনগর'],
+  'সিলেট':['বালাগঞ্জ','বিয়ানীবাজার','বিশ্বনাথ','কোম্পানীগঞ্জ','দক্ষিণ সুরমা','ফেঞ্চুগঞ্জ','গোলাপগঞ্জ','গোয়াইনঘাট','জৈন্তাপুর','কানাইঘাট','ওসমানীনগর','সিলেট সদর','জকিগঞ্জ'],
 };
 
 function getUpa(dist){
@@ -341,6 +431,7 @@ function fillDist(){
   document.getElementById('wardSel').disabled=true;
   document.getElementById('areaInfo').classList.remove('show');
   document.getElementById('villageWrap').classList.remove('show');
+  document.getElementById('addressFormWrap').style.display = 'none';
 }
 
 function fillUpa(){
@@ -396,6 +487,22 @@ const UNIONS = {
   'ত্রিশাল':['আমিরাবাড়ী','বালিপাড়া','ধানীখলা','কানিহারী','মঠবাড়ী','মোয়াজ্জেমপুর','রামপুর','সাখুয়া','তরঙ্গী'],
   'ভালুকা':['ভালুকা','বিরুনিয়া','ধিতপুর','হবিরবাড়ী','কাচিনা','মালিক্কান্দা','মেদুয়ারী'],
   'ফুলপুর':['বালিজুরী','বোয়ালী','এনায়েতপুর','ফুলপুর','কড়াইগাছা','রাঙ্গামাটিয়া','সিন্দুরকান্দি'],
+  // চট্টগ্রাম বিভাগ — কক্সবাজার জেলা
+  'কক্সবাজার সদর':['ঈদগাঁও','ইসলামাবাদ','জালালাবাদ','খুরুশকুল','পিএম খালী','পোকখালী'],
+  'চকরিয়া':['বদরখালী','বরইতলী','ঢেমশা','ফাঁসিয়াখালী','হারবাং','কাকারা','কৈয়ারবিল','খুটাখালী','লক্ষ্যারচর','মানিকপুর','পূর্ব বড় ভেওলা','শাহারবিল','সুরাজপুর-মানিকপুর','পশ্চিম বড় ভেওলা'],
+  'কুতুবদিয়া':['আলী আকবর ডেইল','বড়ঘোপ','কায়ার বিল','কুতুবদিয়া উত্তর','কুতুবদিয়া দক্ষিণ','লেমশিখালী'],
+  'মহেশখালী':['কালারমার ছড়া','মহেশখালী','মাতারবাড়ী','ধলঘাটা','হোয়ানক','কুতুবজোম'],
+  'পেকুয়া':['মগনামা','পেকুয়া','রাজাখালী','শীলখালী','টাইটং','উজানটিয়া'],
+  'রামু':['কচ্ছপিয়া','খুনিয়াপালং','রাজারকুল','রামু','দক্ষিণ মিঠাছড়ি','গর্জনিয়া'],
+  'টেকনাফ':['হ্নীলা','সাবরাং','শাহপরীর দ্বীপ','টেকনাফ','বাহারছড়া','হোয়াইক্যং'],
+  'উখিয়া':['হলদিয়াপালং','জালিয়াপালং','পালংখালী','রাজাপালং'],
+  // চট্টগ্রাম বিভাগ — লক্ষ্মীপুর জেলা
+  'লক্ষ্মীপুর':['লক্ষ্মীপুর সদর','রায়পুর','রামগতি','রামগঞ্জ','কমলনগর'],
+  'লক্ষ্মীপুর সদর':['দালাল বাজার','বশিকপুর','চররুহিতা','চন্দ্রগঞ্জ','দিঘলী','হাজিরপাড়া','লাহারকান্দি','মান্দারী','মতিরহাট','পার্বতীনগর','শাকচর','তুলাতলী','উত্তর জয়পুর','ভবানীগঞ্জ'],
+  'রায়পুর':['বামনী','চরআবাবিল','চরবংশী','চরমোহনা','হায়দরগঞ্জ','কেরোয়া','রায়পুর','সোনাপুর'],
+  'রামগতি':['আলেকজান্ডার','চরআলগী','চরবাদাম','চরগাজী','চরপোড়াগাছা','রামগতি'],
+  'রামগঞ্জ':['ভবানীপুর','চণ্ডীপুর','দারোগাহাট','ইছাপুরা','লামচর','নোয়াগাঁও','রামগঞ্জ'],
+  'কমলনগর':['চরকাদিরা','চরলরেন্স','চরমার্টিন','চরপাতা','হাজিরহাট','পাটারীরহাট','তোরাবগঞ্জ'],
   // বরিশাল বিভাগ
   'বরিশাল সদর':['চরবাড়িয়া','চরকাউয়া','জাগুয়া','কাশিপুর','শায়েস্তাবাদ','টুংগীবাড়িয়া'],
 };
@@ -408,15 +515,17 @@ function fillUnion(){
   us.disabled = true;
 
   const ws = document.getElementById('wardSel');
-  ws.innerHTML = '<option value="">-- ওয়ার্ড নির্বাচন --</option>';
-  for(let i=1;i<=9;i++){const o=document.createElement('option');o.value=o.text=i+'নং ওয়ার্ড';ws.appendChild(o);}
+  ws.innerHTML = '<option value="">-- আগে ইউনিয়ন নিন --</option>';
+  ws.disabled = true;
+
+  // Hide address form when union changes
+  document.getElementById('addressFormWrap').style.display = 'none';
 
   if(!upa){us.innerHTML='<option value="">-- আগে উপজেলা নিন --</option>';return;}
 
   // Check local data first
   if(UNIONS[upa]){
     populateUnions(UNIONS[upa]);
-    ws.disabled = false;
     return;
   }
 
@@ -429,7 +538,36 @@ function populateUnions(list){
   us.innerHTML = '<option value="">-- ইউনিয়ন নির্বাচন --</option>';
   list.forEach(u=>{const o=document.createElement('option');o.value=o.text=u;us.appendChild(o);});
   us.disabled = false;
-  document.getElementById('wardSel').disabled = false;
+  const ws = document.getElementById('wardSel');
+  ws.innerHTML = '<option value="">-- আগে ইউনিয়ন নিন --</option>';
+  ws.disabled = true;
+}
+
+function onUnionChange(){
+  const union = document.getElementById('unionSel').value;
+  const ws = document.getElementById('wardSel');
+  ws.innerHTML = '<option value="">-- ওয়ার্ড নির্বাচন --</option>';
+  if(union){
+    for(let i=1;i<=9;i++){const o=document.createElement('option');o.value=o.text=i+'নং ওয়ার্ড';ws.appendChild(o);}
+    ws.disabled = false;
+  } else {
+    ws.disabled = true;
+  }
+  document.getElementById('addressFormWrap').style.display = 'none';
+  showAreaInfo();
+}
+
+function onWardChange(){
+  const ward = document.getElementById('wardSel').value;
+  const wrap = document.getElementById('addressFormWrap');
+  if(ward){
+    wrap.style.display = 'block';
+    document.getElementById('wardLabel').textContent = ward;
+    wrap.scrollIntoView({behavior:'smooth', block:'center'});
+  } else {
+    wrap.style.display = 'none';
+  }
+  showAreaInfo();
 }
 
 async function fetchUnionsFromAI(upa, dist){
@@ -442,7 +580,7 @@ async function fetchUnionsFromAI(upa, dist){
         max_tokens:500,
         messages:[{
           role:"user",
-          content:`বাংলাদেশের ${dist} জেলার ${upa} উপজেলার সব ইউনিয়নের নাম বাংলায় দাও। শুধু JSON array আকারে দাও, অন্য কিছু না। যেমন: ["ইউনিয়ন১","ইউনিয়ন২"]`
+          content:`বাংলাদেশের ${dist} জেলার ${upa} উপজেলার সব ইউনিয়নের সঠিক নাম বাংলায় দাও। শুধু JSON array আকারে দাও, অন্য কিছু না। যেমন: ["ইউনিয়ন১","ইউনিয়ন২"]`
         }]
       })
     });
@@ -451,7 +589,7 @@ async function fetchUnionsFromAI(upa, dist){
     txt = txt.replace(/```json|```/g,'').trim();
     const unions = JSON.parse(txt);
     if(Array.isArray(unions) && unions.length > 0){
-      UNIONS[upa] = unions; // cache করো
+      UNIONS[upa] = unions;
       populateUnions(unions);
       showToast('✅ '+upa+' এর ইউনিয়ন লোড হয়েছে!');
     } else {
@@ -459,7 +597,7 @@ async function fetchUnionsFromAI(upa, dist){
     }
   }catch(e){
     populateUnions(generateGenericUnions(upa));
-    showToast('ℹ️ AI থেকে আনা যায়নি, generic লিস্ট দেখানো হচ্ছে');
+    showToast('ℹ️ Generic ইউনিয়ন তালিকা দেখানো হচ্ছে');
   }
 }
 
@@ -698,6 +836,74 @@ async function exportPDF(){
     showToast('✅ PDF ডাউনলোড হয়েছে!');
   }catch(e){showToast('❌ Error: '+e.message);}
 }
+
+// ══ ADDRESS FORM ══
+let addressList = [];
+
+function saveAddressEntry(){
+  const name = document.getElementById('addrName').value.trim();
+  const phone = document.getElementById('addrPhone').value.trim();
+  const village = document.getElementById('addrVillage').value.trim();
+  const father = document.getElementById('addrFather').value.trim();
+  if(!name){showToast('❌ নাম লিখুন!');return;}
+
+  const ward = document.getElementById('wardSel').value;
+  const union = document.getElementById('unionSel').value;
+  const entry = {name, phone, village, father, ward, union, id: Date.now()};
+  addressList.push(entry);
+  renderAddressEntries();
+  clearAddressForm();
+  showToast('✅ ঠিকানা সেভ হয়েছে!');
+}
+
+function clearAddressForm(){
+  ['addrName','addrPhone','addrVillage','addrFather'].forEach(id=>{
+    document.getElementById(id).value='';
+  });
+}
+
+function renderAddressEntries(){
+  const container = document.getElementById('addressEntries');
+  if(!addressList.length){container.innerHTML='';return;}
+  container.innerHTML = `
+    <div style="font-size:12.5px;font-weight:700;color:#006a4e;margin-bottom:8px;border-top:1px solid #e2e8f0;padding-top:12px;">
+      📋 সংরক্ষিত ঠিকানা তালিকা (${addressList.length}টি)
+    </div>
+    ${addressList.map((e,i)=>`
+    <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:200px;">
+        <div style="font-weight:700;font-size:13px;">👤 ${e.name}</div>
+        <div style="font-size:12px;color:#555;margin-top:3px;">
+          ${e.phone?'📱 '+e.phone+' &nbsp;':''}
+          ${e.village?'🏡 '+e.village+' &nbsp;':''}
+          ${e.father?'👨 '+e.father:''}
+        </div>
+        <div style="font-size:11px;color:#888;margin-top:2px;">${e.ward} — ${e.union}</div>
+      </div>
+      <button onclick="removeAddress(${e.id})" style="background:#fee2e2;color:#dc2626;border:none;padding:5px 10px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">✕</button>
+    </div>`).join('')}
+    <button onclick="exportAddressList()" style="background:#eff6ff;color:#1d4ed8;border:1.5px solid #93c5fd;padding:8px 16px;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;">📥 তালিকা ডাউনলোড করুন</button>
+  `;
+}
+
+function removeAddress(id){
+  addressList = addressList.filter(e=>e.id!==id);
+  renderAddressEntries();
+}
+
+function exportAddressList(){
+  if(!addressList.length){showToast('❌ কোনো ঠিকানা নেই!');return;}
+  const rows = [['নাম','মোবাইল','গ্রাম','বাবার নাম','ওয়ার্ড','ইউনিয়ন']];
+  addressList.forEach(e=>rows.push([e.name,e.phone,e.village,e.father,e.ward,e.union]));
+  const csv = rows.map(r=>r.map(c=>'"'+c+'"').join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ঠিকানা_তালিকা.csv';
+  a.click();
+  showToast('✅ ডাউনলোড হয়েছে!');
+}
+
 
 function showToast(m){
   const t=document.getElementById('toast');
