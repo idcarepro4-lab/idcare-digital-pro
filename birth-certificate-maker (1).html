@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>তথ্য সংগ্রহ ফর্ম — সনদপত্র PDF</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f6;--card:#fff;--primary:#1a3c6e;--accent:#c8960c;--border:#dde3ec;--text:#1a2332;--muted:#6c757d;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans Bengali',sans-serif;background:var(--bg);min-height:100vh;padding:20px 12px;}
+.wrap{max-width:660px;margin:0 auto;}
+h1{text-align:center;font-size:19px;font-weight:700;color:var(--primary);margin-bottom:4px;}
+.sub{text-align:center;font-size:12px;color:var(--muted);margin-bottom:18px;}
+.card{background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.09);overflow:hidden;}
+.card-hd{background:linear-gradient(135deg,#1a3c6e,#2a5298);padding:16px 22px;display:flex;align-items:center;gap:12px;}
+.card-hd h2{font-size:15px;font-weight:700;color:#fff;}
+.card-hd p{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px;}
+.card-bd{padding:22px;}
+.photo-sec{display:flex;justify-content:center;margin-bottom:18px;}
+.photo-box{width:100px;height:120px;border:2px dashed #93c5fd;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;background:#f0f7ff;overflow:hidden;transition:all .2s;}
+.photo-box:hover{border-color:#1a3c6e;}
+.photo-box input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+#photoPreview{display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.photo-ph{font-size:10px;color:#6b7280;text-align:center;pointer-events:none;}
+.photo-ph span{font-size:26px;display:block;margin-bottom:3px;}
+.photo-lbl{font-size:11px;color:var(--primary);font-weight:600;text-align:center;margin-top:6px;}
+.sec-ttl{font-size:12px;font-weight:700;color:var(--primary);background:#e8f0fe;padding:5px 10px;border-radius:4px;border-left:3px solid var(--primary);margin:14px 0 9px;display:flex;align-items:center;gap:6px;}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+.fg{margin-bottom:10px;}
+.fg label{font-size:11.5px;font-weight:600;color:#333;display:block;margin-bottom:3px;}
+.req{color:#e00;}
+.fg input,.fg select,.fg textarea{width:100%;border:1.5px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;font-family:'Noto Sans Bengali',sans-serif;color:var(--text);background:#fafcff;transition:border-color .2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--primary);background:#fff;}
+.fg input::placeholder,.fg textarea::placeholder{color:#b0bec5;font-size:12px;}
+.fg textarea{resize:vertical;min-height:68px;}
+.btn-row{display:flex;gap:10px;margin-top:18px;}
+.btn-pdf{flex:2;padding:12px;background:linear-gradient(135deg,#1a3c6e,#2a5298);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s;box-shadow:0 3px 12px rgba(26,60,110,.3);}
+.btn-pdf:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(26,60,110,.4);}
+.btn-pdf:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-rst{flex:1;padding:12px;background:#f3f4f6;color:#374151;border:1.5px solid #dde;border-radius:8px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;}
+.btn-rst:hover{background:#e5e7eb;}
+.st{margin-top:11px;padding:9px 13px;border-radius:7px;font-size:13px;display:none;align-items:center;gap:7px;}
+.st.show{display:flex;}
+.st.ok{background:#d4edda;color:#155724;border:1px solid #c3e6cb;}
+.st.err{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;}
+.prev-wrap{display:none;margin-top:16px;}
+.prev-wrap.show{display:block;}
+.prev-hd{background:var(--primary);color:#fff;padding:8px 13px;border-radius:7px 7px 0 0;font-size:12px;font-weight:700;}
+#certCanvas{width:100%;border:1px solid #dde;border-radius:0 0 7px 7px;display:block;}
+@media(max-width:520px){.r2,.r3{grid-template-columns:1fr;}.btn-row{flex-direction:column;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🏛️ তথ্য সংগ্রহ ফর্ম</h1>
+<div class="sub">সনদপত্র স্টাইলে PDF তৈরি করুন — GitHub Pages এ কাজ করে</div>
+<div class="card">
+  <div class="card-hd">
+    <div style="font-size:26px;">📜</div>
+    <div><h2>ব্যক্তিগত তথ্য পূরণ করুন</h2><p>সব তথ্য পূরণ করুন → PDF ডাউনলোড হবে</p></div>
+  </div>
+  <div class="card-bd">
+    <div class="photo-sec">
+      <div>
+        <div class="photo-box">
+          <input type="file" id="photoFile" accept="image/*" onchange="loadPhoto(event)">
+          <img id="photoPreview" alt="photo">
+          <div class="photo-ph" id="photoPh"><span>📷</span>ছবি<br>আপলোড</div>
+        </div>
+        <div class="photo-lbl">পাসপোর্ট সাইজ ছবি</div>
+      </div>
+    </div>
+    <div class="sec-ttl">👤 ব্যক্তিগত তথ্য</div>
+    <div class="r2">
+      <div class="fg"><label>পুরো নাম (বাংলা) <span class="req">*</span></label><input id="nameBn" placeholder="আপনার পুরো নাম"></div>
+      <div class="fg"><label>Full Name (English)</label><input id="nameEn" placeholder="Your Full Name"></div>
+    </div>
+    <div class="r3">
+      <div class="fg"><label>জন্মতারিখ <span class="req">*</span></label><input type="date" id="dob"></div>
+      <div class="fg"><label>রক্তের গ্রুপ</label>
+        <select id="blood"><option value="">-- বেছে নিন --</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+      <div class="fg"><label>লিঙ্গ</label>
+        <select id="gender"><option value="">-- বেছে নিন --</option><option>পুরুষ</option><option>মহিলা</option><option>অন্যান্য</option></select></div>
+    </div>
+    <div class="r2">
+      <div class="fg"><label>ধর্ম</label>
+        <select id="religion"><option value="">-- বেছে নিন --</option><option>ইসলাম</option><option>হিন্দু</option><option>বৌদ্ধ</option><option>খ্রিস্টান</option><option>অন্যান্য</option></select></div>
+      <div class="fg"><label>পেশা</label><input id="profession" placeholder="ব্যবসায়ী, চাকরিজীবী..."></div>
+    </div>
+    <div class="r2">
+      <div class="fg"><label>মোবাইল নম্বর <span class="req">*</span></label><input id="mobile" placeholder="01XXXXXXXXX" maxlength="11"></div>
+      <div class="fg"><label>এনআইডি নম্বর <span class="req">*</span></label><input id="nid" placeholder="NID নম্বর" maxlength="17"></div>
+    </div>
+    <div class="fg"><label>ঠিকানা <span class="req">*</span></label><textarea id="address" placeholder="সম্পূর্ণ ঠিকানা লিখুন"></textarea></div>
+    <div class="sec-ttl">👨 পিতার তথ্য</div>
+    <div class="r2">
+      <div class="fg"><label>পিতার নাম (বাংলা)</label><input id="fatherBn" placeholder="পিতার নাম বাংলায়"></div>
+      <div class="fg"><label>Father's Name (English)</label><input id="fatherEn" placeholder="Father's Name"></div>
+    </div>
+    <div class="fg"><label>পিতার এনআইডি নম্বর</label><input id="fatherNid" placeholder="পিতার NID নম্বর" maxlength="17"></div>
+    <div class="sec-ttl">👩 মাতার তথ্য</div>
+    <div class="r2">
+      <div class="fg"><label>মাতার নাম (বাংলা)</label><input id="motherBn" placeholder="মাতার নাম বাংলায়"></div>
+      <div class="fg"><label>Mother's Name (English)</label><input id="motherEn" placeholder="Mother's Name"></div>
+    </div>
+    <div class="fg"><label>মাতার এনআইডি নম্বর</label><input id="motherNid" placeholder="মাতার NID নম্বর" maxlength="17"></div>
+    <div class="btn-row">
+      <button class="btn-rst" onclick="resetForm()">🔄 রিসেট</button>
+      <button class="btn-pdf" id="pdfBtn" onclick="makePDF()">📜 সনদপত্র PDF তৈরি করুন</button>
+    </div>
+    <div class="st" id="st"></div>
+    <div class="prev-wrap" id="prevWrap">
+      <div class="prev-hd">👁️ সনদপত্র প্রিভিউ — PDF ডাউনলোড হয়েছে</div>
+      <canvas id="certCanvas"></canvas>
+    </div>
+  </div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+let photoURL='';
+function loadPhoto(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{photoURL=ev.target.result;document.getElementById('photoPreview').src=photoURL;document.getElementById('photoPreview').style.display='block';document.getElementById('photoPh').style.display='none';};r.readAsDataURL(f);}
+function v(id){return(document.getElementById(id).value||'').trim();}
+function fmtDOB(s){if(!s)return'—';const d=new Date(s),mn=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];return d.getDate()+' '+mn[d.getMonth()]+' '+d.getFullYear();}
+function today(){const d=new Date();return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
+async function makePDF(){
+  const nameBn=v('nameBn'),mobile=v('mobile'),nid=v('nid'),addr=v('address');
+  if(!nameBn){showSt('❌ নাম লিখুন!','err');return;}
+  if(!mobile){showSt('❌ মোবাইল নম্বর লিখুন!','err');return;}
+  if(!nid){showSt('❌ এনআইডি নম্বর লিখুন!','err');return;}
+  if(!addr){showSt('❌ ঠিকানা লিখুন!','err');return;}
+  const btn=document.getElementById('pdfBtn');
+  btn.disabled=true;btn.innerHTML='⏳ তৈরি হচ্ছে...';
+  try{
+    const W=794,H=1123;
+    const canvas=document.getElementById('certCanvas');
+    canvas.width=W;canvas.height=H;
+    const c=canvas.getContext('2d');
+    const bg=c.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,'#fefefe');bg.addColorStop(1,'#f5f0e6');
+    c.fillStyle=bg;c.fillRect(0,0,W,H);
+    c.strokeStyle='#1a3c6e';c.lineWidth=5;c.strokeRect(8,8,W-16,H-16);
+    c.strokeStyle='#c8960c';c.lineWidth=2;c.strokeRect(16,16,W-32,H-32);
+    c.strokeStyle='#1a3c6e';c.lineWidth=1;c.strokeRect(22,22,W-44,H-44);
+    [[32,32],[W-32,32],[32,H-32],[W-32,H-32]].forEach(([cx,cy])=>{c.save();c.translate(cx,cy);c.rotate(Math.PI/4);c.fillStyle='#c8960c';c.fillRect(-6,-6,12,12);c.restore();});
+    const hg=c.createLinearGradient(0,30,0,130);
+    hg.addColorStop(0,'#1a3c6e');hg.addColorStop(1,'#2e5fa3');
+    c.fillStyle=hg;c.fillRect(26,30,W-52,100);
+    c.fillStyle='#c8960c';c.fillRect(26,30,W-52,4);c.fillRect(26,126,W-52,4);
+    c.textAlign='center';
+    c.fillStyle='#ffd700';c.font='bold 15px Arial';c.fillText('গণপ্রজাতন্ত্রী বাংলাদেশ সরকার',W/2,58);
+    c.fillStyle='#ffffff';c.font='bold 24px Arial';c.fillText('ব্যক্তিগত তথ্য সনদপত্র',W/2,92);
+    c.font='12px Arial';c.fillStyle='rgba(255,255,255,0.8)';c.fillText('Personal Information Certificate',W/2,116);
+    const PX=W-185,PY=148,PW=115,PH=138;
+    c.fillStyle='#e8f0fe';c.fillRect(PX,PY,PW,PH);
+    if(photoURL){const img=new Image();await new Promise(res=>{img.onload=res;img.src=photoURL;});c.drawImage(img,PX+2,PY+2,PW-4,PH-4);}
+    else{c.fillStyle='#9ca3af';c.font='50px Arial';c.textAlign='center';c.fillText('👤',PX+PW/2,PY+PH/2+18);}
+    c.strokeStyle='#1a3c6e';c.lineWidth=2;c.strokeRect(PX,PY,PW,PH);
+    c.fillStyle='#1a3c6e';c.font='bold 11px Arial';c.textAlign='center';c.fillText('স্বাক্ষরিত ছবি',PX+PW/2,PY+PH+18);
+    const LX=42,VX=255;let Y=155;
+    const rows=[['নাম (বাংলা)',nameBn],['Name (English)',v('nameEn')||'—'],['জন্মতারিখ',fmtDOB(v('dob'))],['মোবাইল নম্বর',mobile],['রক্তের গ্রুপ',v('blood')||'—'],['লিঙ্গ',v('gender')||'—'],['ধর্ম',v('religion')||'—'],['পেশা',v('profession')||'—'],['এনআইডি নম্বর',nid],['ঠিকানা',addr]];
+    rows.forEach((row,i)=>{
+      const RY=Y+i*34;
+      if(i%2===0){c.fillStyle='rgba(26,60,110,0.05)';c.fillRect(30,RY-14,PX-40,34);}
+      c.fillStyle='#1a3c6e';c.font='bold 12.5px Arial';c.textAlign='left';c.fillText(row[0]+' :',LX,RY+4);
+      c.strokeStyle='#c8960c';c.lineWidth=0.8;c.beginPath();c.moveTo(VX-8,RY-12);c.lineTo(VX-8,RY+16);c.stroke();
+      c.fillStyle='#1a1a1a';c.font='12.5px Arial';
+      const val=String(row[1]),maxW=PX-VX-10,words=val.split(' ');
+      let line='',lx=VX,ly=RY+4;
+      words.forEach(w=>{const t=line+w+' ';if(c.measureText(t).width>maxW&&line){c.fillText(line.trim(),lx,ly);line=w+' ';ly+=15;}else{line=t;}});
+      c.fillText(line.trim(),lx,ly);
+    });
+    const parY=Y+rows.length*34+14;
+    c.fillStyle='#c8960c';c.fillRect(30,parY-4,W-60,2);
+    c.fillStyle='#1a3c6e';c.font='bold 13px Arial';c.textAlign='center';c.fillText('পিতা-মাতার তথ্য / Parents Information',W/2,parY+16);
+    const pRows=[['পিতার নাম',(v('fatherBn')||'—')+(v('fatherEn')?' | '+v('fatherEn'):'')],['পিতার এনআইডি',v('fatherNid')||'—'],['মাতার নাম',(v('motherBn')||'—')+(v('motherEn')?' | '+v('motherEn'):'')],['মাতার এনআইডি',v('motherNid')||'—']];
+    pRows.forEach((row,i)=>{
+      const RY=parY+36+i*32;
+      if(i%2===0){c.fillStyle='rgba(200,150,12,0.07)';c.fillRect(30,RY-13,W-60,32);}
+      c.fillStyle='#7c4a00';c.font='bold 12.5px Arial';c.textAlign='left';c.fillText(row[0]+' :',LX,RY+3);
+      c.strokeStyle='#c8960c';c.lineWidth=0.8;c.beginPath();c.moveTo(VX-8,RY-11);c.lineTo(VX-8,RY+15);c.stroke();
+      c.fillStyle='#222';c.font='12.5px Arial';c.fillText(row[1],VX,RY+3);
+    });
+    const sigY=H-168;
+    c.strokeStyle='#c8960c';c.lineWidth=1.5;c.beginPath();c.moveTo(30,sigY);c.lineTo(W-30,sigY);c.stroke();
+    c.fillStyle='#1a3c6e';c.font='11px Arial';c.textAlign='center';c.fillText('ইস্যুর তারিখ: '+today(),W/2,sigY+22);
+    c.strokeStyle='#333';c.lineWidth=0.8;
+    c.beginPath();c.moveTo(60,sigY+75);c.lineTo(210,sigY+75);c.stroke();
+    c.fillStyle='#1a3c6e';c.font='bold 11px Arial';c.fillText('আবেদনকারীর স্বাক্ষর',135,sigY+90);
+    c.beginPath();c.moveTo(W-210,sigY+75);c.lineTo(W-60,sigY+75);c.stroke();
+    c.fillText('কর্তৃপক্ষের স্বাক্ষর ও সীল',W-135,sigY+90);
+    c.fillStyle='rgba(26,60,110,0.07)';c.fillRect(26,H-50,W-52,28);
+    c.fillStyle='#1a3c6e';c.font='10px Arial';c.textAlign='center';
+    c.fillText('এই সনদপত্রটি কম্পিউটার তৈরিকৃত  |  Computer Generated Certificate  |  '+today(),W/2,H-30);
+    c.save();c.globalAlpha=0.04;c.translate(W/2,H/2);c.rotate(-35*Math.PI/180);
+    c.fillStyle='#1a3c6e';c.font='bold 80px Arial';c.textAlign='center';c.fillText('OFFICIAL',0,0);c.restore();
+    document.getElementById('prevWrap').classList.add('show');
+    const{jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pw=pdf.internal.pageSize.getWidth(),ph=pdf.internal.pageSize.getHeight();
+    pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',0,0,pw,ph);
+    pdf.save('Certificate_'+nid+'_'+today().replace(/\//g,'-')+'.pdf');
+    showSt('✅ সনদপত্র PDF সফলভাবে ডাউনলোড হয়েছে!','ok');
+  }catch(e){showSt('❌ সমস্যা হয়েছে: '+e.message,'err');}
+  btn.disabled=false;btn.innerHTML='📜 সনদপত্র PDF তৈরি করুন';
+}
+function resetForm(){
+  document.querySelectorAll('input:not([type=file]),textarea').forEach(i=>i.value='');
+  document.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+  photoURL='';
+  document.getElementById('photoPreview').style.display='none';
+  document.getElementById('photoPh').style.display='block';
+  document.getElementById('prevWrap').classList.remove('show');
+  document.getElementById('st').classList.remove('show');
+}
+function showSt(msg,type){const el=document.getElementById('st');el.textContent=msg;el.className='st show '+type;setTimeout(()=>el.classList.remove('show'),6000);}
+</script>
+</body>
+</html>
