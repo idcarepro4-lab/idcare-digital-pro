@@ -14,10 +14,6 @@ tw.insertAdjacentHTML('beforeend',`
     <button class="sb">☆</button><div class="ti">📝</div>
     <div class="tn">জন্ম নিবন্ধন সংশোধন</div>
   </div>
-  <div class="tc" onclick="window.open('birth-cert-v4.html','_blank')">
-    <button class="sb">☆</button><div class="ti">📄</div>
-    <div class="tn">জন্ম সনদ PDF মেকার</div>
-  </div>
   <div class="tc" onclick="window.open('birth-certificate-maker.html','_blank')">
     <button class="sb">☆</button><div class="ti">🗂️</div>
     <div class="tn">Birth Certificate Maker</div>
@@ -50,13 +46,12 @@ TP['birth-reg']=()=>`
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
 <button class="ab" onclick="window.open('bdris-final.html','_blank')" style="margin:0;background:linear-gradient(135deg,#7c3aed,#8b5cf6)"><i class="fas fa-edit"></i> সংশোধন আবেদন</button>
-<button class="ab" onclick="window.open('birth-cert-v4.html','_blank')" style="margin:0;background:linear-gradient(135deg,#b45309,#d97706)"><i class="fas fa-file-pdf"></i> সনদ PDF মেকার</button>
+<button class="ab" onclick="window.open('birth-certificate-maker.html','_blank')" style="margin:0;background:linear-gradient(135deg,#0e7490,#0891b2)"><i class="fas fa-certificate"></i> Birth Certificate Maker</button>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-<button class="ab" onclick="window.open('birth-certificate-maker.html','_blank')" style="margin:0;background:linear-gradient(135deg,#0e7490,#0891b2)"><i class="fas fa-certificate"></i> Birth Certificate Maker</button>
 <button class="ab" onclick="window.open('warish-sanad.html','_blank')" style="margin:0;background:linear-gradient(135deg,#be185d,#ec4899)"><i class="fas fa-scroll"></i> ওয়ারিশ সনদপত্র</button>
+<button class="ab" onclick="window.open('area-info.html','_blank')" style="margin:0;background:linear-gradient(135deg,#166534,#16a34a)"><i class="fas fa-map-marker-alt"></i> এলাকা তথ্য সিস্টেম</button>
 </div>
-<button class="ab" onclick="window.open('area-info.html','_blank')" style="background:linear-gradient(135deg,#166534,#16a34a)"><i class="fas fa-map-marker-alt"></i> বাংলাদেশ এলাকা তথ্য সিস্টেম</button>
 </div>`;
 }
 })();
